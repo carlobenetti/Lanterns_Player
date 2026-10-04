@@ -9,7 +9,6 @@
     "main"
   ],
   "permissions": [
-    "updater:default",
     "process:default",
     "window-state:default",
     "core:window:allow-set-decorations",

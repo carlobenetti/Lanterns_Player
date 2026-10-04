@@ -58,7 +58,7 @@ const getSettingsSnapshot = () => {
     discovery: (getValue('core.playback.discovery') as boolean) ?? false,
     language: (getValue('core.general.language') as string) ?? 'en_US',
     dark: (getValue('core.theme.dark') as boolean) ?? false,
-    themeId: (getValue('core.theme.active.id') as string) ?? DEFAULT_THEME_ID,
+    themeId: DEFAULT_THEME_ID,
   };
 };
 

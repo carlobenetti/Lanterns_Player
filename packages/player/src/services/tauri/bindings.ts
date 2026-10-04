@@ -21,6 +21,10 @@ export const commands = {
 	mpdStart: () => typedError<number, string>(__TAURI_INVOKE("mpd_start")),
 	mpdStop: () => typedError<null, string>(__TAURI_INVOKE("mpd_stop")),
 	streamServerPort: () => __TAURI_INVOKE<number>("stream_server_port"),
+	scanMusicFolder: (path: string) => typedError<LocalFolderScan, string>(__TAURI_INVOKE("scan_music_folder", { path })),
+	savePlaylistCover: (playlistId: string, sourcePath: string) => typedError<string, string>(__TAURI_INVOKE("save_playlist_cover", { playlistId, sourcePath })),
+	resolveMusicFolders: (path: string) => typedError<MusicFolderSelection, string>(__TAURI_INVOKE("resolve_music_folders", { path })),
+	readAudioTags: (paths: string[]) => typedError<LocalAudioTags[], string>(__TAURI_INVOKE("read_audio_tags", { paths })),
 	ytdlpEnsureInstalled: () => typedError<boolean, string>(__TAURI_INVOKE("ytdlp_ensure_installed")),
 	discordConnect: () => typedError<null, string>(__TAURI_INVOKE("discord_connect")),
 	discordDisconnect: () => typedError<null, string>(__TAURI_INVOKE("discord_disconnect")),
@@ -96,6 +100,33 @@ export type HttpResponse = {
 	status: number,
 	headers: { [key in string]: string },
 	body: string,
+};
+
+export type LocalAudioFile = {
+	path: string,
+	fileName: string,
+	extension: string,
+};
+
+export type LocalAudioTags = {
+	path: string,
+	title: string | null,
+	artist: string | null,
+	trackNumber: number | null,
+	durationMs: number | null,
+	coverPath: string | null,
+};
+
+export type LocalFolderScan = {
+	folderPath: string,
+	folderName: string,
+	files: LocalAudioFile[],
+	coverPath: string | null,
+};
+
+export type MusicFolderSelection = {
+	isLibrary: boolean,
+	folders: string[],
 };
 
 export type Page<T> = {

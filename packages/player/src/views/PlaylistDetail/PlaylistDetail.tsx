@@ -6,6 +6,7 @@ import { useTranslation } from '@nuclearplayer/i18n';
 import { EmptyState, ScrollableArea } from '@nuclearplayer/ui';
 
 import { ConnectedTrackTable } from '../../components/ConnectedTrackTable';
+import { isFolderPlaylist } from '../../services/localFolders';
 import { PlaylistDetailHeader } from '../Playlists/components/PlaylistDetailHeader';
 import { PlaylistDetailActions } from './components/PlaylistDetailActions';
 import { usePlaylistDetail } from './usePlaylistDetail';
@@ -15,10 +16,11 @@ export const PlaylistDetail: FC = () => {
   const { t } = useTranslation('playlists');
   const { playlistId, playlist, items, tracks, thumbnails } =
     usePlaylistDetail();
+  const isFolder = Boolean(playlist && isFolderPlaylist(playlist));
   const editing = usePlaylistEditing(
     playlistId,
     items,
-    Boolean(playlist && !playlist.isReadOnly),
+    Boolean(playlist && !playlist.isReadOnly && !isFolder),
   );
 
   return (
@@ -32,7 +34,11 @@ export const PlaylistDetail: FC = () => {
           thumbnails={thumbnails}
           className="mx-6 mt-6"
         >
-          <PlaylistDetailActions playlistId={playlistId} tracks={tracks} />
+          <PlaylistDetailActions
+            playlistId={playlistId}
+            tracks={tracks}
+            isFolderPlaylist={isFolder}
+          />
         </PlaylistDetailHeader>
       )}
       {isEmpty(tracks) ? (

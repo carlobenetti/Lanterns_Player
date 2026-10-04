@@ -1,7 +1,6 @@
 import {
   BlocksIcon,
   KeyboardIcon,
-  PaletteIcon,
   ScrollTextIcon,
   SparklesIcon,
 } from 'lucide-react';
@@ -16,7 +15,6 @@ import { Logs } from '../views/Logs/Logs';
 import { Plugins } from '../views/Plugins/Plugins';
 import { Settings } from '../views/Settings/Settings';
 import { useSettingsGroups } from '../views/Settings/useSettingsGroups';
-import { Themes } from '../views/Themes/Themes';
 import { WhatsNew } from '../views/WhatsNew';
 
 const APP_TABS = [
@@ -31,12 +29,6 @@ const APP_TABS = [
     labelKey: 'plugins.title',
     icon: <BlocksIcon />,
     view: <Plugins />,
-  },
-  {
-    id: 'themes',
-    labelKey: 'themes.title',
-    icon: <PaletteIcon />,
-    view: <Themes />,
   },
   {
     id: 'logs',

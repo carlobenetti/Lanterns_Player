@@ -116,6 +116,11 @@
     "emptyDescription": "Create a playlist or import one to get started",
     "emptyTracks": "No tracks in this playlist",
     "emptyTracksDescription": "Add tracks from search results or your library",
+    "changeCover": "Change cover",
+    "changeCoverError": "Could not change the cover",
+    "rescanFolder": "Rescan folder",
+    "rescanFolderSuccess": "Folder rescanned",
+    "rescanFolderError": "Could not read this folder",
     "create": "Create new",
     "importJson": "Import from JSON",
     "exportJson": "Export as JSON",
@@ -245,8 +250,17 @@
   "dashboard": {
     "title": "Dashboard",
     "empty-state": "Welcome to Nuclear",
-    "empty-state-description": "Install a plugin to see top tracks, new releases, and recommendations here.",
+    "empty-state-description": "Use the Add folder button at the top to turn a music folder into a playlist, or install a plugin to see top tracks and new releases here.",
     "empty-state-action": "Browse plugins",
+    "add-folder": "Add folder",
+    "add-folder-tooltip": "Turn a music folder into a playlist. A folder of folders turns each one into a playlist.",
+    "folders-title": "My folders",
+    "folder-adding": "Reading your music...",
+    "folder-added": "\"{{name}}\" is now on your dashboard",
+    "library-added":"{{count}} playlist is now on your dashboard",
+    "library-added_other": "{{count}} playlists are now on your dashboard",
+    "folder-empty": "No music found in this folder",
+    "folder-add-error": "Could not add this folder",
     "top-tracks": "Top Tracks",
     "top-artists": "Top Artists",
     "top-albums": "Top Albums",
@@ -303,12 +317,6 @@
         "title": "Failed to install {{name}}"
       }
     }
-  },
-  "updater": {
-    "updateAvailable": "Update available",
-    "clickToUpdate": "Click to update",
-    "downloading": "Downloading... {{progress}}%",
-    "clickToRestart": "Click to restart"
   },
   "flatpak": {
     "sandboxWarning": "You're running Nuclear in a Flatpak sandbox. Some features may not work correctly. If you experience issues, try the .deb or AppImage instead.",
@@ -422,17 +430,6 @@
     },
     "layout": {
       "title": "Layout"
-    },
-    "updates": {
-      "title": "Updates",
-      "checkForUpdates": {
-        "title": "Check for updates",
-        "description": "Automatically check for new versions on startup"
-      },
-      "autoInstall": {
-        "title": "Auto-install updates",
-        "description": "Download and install updates automatically when available"
-      }
     },
     "integrations": {
       "title": "Integrations",
@@ -613,7 +610,7 @@
     }
   },
   "titleBar": {
-    "title": "Nuclear Music Player",
+    "title": "Lanterns Player",
     "minimize": "Minimize",
     "maximize": "Maximize",
     "close": "Close"

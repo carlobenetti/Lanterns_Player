@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { ShareIcon, Trash2Icon } from 'lucide-react';
+import { ImageIcon, RefreshCwIcon, ShareIcon, Trash2Icon } from 'lucide-react';
 import { useState, type FC } from 'react';
 
 import { useTranslation } from '@nuclearplayer/i18n';
@@ -9,21 +9,25 @@ import { Button, Dialog, Popover } from '@nuclearplayer/ui';
 import { usePlaylistExport } from '../../../hooks/usePlaylistExport';
 import { usePlaylistStore } from '../../../stores/playlistStore';
 import { PlaylistActions } from '../../Playlists/components/PlaylistActions';
+import { usePlaylistFolderActions } from '../usePlaylistFolderActions';
 
 type PlaylistDetailActionsProps = {
   playlistId: string;
   tracks: Track[];
+  isFolderPlaylist: boolean;
 };
 
 export const PlaylistDetailActions: FC<PlaylistDetailActionsProps> = ({
   playlistId,
   tracks,
+  isFolderPlaylist,
 }) => {
   const { t } = useTranslation('playlists');
   const navigate = useNavigate();
   const deletePlaylist = usePlaylistStore((state) => state.deletePlaylist);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { exportAsJson } = usePlaylistExport(playlistId);
+  const { changeCover, rescanFolder } = usePlaylistFolderActions(playlistId);
 
   const handleDelete = async () => {
     await deletePlaylist(playlistId);
@@ -37,6 +41,22 @@ export const PlaylistDetailActions: FC<PlaylistDetailActionsProps> = ({
         tracks={tracks}
         menuItems={
           <>
+            <Popover.Item
+              icon={<ImageIcon size={16} />}
+              onClick={changeCover}
+              data-testid="change-cover-action"
+            >
+              {t('changeCover')}
+            </Popover.Item>
+            {isFolderPlaylist && (
+              <Popover.Item
+                icon={<RefreshCwIcon size={16} />}
+                onClick={rescanFolder}
+                data-testid="rescan-folder-action"
+              >
+                {t('rescanFolder')}
+              </Popover.Item>
+            )}
             <Popover.Item
               icon={<ShareIcon size={16} />}
               onClick={exportAsJson}

@@ -11,6 +11,7 @@ const toIndexEntry = (playlist: Playlist): PlaylistIndexEntry => ({
   lastModifiedIso: playlist.lastModifiedIso,
   isReadOnly: playlist.isReadOnly,
   artwork: playlist.artwork,
+  ...(playlist.origin && { origin: playlist.origin }),
   itemCount: playlist.items.length,
   totalDurationMs: playlist.items.reduce(
     (sum, item) => sum + (item.track.durationMs ?? 0),

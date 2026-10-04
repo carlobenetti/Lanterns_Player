@@ -9,11 +9,6 @@ import {
 } from './advanced/schema';
 import { BUILTIN_BASIC_THEME_IDS, DEFAULT_THEME_ID } from './basic';
 
-import './basic/aurora.css';
-import './basic/ember.css';
-import './basic/lagoon.css';
-import './basic/arctic-moss.css';
-
 export type BasicThemeMeta = {
   id: string;
   name: string;
@@ -23,52 +18,12 @@ export type BasicThemeMeta = {
 const BUILT_INS: BasicThemeMeta[] = [
   {
     id: DEFAULT_THEME_ID,
-    name: 'Default',
+    name: 'Green Lantern',
     palette: [
-      'oklch(0.8 0.12 5)',
-      'oklch(0.92 0.036 7)',
-      'oklch(0.5 0.1 5)',
-      'oklch(0.22 0.03 5)',
-    ],
-  },
-  {
-    id: 'nuclear:aurora',
-    name: 'Aurora',
-    palette: [
-      'oklch(0.74 0.15 305)',
-      'oklch(0.98 0.01 340)',
-      'oklch(0.62 0.11 305)',
-      'oklch(0.22 0.03 305)',
-    ],
-  },
-  {
-    id: 'nuclear:ember',
-    name: 'Ember',
-    palette: [
-      'oklch(0.76 0.14 30)',
-      'oklch(0.97 0.02 70)',
-      'oklch(0.64 0.10 30)',
-      'oklch(0.22 0.03 20)',
-    ],
-  },
-  {
-    id: 'nuclear:lagoon',
-    name: 'Lagoon',
-    palette: [
-      'oklch(0.67 0.16 205)',
-      'oklch(0.985 0.018 210)',
-      'oklch(0.55 0.12 205)',
-      'oklch(0.20 0.025 205)',
-    ],
-  },
-  {
-    id: 'nuclear:arctic-moss',
-    name: 'Moss',
-    palette: [
-      'oklch(0.70 0.12 175)',
-      'oklch(0.97 0.008 200)',
-      'oklch(0.58 0.09 175)',
-      'oklch(0.20 0.02 175)',
+      'oklch(0.76 0.14 152)',
+      'oklch(0.86 0.12 192)',
+      'oklch(0.45 0.1 152)',
+      'oklch(0.19 0.03 205)',
     ],
   },
 ];

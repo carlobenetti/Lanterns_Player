@@ -18,6 +18,13 @@ export class AudioSourceFactory {
       return { url: stream.url, protocol: 'hls' };
     }
 
+    if (stream.protocol === 'file') {
+      return {
+        url: this.localFileUrl(stream.url, await this.streamServerPort()),
+        protocol: 'http',
+      };
+    }
+
     const proxyUrl = this.proxiedUrl(stream.url, await this.streamServerPort());
 
     const durationMs = stream.durationMs ?? candidate.durationMs;
@@ -48,6 +55,21 @@ export class AudioSourceFactory {
       .replace(/\//g, '_')
       .replace(/=+$/, '');
     return `http://127.0.0.1:${port}/stream/${encoded}`;
+  }
+
+  private localFileUrl(path: string, port: number): string {
+    return `http://127.0.0.1:${port}/file/${this.base64Url(path)}`;
+  }
+
+  private base64Url(value: string): string {
+    const bytes = new TextEncoder().encode(value);
+    const binary = Array.from(bytes, (byte) => String.fromCharCode(byte)).join(
+      '',
+    );
+    return btoa(binary)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
   }
 
   private isFmp4(stream: ResolvedStream): boolean {

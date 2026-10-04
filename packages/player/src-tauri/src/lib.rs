@@ -5,6 +5,7 @@ pub mod discord;
 pub mod history;
 pub mod http;
 pub mod http_api;
+pub mod local_library;
 pub mod logging;
 pub mod mcp;
 pub mod mpd;
@@ -53,6 +54,10 @@ fn specta_builder() -> tauri_specta::Builder<tauri::Wry> {
         mpd::mpd_start,
         mpd::mpd_stop,
         stream_server::stream_server_port,
+        local_library::scan_music_folder,
+        local_library::save_playlist_cover,
+        local_library::resolve_music_folders,
+        local_library::read_audio_tags,
         ytdlp_setup::ytdlp_ensure_installed,
         discord::discord_connect,
         discord::discord_disconnect,
@@ -119,7 +124,6 @@ pub fn run() {
 
     if !is_flatpak {
         builder = builder
-            .plugin(tauri_plugin_updater::Builder::new().build())
             .plugin(tauri_plugin_process::init());
     }
 

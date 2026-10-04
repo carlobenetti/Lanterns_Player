@@ -1617,3 +1617,5 @@ exports[`Album view > (Snapshot) renders the album view 1`] = `
   </div>
 </DocumentFragment>
 `;
+
+exports[`Album view > shows loading states for album details and tracks 1`] = `<DocumentFragment />`;

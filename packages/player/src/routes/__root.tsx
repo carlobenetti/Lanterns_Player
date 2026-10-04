@@ -31,7 +31,6 @@ import { ConnectedSettingsModal } from '../components/ConnectedSettingsModal';
 import { ConnectedStreamVerification } from '../components/ConnectedStreamVerification';
 import { ConnectedTitleBar } from '../components/ConnectedTitleBar';
 import { ConnectedTopBar } from '../components/ConnectedTopBar';
-import { DevTools } from '../components/DevTools';
 import { FlatpakWarningBanner } from '../components/FlatpakWarningBanner';
 import { SoundProvider } from '../components/SoundProvider';
 import { StreamResolver } from '../components/StreamResolver';
@@ -140,7 +139,6 @@ const RootComponent = () => {
       <ConnectedPlayerBar />
       <Toaster />
       <ConnectedSettingsModal />
-      <DevTools />
     </PlayerShell>
   );
 };

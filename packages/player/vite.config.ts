@@ -3,7 +3,6 @@
 import { execSync } from 'child_process';
 import { codecovVitePlugin } from '@codecov/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
-import { devtools } from '@tanstack/devtools-vite';
 import { tanstackRouter } from '@tanstack/router-vite-plugin';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
@@ -22,7 +21,6 @@ export default defineConfig(() => ({
     __COMMIT_HASH__: JSON.stringify(commitHash),
   },
   plugins: [
-    devtools(),
     react(),
     tanstackRouter(),
     tailwindcss(),

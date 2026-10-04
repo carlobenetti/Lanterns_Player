@@ -16,7 +16,13 @@ export type Playlist = {
 
 export type PlaylistIndexEntry = Pick<
   Playlist,
-  'id' | 'name' | 'createdAtIso' | 'lastModifiedIso' | 'isReadOnly' | 'artwork'
+  | 'id'
+  | 'name'
+  | 'createdAtIso'
+  | 'lastModifiedIso'
+  | 'isReadOnly'
+  | 'artwork'
+  | 'origin'
 > & {
   itemCount: number;
   totalDurationMs: number;

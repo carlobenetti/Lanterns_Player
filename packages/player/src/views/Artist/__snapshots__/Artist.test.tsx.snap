@@ -1706,6 +1706,8 @@ exports[`Artist view > with bio provider > adds artist to favorites when clickin
 ]
 `;
 
+exports[`Artist view > with bio provider > shows loading states for bio, top tracks, related artists, and albums 1`] = `<DocumentFragment />`;
+
 exports[`Artist view > with social stats provider > (Snapshot) renders the artist view with social stats 1`] = `
 <DocumentFragment>
   <div

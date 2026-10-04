@@ -11,9 +11,15 @@ import userEvent from '@testing-library/user-event';
 
 import App from '../../App';
 import { routeTree } from '../../routeTree.gen';
+import { LOCAL_FOLDER_PROVIDER } from '../../services/localFolders';
 import { providersHost } from '../../services/providersHost';
+import {
+  initializePlaylistStore,
+  usePlaylistStore,
+} from '../../stores/playlistStore';
 import { useStartupStore } from '../../stores/startupStore';
 import { DashboardProviderBuilder } from '../../test/builders/DashboardProviderBuilder';
+import { PlaylistBuilder } from '../../test/builders/PlaylistBuilder';
 import { PlaylistProviderBuilder } from '../../test/builders/PlaylistProviderBuilder';
 import {
   EDITORIAL_PLAYLISTS_DASHBOARD,
@@ -56,6 +62,74 @@ export const DashboardWrapper = {
 
   seedPlaylistProvider(builder: PlaylistProviderBuilder) {
     providersHost.register(builder.build());
+  },
+
+  seedPlaylists(...builders: PlaylistBuilder[]) {
+    const playlists = builders.map((builder) => builder.build());
+    usePlaylistStore.setState({
+      index: builders.map((builder) => builder.buildIndexEntry()),
+      playlists: new Map(playlists.map((playlist) => [playlist.id, playlist])),
+      loaded: true,
+      isSyncingLibrary: false,
+    });
+  },
+
+  addFolderButton: {
+    get element() {
+      return screen.getByTestId('add-folder-button');
+    },
+    async click() {
+      await userEvent.click(this.element);
+    },
+  },
+
+  folders: {
+    async findSkeleton() {
+      return screen.findByTestId('dashboard-folder-playlists-skeleton');
+    },
+    async findSection() {
+      return screen.findByTestId('dashboard-folder-playlists');
+    },
+    async cardNames() {
+      const section = await screen.findByTestId('dashboard-folder-playlists');
+      return within(section)
+        .getAllByTestId('card-title')
+        .map((title) => title.textContent);
+    },
+    folder(name: string) {
+      return {
+        async find() {
+          const section = await screen.findByTestId(
+            'dashboard-folder-playlists',
+          );
+          await within(section).findByText(name);
+          return findCard(section, name, 'Folder card');
+        },
+        async click() {
+          await userEvent.click(await this.find());
+        },
+        async findCover() {
+          return within(await this.find()).findByRole('img', { name });
+        },
+      };
+    },
+  },
+
+  async simulateRestart() {
+    await act(() => initializePlaylistStore());
+  },
+
+  openedPlaylist: {
+    async findTitle() {
+      return screen.findByTestId('playlist-detail-title');
+    },
+    async findTrack(title: string) {
+      const table = await screen.findByRole('table');
+      return within(table).findByText(title);
+    },
+    get removeButtons() {
+      return screen.queryAllByLabelText('Remove from list');
+    },
   },
 
   simulateStartupWithProvider(builder: DashboardProviderBuilder) {
@@ -196,6 +270,12 @@ export const DashboardWrapper = {
   },
 
   fixtures: {
+    folderPlaylist(name: string, folderPath: string) {
+      return new PlaylistBuilder()
+        .withName(name)
+        .withOrigin({ provider: LOCAL_FOLDER_PROVIDER, id: folderPath })
+        .withTrackCount(2);
+    },
     topTracksProvider() {
       return new DashboardProviderBuilder()
         .withId('acme-dashboard')

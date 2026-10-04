@@ -12,10 +12,10 @@ import { useAppVersion } from '../hooks/useAppVersion';
 import { useCanGoForward } from '../hooks/useCanGoForward';
 import { useCoreSetting } from '../hooks/useCoreSetting';
 import { useFramelessWindow } from '../hooks/useFramelessWindow';
+import { AddFolderButton } from './AddFolderButton';
 import { ConnectedThemeController } from './ConnectedThemeController';
 import { JamQrCodeButton } from './JamQrCodeButton';
 import { SearchBox } from './SearchBox';
-import { UpdateBadge } from './UpdateBadge';
 
 export const ConnectedTopBar: FC = () => {
   const router = useRouter();
@@ -32,7 +32,7 @@ export const ConnectedTopBar: FC = () => {
       <div className="flex flex-row items-center gap-4">
         {!isTitleBarEnabled && (
           <Tooltip
-            content={`Nuclear ${version}`}
+            content={`Lanterns Player ${version}`}
             side="bottom"
             wrapperClassName="flex items-center"
           >
@@ -45,10 +45,10 @@ export const ConnectedTopBar: FC = () => {
           canGoBack={canGoBack}
           canGoForward={canGoForward}
         />
-        <UpdateBadge />
       </div>
       <SearchBox />
       <div className="flex flex-row items-center justify-end gap-2">
+        <AddFolderButton />
         <JamQrCodeButton />
         <ConnectedThemeController />
       </div>

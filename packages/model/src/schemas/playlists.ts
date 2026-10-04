@@ -70,6 +70,7 @@ export const playlistIndexEntrySchema = z.object({
   lastModifiedIso: z.string(),
   isReadOnly: z.boolean(),
   artwork: artworkSetSchema.optional(),
+  origin: providerRefSchema.optional(),
   itemCount: z.number(),
   totalDurationMs: z.number(),
   thumbnails: z.array(z.string()).default([]),

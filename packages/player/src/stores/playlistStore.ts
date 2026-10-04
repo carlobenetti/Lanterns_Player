@@ -9,6 +9,18 @@ import type {
 } from '@nuclearplayer/model';
 import { stripResolutionState } from '@nuclearplayer/model';
 
+import { libraryRoots } from '../services/libraryRoots';
+import {
+  folderOrigin,
+  isFolderPlaylist,
+  localCoverArtwork,
+  readAudioTags,
+  resolveMusicFolders,
+  saveCoverImage,
+  scanMusicFolder,
+  trackFromLocalFile,
+} from '../services/localFolders';
+import { Logger } from '../services/logger';
 import { playlistFileService } from '../services/playlistFileService';
 import { useQueueStore } from './queueStore';
 
@@ -16,6 +28,7 @@ type PlaylistStore = {
   index: PlaylistIndexEntry[];
   playlists: Map<string, Playlist>;
   loaded: boolean;
+  isSyncingLibrary: boolean;
 
   loadIndex: () => Promise<void>;
   loadPlaylist: (id: string) => Promise<Playlist | null>;
@@ -25,6 +38,11 @@ type PlaylistStore = {
   removeTracks: (playlistId: string, itemIds: string[]) => Promise<void>;
   importPlaylist: (playlist: Playlist) => Promise<string>;
   saveQueueAsPlaylist: (name: string) => Promise<string>;
+  addMusicFolder: (folderPath: string) => Promise<string[]>;
+  addFolderPlaylist: (folderPath: string) => Promise<string>;
+  syncLibraryRoots: () => Promise<void>;
+  syncFolderPlaylist: (id: string) => Promise<void>;
+  setPlaylistCover: (id: string, imagePath: string) => Promise<void>;
   reorderTracks: (
     playlistId: string,
     from: number,
@@ -42,6 +60,7 @@ export const usePlaylistStore = create<PlaylistStore>((set, get) => ({
   index: [],
   playlists: new Map(),
   loaded: false,
+  isSyncingLibrary: false,
 
   loadIndex: async () => {
     const index = await playlistFileService.loadIndex();
@@ -207,6 +226,147 @@ export const usePlaylistStore = create<PlaylistStore>((set, get) => ({
     return playlist.id;
   },
 
+  addMusicFolder: async (folderPath: string) => {
+    const selection = await resolveMusicFolders(folderPath);
+    if (selection.isLibrary) {
+      await libraryRoots.add(folderPath);
+    }
+
+    const playlistIds: string[] = [];
+    for (const folder of selection.folders) {
+      playlistIds.push(await get().addFolderPlaylist(folder));
+    }
+    return playlistIds;
+  },
+
+  syncLibraryRoots: async () => {
+    const knownFolders = new Set(
+      get()
+        .index.filter(isFolderPlaylist)
+        .map((entry) => entry.origin?.id),
+    );
+
+    set({ isSyncingLibrary: true });
+    try {
+      for (const root of await libraryRoots.list()) {
+        try {
+          const selection = await resolveMusicFolders(root);
+          const newFolders = selection.folders.filter(
+            (folder) => !knownFolders.has(folder),
+          );
+          for (const folder of newFolders) {
+            await get().addFolderPlaylist(folder);
+            knownFolders.add(folder);
+          }
+        } catch (error) {
+          Logger.playlists.warn(
+            `Could not sync music library ${root}: ${String(error)}`,
+          );
+        }
+      }
+    } finally {
+      set({ isSyncingLibrary: false });
+    }
+  },
+
+  addFolderPlaylist: async (folderPath: string) => {
+    const existing = get().index.find(
+      (entry) => isFolderPlaylist(entry) && entry.origin?.id === folderPath,
+    );
+    if (existing) {
+      await get().syncFolderPlaylist(existing.id);
+      return existing.id;
+    }
+
+    const scan = await scanMusicFolder(folderPath);
+    const tagsByPath = await readAudioTags(scan.files.map((file) => file.path));
+    const now = new Date().toISOString();
+    const playlist: Playlist = {
+      id: uuidv4(),
+      name: scan.folderName,
+      createdAtIso: now,
+      lastModifiedIso: now,
+      isReadOnly: false,
+      origin: folderOrigin(scan.folderPath),
+      artwork: scan.coverPath ? localCoverArtwork(scan.coverPath) : undefined,
+      items: scan.files.map((file) => ({
+        id: uuidv4(),
+        track: trackFromLocalFile(file, tagsByPath.get(file.path)),
+        addedAtIso: now,
+      })),
+    };
+
+    const index = await playlistFileService.savePlaylist(playlist);
+
+    set((state) => ({
+      playlists: new Map(state.playlists).set(playlist.id, playlist),
+      index,
+    }));
+
+    return playlist.id;
+  },
+
+  syncFolderPlaylist: async (id: string) => {
+    const playlist = await get().loadPlaylist(id);
+    if (!playlist?.origin || !isFolderPlaylist(playlist)) {
+      return;
+    }
+
+    const scan = await scanMusicFolder(playlist.origin.id);
+    const now = new Date().toISOString();
+    const existingItemsByPath = new Map(
+      playlist.items.map((item) => [item.track.localFile?.fileUri, item]),
+    );
+    const pathsMissingTags = scan.files
+      .map((file) => file.path)
+      .filter(
+        (path) => !existingItemsByPath.get(path)?.track.localFile?.scannedAtIso,
+      );
+    const tagsByPath = await readAudioTags(pathsMissingTags);
+    const items = scan.files.map((file) => {
+      const existing = existingItemsByPath.get(file.path);
+      const tags = tagsByPath.get(file.path);
+      if (existing && !tags) {
+        return existing;
+      }
+      return {
+        id: existing?.id ?? uuidv4(),
+        track: trackFromLocalFile(file, tags),
+        addedAtIso: existing?.addedAtIso ?? now,
+      };
+    });
+    const artwork =
+      playlist.artwork ??
+      (scan.coverPath ? localCoverArtwork(scan.coverPath) : undefined);
+
+    const isUnchanged =
+      artwork === playlist.artwork &&
+      items.length === playlist.items.length &&
+      items.every((item, position) => item === playlist.items[position]);
+    if (isUnchanged) {
+      return;
+    }
+
+    const updated: Playlist = {
+      ...playlist,
+      items,
+      artwork,
+      lastModifiedIso: now,
+    };
+
+    const index = await playlistFileService.savePlaylist(updated);
+
+    set((state) => ({
+      playlists: new Map(state.playlists).set(id, updated),
+      index,
+    }));
+  },
+
+  setPlaylistCover: async (id: string, imagePath: string) => {
+    const savedPath = await saveCoverImage(id, imagePath);
+    await get().updatePlaylist(id, { artwork: localCoverArtwork(savedPath) });
+  },
+
   updatePlaylist: async (id, updates) => {
     const playlist = await get().loadPlaylist(id);
     if (!playlist) {
@@ -240,4 +400,5 @@ export const usePlaylistStore = create<PlaylistStore>((set, get) => ({
 
 export const initializePlaylistStore = async (): Promise<void> => {
   await usePlaylistStore.getState().loadIndex();
+  void usePlaylistStore.getState().syncLibraryRoots();
 };

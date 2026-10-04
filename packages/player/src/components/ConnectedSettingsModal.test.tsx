@@ -31,14 +31,13 @@ describe('ConnectedSettingsModal', () => {
       'Integrations',
       'Playback',
       'Plugins',
-      'Updates',
     ]);
     expect(
       ConnectedSettingsModalWrapper.appTab('shortcuts').element,
     ).toHaveTextContent('Key Shortcuts');
     expect(
-      ConnectedSettingsModalWrapper.appTab('themes').element,
-    ).toHaveTextContent('Themes');
+      ConnectedSettingsModalWrapper.appTab('logs').element,
+    ).toHaveTextContent('Logs');
   });
 
   it('shows the general view with its sections when opened', async () => {
@@ -55,10 +54,10 @@ describe('ConnectedSettingsModal', () => {
   it('selecting an App tab shows that view', async () => {
     await ConnectedSettingsModalWrapper.mount();
 
-    await ConnectedSettingsModalWrapper.appTab('themes').click();
+    await ConnectedSettingsModalWrapper.appTab('logs').click();
 
     expect(
-      await ConnectedSettingsModalWrapper.viewTitle('Themes'),
+      await ConnectedSettingsModalWrapper.viewTitle('Logs'),
     ).toBeInTheDocument();
   });
 

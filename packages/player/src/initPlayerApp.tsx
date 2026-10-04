@@ -2,8 +2,6 @@ import React from 'react';
 
 import App from './App';
 import { initLogStream } from './hooks/useLogStream';
-import { applyThemeFromSettingsIfAny } from './services/advancedThemeService';
-import { startAdvancedThemeWatcher } from './services/advancedThemeWatcher';
 import { initBridgeHandler } from './services/bridge/bridgeHandler';
 import { registerBuiltInCoreSettings } from './services/coreSettings';
 import { initDiscordHandler } from './services/discordHandler';
@@ -14,7 +12,6 @@ import {
   applyLanguageFromSettings,
   initLanguageWatcher,
 } from './services/languageService';
-import { loadMarketplaceThemes } from './services/marketplaceThemeDirService';
 import { initMcpHandler } from './services/mcp';
 import { initMpdHandler } from './services/mpd';
 import { initPlaybackEventBridge } from './services/playbackEventBridge';
@@ -26,8 +23,6 @@ import { initializeQueueStore } from './stores/queueStore';
 import { initializeSettingsStore } from './stores/settingsStore';
 import { initializeShortcutsStore } from './stores/shortcutsStore';
 import { initializeStreamVerificationStore } from './stores/streamVerificationStore';
-import { hydrateThemeStore } from './stores/themeStore';
-import { useUpdaterStore } from './stores/updaterStore';
 
 const initializeStores = () =>
   initializeSettingsStore()
@@ -46,15 +41,8 @@ const initRemoteControl = () =>
 const initLanguage = () =>
   applyLanguageFromSettings().then(() => initLanguageWatcher());
 
-const initThemes = () =>
-  startAdvancedThemeWatcher()
-    .then(() => loadMarketplaceThemes())
-    .then(() => hydrateThemeStore())
-    .then(() => applyThemeFromSettingsIfAny());
-
 const startBackgroundTasks = () => {
   void hydratePluginsFromRegistry();
-  void useUpdaterStore.getState().checkForUpdate();
   void ytdlpEnsureInstalled();
 };
 
@@ -71,7 +59,6 @@ export const initPlayerApp = async (
     .then(() => initPlaybackEventBridge())
     .then(() => initHistoryService())
     .then(() => initLanguage())
-    .then(() => initThemes())
     .then(() => startBackgroundTasks());
 
   root.render(

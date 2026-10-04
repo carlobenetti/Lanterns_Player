@@ -1,6 +1,6 @@
 import { omit } from 'lodash-es';
 
-import type { QueueItem, StreamCandidate } from '@nuclearplayer/model';
+import type { QueueItem, StreamCandidate, Track } from '@nuclearplayer/model';
 import { stripResolutionState } from '@nuclearplayer/model';
 
 import { useQueueStore } from '../../stores/queueStore';
@@ -29,6 +29,12 @@ export class StreamResolution {
       useSoundStore.getState().stop();
     }
     updateItemState(item.id, { status: 'loading', error: undefined });
+
+    const localCandidate = this.localFileCandidate(item.track);
+    if (localCandidate) {
+      await this.startPlayback(item, localCandidate, signal, options);
+      return;
+    }
 
     if (!hasActiveStreamingProvider()) {
       this.failItem(item.id, 'streaming:errors.noProviderAvailable');
@@ -122,6 +128,24 @@ export class StreamResolution {
     playbackManager.startTrack(item, audioSource, {
       autoPlay: options.autoPlay,
     });
+  }
+
+  private localFileCandidate(track: Track): StreamCandidate | undefined {
+    if (!track.localFile) {
+      return undefined;
+    }
+
+    return {
+      id: track.localFile.fileUri,
+      title: track.title,
+      failed: false,
+      source: track.source,
+      stream: {
+        url: track.localFile.fileUri,
+        protocol: 'file',
+        source: track.source,
+      },
+    };
   }
 
   private failItem(itemId: string, errorKey: string): void {
