@@ -12,16 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as HistoryRouteImport } from './routes/history'
-import { Route as SearchRouteImport } from './routes/search'
-import { Route as SourcesRouteImport } from './routes/sources'
-import { Route as FavoritesAlbumsRouteImport } from './routes/favorites/albums'
-import { Route as FavoritesArtistsRouteImport } from './routes/favorites/artists'
+import { Route as NowPlayingRouteImport } from './routes/now-playing'
 import { Route as FavoritesTracksRouteImport } from './routes/favorites/tracks'
 import { Route as PlaylistsIndexRouteImport } from './routes/playlists/index'
 import { Route as PlaylistsPlaylistIdRouteImport } from './routes/playlists/$playlistId'
-import { Route as AlbumProviderIdAlbumIdRouteImport } from './routes/album/$providerId/$albumId'
-import { Route as ArtistProviderIdArtistIdRouteImport } from './routes/artist/$providerId/$artistId'
-import { Route as PlaylistsImportProviderIdRouteImport } from './routes/playlists/import.$providerId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -38,24 +32,9 @@ const HistoryRoute = HistoryRouteImport.update({
   path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SourcesRoute = SourcesRouteImport.update({
-  id: '/sources',
-  path: '/sources',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FavoritesAlbumsRoute = FavoritesAlbumsRouteImport.update({
-  id: '/favorites/albums',
-  path: '/favorites/albums',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FavoritesArtistsRoute = FavoritesArtistsRouteImport.update({
-  id: '/favorites/artists',
-  path: '/favorites/artists',
+const NowPlayingRoute = NowPlayingRouteImport.update({
+  id: '/now-playing',
+  path: '/now-playing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FavoritesTracksRoute = FavoritesTracksRouteImport.update({
@@ -73,69 +52,34 @@ const PlaylistsPlaylistIdRoute = PlaylistsPlaylistIdRouteImport.update({
   path: '/playlists/$playlistId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AlbumProviderIdAlbumIdRoute = AlbumProviderIdAlbumIdRouteImport.update({
-  id: '/album/$providerId/$albumId',
-  path: '/album/$providerId/$albumId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArtistProviderIdArtistIdRoute =
-  ArtistProviderIdArtistIdRouteImport.update({
-    id: '/artist/$providerId/$artistId',
-    path: '/artist/$providerId/$artistId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PlaylistsImportProviderIdRoute =
-  PlaylistsImportProviderIdRouteImport.update({
-    id: '/playlists/import/$providerId',
-    path: '/playlists/import/$providerId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
-  '/search': typeof SearchRoute
-  '/sources': typeof SourcesRoute
-  '/favorites/albums': typeof FavoritesAlbumsRoute
-  '/favorites/artists': typeof FavoritesArtistsRoute
+  '/now-playing': typeof NowPlayingRoute
   '/favorites/tracks': typeof FavoritesTracksRoute
   '/playlists/$playlistId': typeof PlaylistsPlaylistIdRoute
   '/playlists/': typeof PlaylistsIndexRoute
-  '/album/$providerId/$albumId': typeof AlbumProviderIdAlbumIdRoute
-  '/artist/$providerId/$artistId': typeof ArtistProviderIdArtistIdRoute
-  '/playlists/import/$providerId': typeof PlaylistsImportProviderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
-  '/search': typeof SearchRoute
-  '/sources': typeof SourcesRoute
-  '/favorites/albums': typeof FavoritesAlbumsRoute
-  '/favorites/artists': typeof FavoritesArtistsRoute
+  '/now-playing': typeof NowPlayingRoute
   '/favorites/tracks': typeof FavoritesTracksRoute
   '/playlists/$playlistId': typeof PlaylistsPlaylistIdRoute
   '/playlists': typeof PlaylistsIndexRoute
-  '/album/$providerId/$albumId': typeof AlbumProviderIdAlbumIdRoute
-  '/artist/$providerId/$artistId': typeof ArtistProviderIdArtistIdRoute
-  '/playlists/import/$providerId': typeof PlaylistsImportProviderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
-  '/search': typeof SearchRoute
-  '/sources': typeof SourcesRoute
-  '/favorites/albums': typeof FavoritesAlbumsRoute
-  '/favorites/artists': typeof FavoritesArtistsRoute
+  '/now-playing': typeof NowPlayingRoute
   '/favorites/tracks': typeof FavoritesTracksRoute
   '/playlists/$playlistId': typeof PlaylistsPlaylistIdRoute
   '/playlists/': typeof PlaylistsIndexRoute
-  '/album/$providerId/$albumId': typeof AlbumProviderIdAlbumIdRoute
-  '/artist/$providerId/$artistId': typeof ArtistProviderIdArtistIdRoute
-  '/playlists/import/$providerId': typeof PlaylistsImportProviderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -143,62 +87,38 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/history'
-    | '/search'
-    | '/sources'
-    | '/favorites/albums'
-    | '/favorites/artists'
+    | '/now-playing'
     | '/favorites/tracks'
     | '/playlists/$playlistId'
     | '/playlists/'
-    | '/album/$providerId/$albumId'
-    | '/artist/$providerId/$artistId'
-    | '/playlists/import/$providerId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
     | '/history'
-    | '/search'
-    | '/sources'
-    | '/favorites/albums'
-    | '/favorites/artists'
+    | '/now-playing'
     | '/favorites/tracks'
     | '/playlists/$playlistId'
     | '/playlists'
-    | '/album/$providerId/$albumId'
-    | '/artist/$providerId/$artistId'
-    | '/playlists/import/$providerId'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
     | '/history'
-    | '/search'
-    | '/sources'
-    | '/favorites/albums'
-    | '/favorites/artists'
+    | '/now-playing'
     | '/favorites/tracks'
     | '/playlists/$playlistId'
     | '/playlists/'
-    | '/album/$providerId/$albumId'
-    | '/artist/$providerId/$artistId'
-    | '/playlists/import/$providerId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
   HistoryRoute: typeof HistoryRoute
-  SearchRoute: typeof SearchRoute
-  SourcesRoute: typeof SourcesRoute
-  FavoritesAlbumsRoute: typeof FavoritesAlbumsRoute
-  FavoritesArtistsRoute: typeof FavoritesArtistsRoute
+  NowPlayingRoute: typeof NowPlayingRoute
   FavoritesTracksRoute: typeof FavoritesTracksRoute
   PlaylistsPlaylistIdRoute: typeof PlaylistsPlaylistIdRoute
   PlaylistsIndexRoute: typeof PlaylistsIndexRoute
-  AlbumProviderIdAlbumIdRoute: typeof AlbumProviderIdAlbumIdRoute
-  ArtistProviderIdArtistIdRoute: typeof ArtistProviderIdArtistIdRoute
-  PlaylistsImportProviderIdRoute: typeof PlaylistsImportProviderIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -224,32 +144,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sources': {
-      id: '/sources'
-      path: '/sources'
-      fullPath: '/sources'
-      preLoaderRoute: typeof SourcesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/favorites/albums': {
-      id: '/favorites/albums'
-      path: '/favorites/albums'
-      fullPath: '/favorites/albums'
-      preLoaderRoute: typeof FavoritesAlbumsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/favorites/artists': {
-      id: '/favorites/artists'
-      path: '/favorites/artists'
-      fullPath: '/favorites/artists'
-      preLoaderRoute: typeof FavoritesArtistsRouteImport
+    '/now-playing': {
+      id: '/now-playing'
+      path: '/now-playing'
+      fullPath: '/now-playing'
+      preLoaderRoute: typeof NowPlayingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/favorites/tracks': {
@@ -273,27 +172,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlaylistsPlaylistIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/album/$providerId/$albumId': {
-      id: '/album/$providerId/$albumId'
-      path: '/album/$providerId/$albumId'
-      fullPath: '/album/$providerId/$albumId'
-      preLoaderRoute: typeof AlbumProviderIdAlbumIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/artist/$providerId/$artistId': {
-      id: '/artist/$providerId/$artistId'
-      path: '/artist/$providerId/$artistId'
-      fullPath: '/artist/$providerId/$artistId'
-      preLoaderRoute: typeof ArtistProviderIdArtistIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/playlists/import/$providerId': {
-      id: '/playlists/import/$providerId'
-      path: '/playlists/import/$providerId'
-      fullPath: '/playlists/import/$providerId'
-      preLoaderRoute: typeof PlaylistsImportProviderIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -301,16 +179,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
   HistoryRoute: HistoryRoute,
-  SearchRoute: SearchRoute,
-  SourcesRoute: SourcesRoute,
-  FavoritesAlbumsRoute: FavoritesAlbumsRoute,
-  FavoritesArtistsRoute: FavoritesArtistsRoute,
+  NowPlayingRoute: NowPlayingRoute,
   FavoritesTracksRoute: FavoritesTracksRoute,
   PlaylistsPlaylistIdRoute: PlaylistsPlaylistIdRoute,
   PlaylistsIndexRoute: PlaylistsIndexRoute,
-  AlbumProviderIdAlbumIdRoute: AlbumProviderIdAlbumIdRoute,
-  ArtistProviderIdArtistIdRoute: ArtistProviderIdArtistIdRoute,
-  PlaylistsImportProviderIdRoute: PlaylistsImportProviderIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

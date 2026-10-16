@@ -1,29 +1,18 @@
 import type { FC, PropsWithChildren } from 'react';
 import { useCallback, useEffect } from 'react';
 
-import { LoggerProvider, Sound, SoundError } from '@nuclearplayer/hifi';
-import type { TFunction } from '@nuclearplayer/i18n';
-import { useTranslation } from '@nuclearplayer/i18n';
+import { Sound } from '@nuclearplayer/hifi';
 
 import { useCoreSetting } from '../hooks/useCoreSetting';
-import { eventBus } from '../services/eventBus';
+import { audioAnalyser } from '../services/audioAnalyser';
 import { Logger } from '../services/logger';
 import { playbackManager } from '../services/playback';
 import { useQueueStore } from '../stores/queueStore';
 import { useSoundStore } from '../stores/soundStore';
 import { errorMessage } from '../utils/errorMessage';
 
-const describePlaybackError = (error: Error, t: TFunction): string => {
-  if (error instanceof SoundError) {
-    return t(`errors.hifi.${error.code}`, { details: error.details });
-  }
-  return errorMessage(error);
-};
-
 export const SoundProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { t } = useTranslation('streaming');
   const { src, status, seek } = useSoundStore();
-  const [crossfadeMs] = useCoreSetting<number>('playback.crossfadeMs');
   const preload: HTMLAudioElement['preload'] = 'auto';
   const crossOrigin = '' as const;
   const [volume01] = useCoreSetting<number>('playback.volume');
@@ -31,14 +20,10 @@ export const SoundProvider: FC<PropsWithChildren> = ({ children }) => {
   const volumePercent = muted ? 0 : Math.round((volume01 ?? 1) * 100);
 
   useEffect(() => {
-    LoggerProvider.init(Logger.streaming);
-  }, []);
-
-  useEffect(() => {
-    if (crossfadeMs !== undefined) {
-      useSoundStore.getState().setCrossfadeMs(crossfadeMs);
+    if (status === 'playing') {
+      audioAnalyser.resume();
     }
-  }, [crossfadeMs]);
+  }, [status]);
 
   const handleTimeUpdate = useCallback(
     ({ position, duration }: { position: number; duration: number }) => {
@@ -60,27 +45,17 @@ export const SoundProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   }, []);
 
-  const handleSourceInvalid = useCallback(() => {
-    const currentTrack = useQueueStore.getState().getCurrentItem()?.track;
-    if (currentTrack) {
-      eventBus.emit('streamSourceInvalid', currentTrack);
+  const handleError = useCallback((error: Error) => {
+    const message = errorMessage(error);
+    Logger.streaming.error(`Playback error: ${message}`);
+
+    const currentItem = useQueueStore.getState().getCurrentItem();
+    if (currentItem) {
+      useQueueStore
+        .getState()
+        .updateItemState(currentItem.id, { status: 'error', error: message });
     }
   }, []);
-
-  const handleError = useCallback(
-    (error: Error) => {
-      const message = describePlaybackError(error, t);
-      Logger.streaming.error(`Playback error: ${message}`);
-
-      const currentItem = useQueueStore.getState().getCurrentItem();
-      if (currentItem) {
-        useQueueStore
-          .getState()
-          .updateItemState(currentItem.id, { status: 'error', error: message });
-      }
-    },
-    [t],
-  );
 
   return (
     <>
@@ -96,7 +71,7 @@ export const SoundProvider: FC<PropsWithChildren> = ({ children }) => {
           onEnd={handleEnd}
           onCanPlay={handleCanPlay}
           onError={handleError}
-          onSourceInvalid={handleSourceInvalid}
+          onAudioElement={audioAnalyser.attach}
         />
       )}
       {children}

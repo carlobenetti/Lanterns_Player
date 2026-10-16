@@ -4,18 +4,10 @@ import type { QueueItem } from '@nuclearplayer/model';
 
 import { streamResolution } from '../services/streamResolution';
 import { useQueueStore } from '../stores/queueStore';
-import { useStreamRecovery } from './useStreamRecovery';
-
-const buildResolutionKey = (item: QueueItem): string => {
-  const headCandidate = item.track.streamCandidates?.[0];
-  return [item.id, headCandidate?.id, headCandidate?.failed].join(':');
-};
 
 export const useStreamResolution = (): void => {
   const resolutionKeyRef = useRef<string | null>(null);
   const isFirstResolutionRef = useRef(true);
-
-  useStreamRecovery();
 
   useEffect(() => {
     const onCurrentItemChanged = (currentItem: QueueItem | undefined): void => {
@@ -23,7 +15,7 @@ export const useStreamResolution = (): void => {
         return;
       }
 
-      const resolutionKey = buildResolutionKey(currentItem);
+      const resolutionKey = currentItem.id;
       if (resolutionKey === resolutionKeyRef.current) {
         return;
       }

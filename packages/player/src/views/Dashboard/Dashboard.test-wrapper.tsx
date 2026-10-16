@@ -12,23 +12,11 @@ import userEvent from '@testing-library/user-event';
 import App from '../../App';
 import { routeTree } from '../../routeTree.gen';
 import { LOCAL_FOLDER_PROVIDER } from '../../services/localFolders';
-import { providersHost } from '../../services/providersHost';
 import {
   initializePlaylistStore,
   usePlaylistStore,
 } from '../../stores/playlistStore';
-import { useStartupStore } from '../../stores/startupStore';
-import { DashboardProviderBuilder } from '../../test/builders/DashboardProviderBuilder';
 import { PlaylistBuilder } from '../../test/builders/PlaylistBuilder';
-import { PlaylistProviderBuilder } from '../../test/builders/PlaylistProviderBuilder';
-import {
-  EDITORIAL_PLAYLISTS_DASHBOARD,
-  EDITORIAL_PLAYLISTS_WITH_URL,
-  NEW_RELEASES_DASHBOARD,
-  TOP_ALBUMS_DASHBOARD,
-  TOP_ARTISTS_DASHBOARD,
-  TOP_TRACKS_RADIOHEAD,
-} from '../../test/fixtures/dashboard';
 import { resetInMemoryTauriStore } from '../../test/utils/inMemoryTauriStore';
 
 type MountResult = RenderResult & {
@@ -46,22 +34,7 @@ const findCard = (section: HTMLElement, text: string, label: string) => {
 
 export const DashboardWrapper = {
   reset() {
-    providersHost.clear();
     resetInMemoryTauriStore();
-    useStartupStore.setState({
-      isStartingUp: false,
-      startupFinishedAt: undefined,
-      totalStartupTimeMs: undefined,
-      pluginDurations: {},
-    });
-  },
-
-  seedProvider(builder: DashboardProviderBuilder) {
-    providersHost.register(builder.build());
-  },
-
-  seedPlaylistProvider(builder: PlaylistProviderBuilder) {
-    providersHost.register(builder.build());
   },
 
   seedPlaylists(...builders: PlaylistBuilder[]) {
@@ -132,16 +105,6 @@ export const DashboardWrapper = {
     },
   },
 
-  simulateStartupWithProvider(builder: DashboardProviderBuilder) {
-    act(() => {
-      useStartupStore.getState().startStartup();
-    });
-    act(() => {
-      providersHost.register(builder.build());
-      useStartupStore.getState().finishStartup(100);
-    });
-  },
-
   async mount(): Promise<MountResult> {
     const history = createMemoryHistory({ initialEntries: ['/dashboard'] });
     const router = createRouter({ routeTree, history });
@@ -155,118 +118,8 @@ export const DashboardWrapper = {
     return { ...component, router };
   },
 
-  get skeleton() {
-    return screen.queryByTestId('dashboard-skeleton');
-  },
-
   get emptyState() {
     return screen.queryByTestId('dashboard-empty-state');
-  },
-
-  emptyStateAction: {
-    get element() {
-      return screen.queryByTestId('dashboard-empty-state-action');
-    },
-    async click() {
-      await userEvent.click(screen.getByTestId('dashboard-empty-state-action'));
-    },
-  },
-
-  async settingsDialog() {
-    return screen.findByRole('dialog');
-  },
-
-  async pluginsHeading() {
-    return screen.findByRole('heading', { name: 'Plugins' });
-  },
-
-  topTracks: {
-    get heading() {
-      return screen.queryByRole('heading', { name: /top tracks/i });
-    },
-    get table() {
-      return screen.queryByTestId('dashboard-top-tracks');
-    },
-    async findTrack(title: string) {
-      const table = await screen.findByTestId('dashboard-top-tracks');
-      return within(table).findByText(title);
-    },
-  },
-
-  topArtists: {
-    get heading() {
-      return screen.queryByRole('heading', { name: /top artists/i });
-    },
-    artist(name: string) {
-      return {
-        async find() {
-          const section = await screen.findByTestId('dashboard-top-artists');
-          return within(section).findByText(name);
-        },
-        async click() {
-          const section = await screen.findByTestId('dashboard-top-artists');
-          await userEvent.click(findCard(section, name, 'Artist card'));
-        },
-      };
-    },
-  },
-
-  topAlbums: {
-    get heading() {
-      return screen.queryByRole('heading', { name: /top albums/i });
-    },
-    album(title: string) {
-      return {
-        async find() {
-          const section = await screen.findByTestId('dashboard-top-albums');
-          return within(section).findByText(title);
-        },
-        async click() {
-          const section = await screen.findByTestId('dashboard-top-albums');
-          await userEvent.click(findCard(section, title, 'Album card'));
-        },
-      };
-    },
-  },
-
-  editorialPlaylists: {
-    get heading() {
-      return screen.queryByRole('heading', { name: /top playlists/i });
-    },
-    playlist(name: string) {
-      return {
-        async find() {
-          const section = await screen.findByTestId(
-            'dashboard-editorial-playlists',
-          );
-          return within(section).findByText(name);
-        },
-        async click() {
-          const section = await screen.findByTestId(
-            'dashboard-editorial-playlists',
-          );
-          await userEvent.click(findCard(section, name, 'Playlist card'));
-        },
-      };
-    },
-  },
-
-  newReleases: {
-    get heading() {
-      return screen.queryByRole('heading', { name: /new releases/i });
-    },
-    release(title: string) {
-      return {
-        async find() {
-          const section = await screen.findByTestId('dashboard-new-releases');
-          return within(section).findByText(title);
-        },
-        async click() {
-          const section = await screen.findByTestId('dashboard-new-releases');
-          await userEvent.click(findCard(section, title, 'Release card'));
-        },
-      };
-    },
   },
 
   fixtures: {
@@ -275,57 +128,6 @@ export const DashboardWrapper = {
         .withName(name)
         .withOrigin({ provider: LOCAL_FOLDER_PROVIDER, id: folderPath })
         .withTrackCount(2);
-    },
-    topTracksProvider() {
-      return new DashboardProviderBuilder()
-        .withId('acme-dashboard')
-        .withName('Acme Music')
-        .withCapabilities('topTracks')
-        .withFetchTopTracks(async () => TOP_TRACKS_RADIOHEAD);
-    },
-    topTracksAndArtistsProvider() {
-      return new DashboardProviderBuilder()
-        .withId('acme-dashboard')
-        .withName('Acme Music')
-        .withCapabilities('topTracks', 'topArtists')
-        .withFetchTopTracks(async () => TOP_TRACKS_RADIOHEAD)
-        .withFetchTopArtists(async () => TOP_ARTISTS_DASHBOARD);
-    },
-    topAlbumsProvider() {
-      return new DashboardProviderBuilder()
-        .withId('acme-dashboard')
-        .withName('Acme Music')
-        .withCapabilities('topAlbums')
-        .withFetchTopAlbums(async () => TOP_ALBUMS_DASHBOARD);
-    },
-    editorialPlaylistsProvider() {
-      return new DashboardProviderBuilder()
-        .withId('acme-dashboard')
-        .withName('Acme Music')
-        .withCapabilities('editorialPlaylists')
-        .withFetchEditorialPlaylists(async () => EDITORIAL_PLAYLISTS_DASHBOARD);
-    },
-    newReleasesProvider() {
-      return new DashboardProviderBuilder()
-        .withId('acme-dashboard')
-        .withName('Acme Music')
-        .withCapabilities('newReleases')
-        .withFetchNewReleases(async () => NEW_RELEASES_DASHBOARD);
-    },
-    editorialPlaylistsWithUrlProvider() {
-      return new DashboardProviderBuilder()
-        .withId('acme-dashboard')
-        .withName('Acme Music')
-        .withCapabilities('editorialPlaylists')
-        .withFetchEditorialPlaylists(async () => EDITORIAL_PLAYLISTS_WITH_URL);
-    },
-    topArtistsProviderWithoutMetadata() {
-      return new DashboardProviderBuilder()
-        .withId('discovery-dashboard')
-        .withName('Discovery')
-        .withMetadataProviderId(undefined)
-        .withCapabilities('topArtists')
-        .withFetchTopArtists(async () => TOP_ARTISTS_DASHBOARD);
     },
   },
 };

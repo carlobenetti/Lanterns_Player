@@ -16,7 +16,6 @@ import { routeTree } from '../routeTree.gen';
 import { usePlaylistStore } from '../stores/playlistStore';
 import { useQueueStore } from '../stores/queueStore';
 import { PlaylistBuilder } from '../test/builders/PlaylistBuilder';
-import { createStreamVerificationWrapper } from './StreamVerification.test-wrapper';
 
 const user = userEvent.setup();
 
@@ -53,10 +52,6 @@ export const QueueWrapper = {
 
   get emptyState() {
     return screen.queryByTestId('queue-empty-state');
-  },
-
-  get streamVerification() {
-    return createStreamVerificationWrapper(screen.getByTestId('sidebar-right'));
   },
 
   toast: {
@@ -108,61 +103,6 @@ export const QueueWrapper = {
     );
     const removeButton = within(item!).getByTestId('queue-item-remove-button');
     await userEvent.click(removeButton);
-  },
-
-  candidatePopover: {
-    async openFor(title: string) {
-      const queuePanel = await screen.findByTestId('queue-panel');
-      const queueItems = await within(queuePanel).findAllByTestId('queue-item');
-      const item = queueItems.find((itemElement) =>
-        itemElement.textContent?.includes(title),
-      );
-
-      await user.pointer({ keys: '[MouseRight]', target: item! });
-      await screen.findByTestId('queue-item-popover');
-    },
-
-    get element() {
-      return screen.getByTestId('queue-item-popover');
-    },
-
-    get header() {
-      const header = within(this.element).getByTestId('track-header');
-      return {
-        title: within(header).getByTestId('track-header-title').textContent,
-        artist: within(header).getByTestId('track-header-artist').textContent,
-      };
-    },
-
-    get rows() {
-      return within(this.element).getAllByTestId('candidate-row');
-    },
-
-    rowTitle(row: HTMLElement) {
-      return within(row).getByTestId('candidate-row-title').textContent;
-    },
-
-    get candidateTitles() {
-      return this.rows.map((row) => this.rowTitle(row));
-    },
-
-    get selectedCandidate() {
-      const selectedRow = this.rows.find(
-        (row) => row.getAttribute('data-selected') === 'true',
-      );
-      return this.rowTitle(selectedRow!);
-    },
-
-    get emptyState() {
-      return within(this.element).getByTestId('queue-item-popover-empty');
-    },
-
-    async select(title: string) {
-      const row = this.rows.find(
-        (rowElement) => this.rowTitle(rowElement) === title,
-      );
-      await user.click(row!);
-    },
   },
 
   clearButton: {

@@ -2,7 +2,6 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { registerBuiltInCoreSettings } from '../services/coreSettings';
-import { providersHost } from '../services/providersHost';
 import { useHistoryStore } from '../stores/historyStore';
 import { setSetting } from '../stores/settingsStore';
 import type { TauriCommandMocks } from '../test/utils/commandMocks';
@@ -18,7 +17,6 @@ export const createListeningHistoryWrapper = (
     commandMocks.command('historyRecordEvent').mockResolvedValue(ok(null));
     useHistoryStore.setState({ currentPlayId: null });
     QueueWrapper.initQueue([]);
-    providersHost.clear();
     registerBuiltInCoreSettings();
     await setSetting('core.history.enabled', true);
     await setSetting('core.playback.repeat', 'off');

@@ -13,8 +13,8 @@
     "prettier.config.ts"
   ],
   "scripts": {
-    "lint": "eslint '**/*.{js,jsx,ts,tsx}' --ignore-pattern node_modules",
-    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx}' --ignore-pattern node_modules --fix"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
     "prettier": "^3",
@@ -26,6 +26,7 @@
     "@eslint/json": "^2.0.0",
     "@eslint/markdown": "^8.0.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.5.1",
+    "@typescript-eslint/utils": "^8.57.0",
     "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.3",

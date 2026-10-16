@@ -16,6 +16,7 @@ exports[`PlayerBar > (Snapshot) active states render 1`] = `
         >
           <div
             class="border-border bg-muted size-12 shrink-0 overflow-hidden rounded-md border-(length:--border-width)"
+            data-testid="player-now-playing-cover"
           >
             <img
               alt=""
@@ -312,6 +313,7 @@ exports[`PlayerBar > (Snapshot) default render 1`] = `
         >
           <div
             class="border-border bg-muted size-12 shrink-0 overflow-hidden rounded-md border-(length:--border-width)"
+            data-testid="player-now-playing-cover"
           >
             <img
               alt=""
@@ -600,6 +602,7 @@ exports[`PlayerBar > (Snapshot) long metadata truncation 1`] = `
           >
             <div
               class="border-border bg-muted size-12 shrink-0 overflow-hidden rounded-md border-(length:--border-width)"
+              data-testid="player-now-playing-cover"
             >
               <img
                 alt=""
@@ -886,6 +889,7 @@ exports[`PlayerBar > (Snapshot) no artwork fallback 1`] = `
         >
           <div
             class="border-border bg-muted size-12 shrink-0 overflow-hidden rounded-md border-(length:--border-width)"
+            data-testid="player-now-playing-cover"
           >
             <div
               class="text-muted-foreground flex size-full items-center justify-center"

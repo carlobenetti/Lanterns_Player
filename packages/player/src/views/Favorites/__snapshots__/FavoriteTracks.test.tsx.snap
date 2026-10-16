@@ -195,7 +195,7 @@ exports[`FavoriteTracks view > (Snapshot) renders with tracks 1`] = `
                       <input
                         class="border-border focus-visible:ring-ring focus-visible:ring-offset-muted w-full px-3 transition-colors focus-visible:outline-none surface-input placeholder:text-input-foreground/60 h-9 text-sm rounded-l border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                         data-headlessui-state=""
-                        id="input-:r7:"
+                        id="input-:r3:"
                         placeholder="Filter tracks"
                         type="text"
                         value=""
@@ -440,7 +440,7 @@ exports[`FavoriteTracks view > (Snapshot) renders with tracks 1`] = `
                                 data-headlessui-state=""
                                 data-state="closed"
                                 data-testid="track-context-menu-button"
-                                id="radix-:ra:"
+                                id="radix-:r6:"
                                 type="button"
                               >
                                 <svg
@@ -587,7 +587,7 @@ exports[`FavoriteTracks view > (Snapshot) renders with tracks 1`] = `
                                 data-headlessui-state=""
                                 data-state="closed"
                                 data-testid="track-context-menu-button"
-                                id="radix-:rc:"
+                                id="radix-:r8:"
                                 type="button"
                               >
                                 <svg

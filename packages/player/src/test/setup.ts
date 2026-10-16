@@ -33,22 +33,6 @@ vi.mock('@tauri-apps/api/path', () => ({
   normalize: async (p: string) => path.normalize(p),
 }));
 
-vi.mock('esbuild-wasm', () => ({
-  initialize: () => Promise.resolve(),
-  build: () =>
-    Promise.resolve({
-      outputFiles: [
-        {
-          text: 'module.exports = { default: {} };',
-        },
-      ],
-    }),
-}));
-
-vi.mock('esbuild-wasm/esbuild.wasm?url', () => ({
-  default: '/esbuild.wasm',
-}));
-
 vi.mock('@tauri-apps/plugin-os', () => ({
   platform: () => 'linux',
 }));
@@ -162,6 +146,15 @@ const makeAudioContextMock = () => {
         setValueAtTime: vi.fn(),
         linearRampToValueAtTime: vi.fn(),
       },
+    }),
+    createAnalyser: () => ({
+      connect: vi.fn(),
+      disconnect: vi.fn(),
+      fftSize: 2048,
+      frequencyBinCount: 1024,
+      smoothingTimeConstant: 0.8,
+      context: { sampleRate: 44100 },
+      getByteFrequencyData: vi.fn(),
     }),
     destination: {
       connect: vi.fn(),

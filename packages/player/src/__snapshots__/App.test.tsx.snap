@@ -121,45 +121,6 @@ exports[`App > should render snapshot 1`] = `
           </div>
         </div>
         <div
-          class="relative w-full"
-        >
-          <svg
-            aria-hidden="true"
-            class="lucide lucide-search text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="m21 21-4.34-4.34"
-            />
-            <circle
-              cx="11"
-              cy="11"
-              r="8"
-            />
-          </svg>
-          <div
-            class="flex w-full flex-col gap-2"
-          >
-            <input
-              class="border-border focus-visible:ring-ring focus-visible:ring-offset-muted w-full transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none surface-background text-foreground placeholder:text-foreground/60 rounded-md border-(length:--border-width) h-8 px-8"
-              data-headlessui-state=""
-              data-testid="search-box"
-              id="input-:r0:"
-              placeholder="Search"
-              type="text"
-              value=""
-            />
-          </div>
-        </div>
-        <div
           class="flex flex-row items-center justify-end gap-2"
         >
           <div>
@@ -200,7 +161,7 @@ exports[`App > should render snapshot 1`] = `
             aria-label="Toggle theme"
             class="border-border focus:ring-ring focus:ring-offset-muted relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full border-(length:--border-width) transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none data-checked:surface-primary surface-input data-disabled:cursor-not-allowed data-disabled:opacity-50 group justify-self-end"
             data-headlessui-state=""
-            id="headlessui-switch-:r2:"
+            id="headlessui-switch-:r0:"
             role="switch"
             tabindex="0"
             type="button"
@@ -311,6 +272,58 @@ exports[`App > should render snapshot 1`] = `
               class="flex flex-1 flex-col gap-2 overflow-y-auto"
             >
               <a
+                href="/now-playing"
+              >
+                <div>
+                  <div
+                    class="flex w-full items-center overflow-hidden rounded-md border-(length:--border-width) border-transparent"
+                    data-testid="sidebar-navigation-item"
+                  >
+                    <div
+                      class="flex size-8 shrink-0 items-center justify-center"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="lucide lucide-audio-lines"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M2 10v3"
+                        />
+                        <path
+                          d="M6 6v11"
+                        />
+                        <path
+                          d="M10 3v18"
+                        />
+                        <path
+                          d="M14 8v7"
+                        />
+                        <path
+                          d="M18 5v13"
+                        />
+                        <path
+                          d="M22 10v3"
+                        />
+                      </svg>
+                    </div>
+                    <span
+                      class="text-sm whitespace-nowrap transition-opacity duration-150 opacity-100"
+                    >
+                      Now playing
+                    </span>
+                  </div>
+                </div>
+              </a>
+              <a
                 aria-current="page"
                 class="active"
                 data-status="active"
@@ -349,50 +362,6 @@ exports[`App > should render snapshot 1`] = `
                       class="text-sm whitespace-nowrap transition-opacity duration-150 opacity-100"
                     >
                       Dashboard
-                    </span>
-                  </div>
-                </div>
-              </a>
-              <a
-                href="/favorites/albums"
-              >
-                <div>
-                  <div
-                    class="flex w-full items-center overflow-hidden rounded-md border-(length:--border-width) border-transparent"
-                    data-testid="sidebar-navigation-item"
-                  >
-                    <div
-                      class="flex size-8 shrink-0 items-center justify-center"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        class="lucide lucide-disc"
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r="10"
-                        />
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r="2"
-                        />
-                      </svg>
-                    </div>
-                    <span
-                      class="text-sm whitespace-nowrap transition-opacity duration-150 opacity-100"
-                    >
-                      Favorite albums
                     </span>
                   </div>
                 </div>
@@ -440,48 +409,6 @@ exports[`App > should render snapshot 1`] = `
                       class="text-sm whitespace-nowrap transition-opacity duration-150 opacity-100"
                     >
                       Favorite tracks
-                    </span>
-                  </div>
-                </div>
-              </a>
-              <a
-                href="/favorites/artists"
-              >
-                <div>
-                  <div
-                    class="flex w-full items-center overflow-hidden rounded-md border-(length:--border-width) border-transparent"
-                    data-testid="sidebar-navigation-item"
-                  >
-                    <div
-                      class="flex size-8 shrink-0 items-center justify-center"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        class="lucide lucide-user"
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
-                        />
-                        <circle
-                          cx="12"
-                          cy="7"
-                          r="4"
-                        />
-                      </svg>
-                    </div>
-                    <span
-                      class="text-sm whitespace-nowrap transition-opacity duration-150 opacity-100"
-                    >
-                      Favorite artists
                     </span>
                   </div>
                 </div>
@@ -574,61 +501,6 @@ exports[`App > should render snapshot 1`] = `
                       class="text-sm whitespace-nowrap transition-opacity duration-150 opacity-100"
                     >
                       History
-                    </span>
-                  </div>
-                </div>
-              </a>
-              <a
-                href="/sources"
-              >
-                <div>
-                  <div
-                    class="flex w-full items-center overflow-hidden rounded-md border-(length:--border-width) border-transparent"
-                    data-testid="sidebar-navigation-item"
-                  >
-                    <div
-                      class="flex size-8 shrink-0 items-center justify-center"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        class="lucide lucide-cable"
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M17 19a1 1 0 0 1-1-1v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a1 1 0 0 1-1 1z"
-                        />
-                        <path
-                          d="M17 21v-2"
-                        />
-                        <path
-                          d="M19 14V6.5a1 1 0 0 0-7 0v11a1 1 0 0 1-7 0V10"
-                        />
-                        <path
-                          d="M21 21v-2"
-                        />
-                        <path
-                          d="M3 5V3"
-                        />
-                        <path
-                          d="M4 10a2 2 0 0 1-2-2V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2z"
-                        />
-                        <path
-                          d="M7 5V3"
-                        />
-                      </svg>
-                    </div>
-                    <span
-                      class="text-sm whitespace-nowrap transition-opacity duration-150 opacity-100"
-                    >
-                      Sources
                     </span>
                   </div>
                 </div>
@@ -774,16 +646,6 @@ exports[`App > should render snapshot 1`] = `
                       >
                         Use the Add folder button at the top to turn a music folder into a playlist, or install a plugin to see top tracks and new releases here.
                       </p>
-                    </div>
-                    <div>
-                      <button
-                        class="inline-flex cursor-pointer items-center rounded-md whitespace-nowrap transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50 surface-primary border-border shadow-shadow hover:translate-x-shadow-x hover:translate-y-shadow-y border-(length:--border-width) hover:shadow-none h-10 px-4 py-2"
-                        data-headlessui-state=""
-                        data-testid="dashboard-empty-state-action"
-                        type="button"
-                      >
-                        Browse plugins
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -935,6 +797,7 @@ exports[`App > should render snapshot 1`] = `
           >
             <div
               class="border-border bg-muted size-12 shrink-0 overflow-hidden rounded-md border-(length:--border-width)"
+              data-testid="player-now-playing-cover"
             >
               <div
                 class="text-muted-foreground flex size-full items-center justify-center"
@@ -1200,13 +1063,13 @@ exports[`App > should render snapshot 1`] = `
                     </div>
                   </div>
                   <input
-                    aria-labelledby=":r3:-label"
+                    aria-labelledby=":r1:-label"
                     aria-valuemax="100"
                     aria-valuemin="0"
                     aria-valuenow="100"
                     aria-valuetext="100"
                     class="absolute inset-0 z-[1] h-6 w-full appearance-none opacity-0 cursor-pointer"
-                    id=":r3:"
+                    id=":r1:"
                     max="100"
                     min="0"
                     step="1"

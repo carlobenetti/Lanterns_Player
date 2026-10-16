@@ -6,32 +6,12 @@ import { invoke as __TAURI_INVOKE } from "@tauri-apps/api/core";
 /** Commands */
 export const commands = {
 	isFlatpak: () => __TAURI_INVOKE<boolean>("is_flatpak"),
-	copyDirRecursive: (from: string, to: string) => typedError<null, string>(__TAURI_INVOKE("copy_dir_recursive", { from, to })),
-	extractZip: (zipPath: string, destPath: string) => typedError<null, string>(__TAURI_INVOKE("extract_zip", { zipPath, destPath })),
-	downloadFile: (url: string, destPath: string) => typedError<null, string>(__TAURI_INVOKE("download_file", { url, destPath })),
-	httpFetch: (request: HttpRequest) => typedError<HttpResponse, string>(__TAURI_INVOKE("http_fetch", { request })),
-	ytdlpSearch: (query: string, maxResults: number | null) => typedError<YtdlpSearchResult[], string>(__TAURI_INVOKE("ytdlp_search", { query, maxResults })),
-	ytdlpGetStream: (url: string | null, videoId: string | null) => typedError<YtdlpStreamInfo, string>(__TAURI_INVOKE("ytdlp_get_stream", { url, videoId })),
-	ytdlpGetPlaylist: (url: string) => typedError<YtdlpPlaylistInfo, string>(__TAURI_INVOKE("ytdlp_get_playlist", { url })),
 	getStartupLogs: () => __TAURI_INVOKE<StartupLogEntry[]>("get_startup_logs"),
-	mcpStart: () => typedError<number, string>(__TAURI_INVOKE("mcp_start")),
-	mcpStop: () => typedError<null, string>(__TAURI_INVOKE("mcp_stop")),
-	httpApiStart: () => typedError<HttpApiStartResult, string>(__TAURI_INVOKE("http_api_start")),
-	httpApiStop: () => typedError<null, string>(__TAURI_INVOKE("http_api_stop")),
-	mpdStart: () => typedError<number, string>(__TAURI_INVOKE("mpd_start")),
-	mpdStop: () => typedError<null, string>(__TAURI_INVOKE("mpd_stop")),
 	streamServerPort: () => __TAURI_INVOKE<number>("stream_server_port"),
 	scanMusicFolder: (path: string) => typedError<LocalFolderScan, string>(__TAURI_INVOKE("scan_music_folder", { path })),
 	savePlaylistCover: (playlistId: string, sourcePath: string) => typedError<string, string>(__TAURI_INVOKE("save_playlist_cover", { playlistId, sourcePath })),
 	resolveMusicFolders: (path: string) => typedError<MusicFolderSelection, string>(__TAURI_INVOKE("resolve_music_folders", { path })),
 	readAudioTags: (paths: string[]) => typedError<LocalAudioTags[], string>(__TAURI_INVOKE("read_audio_tags", { paths })),
-	ytdlpEnsureInstalled: () => typedError<boolean, string>(__TAURI_INVOKE("ytdlp_ensure_installed")),
-	discordConnect: () => typedError<null, string>(__TAURI_INVOKE("discord_connect")),
-	discordDisconnect: () => typedError<null, string>(__TAURI_INVOKE("discord_disconnect")),
-	discordSetActivity: (track: TrackPresence) => typedError<boolean, string>(__TAURI_INVOKE("discord_set_activity", { track })),
-	discordClearActivity: () => typedError<boolean, string>(__TAURI_INVOKE("discord_clear_activity")),
-	bridgeRespond: (response: BridgeResponse) => typedError<null, string>(__TAURI_INVOKE("bridge_respond", { response })),
-	bridgeNotify: (notification: BridgeNotification) => typedError<null, string>(__TAURI_INVOKE("bridge_notify", { notification })),
 	historyRecordEvent: (event: PlayEvent) => typedError<null, string>(__TAURI_INVOKE("history_record_event", { event })),
 	historyFetch: (page: PageRequest) => typedError<Page<HistoryEntry>, string>(__TAURI_INVOKE("history_fetch", { page })),
 	historyDeleteRange: (range: TimeRange) => typedError<null, string>(__TAURI_INVOKE("history_delete_range", { range })),
@@ -46,16 +26,6 @@ export const commands = {
 };
 
 /* Types */
-export type BridgeNotification = {
-	subsystem: string,
-};
-
-export type BridgeResponse = {
-	traceId: string,
-} & BridgeResponseBody;
-
-export type BridgeResponseBody = { status: "success"; data: unknown } | { status: "error"; error: string };
-
 export type DailyListeningTime = {
 	date: string,
 	value: number,
@@ -82,24 +52,6 @@ export type HistoryEntry = {
 
 export type HourlyListeningTime = {
 	values: number[],
-};
-
-export type HttpApiStartResult = {
-	port: number,
-	lan_address: string | null,
-};
-
-export type HttpRequest = {
-	url: string,
-	method: string | null,
-	headers: { [key in string]: string } | null,
-	body: string | null,
-};
-
-export type HttpResponse = {
-	status: number,
-	headers: { [key in string]: string },
-	body: string,
 };
 
 export type LocalAudioFile = {
@@ -186,15 +138,6 @@ export type TopTrack = {
 	plays: number,
 };
 
-export type TrackPresence = {
-	title: string,
-	artist: string,
-	album: string | null,
-	artworkUrl: string | null,
-	startTimestamp: number | null,
-	endTimestamp: number | null,
-};
-
 export type TrackSnapshot = {
 	title: string,
 	artists: string[],
@@ -203,46 +146,6 @@ export type TrackSnapshot = {
 	artworkUrl: string | null,
 	provider: string,
 	providerId: string,
-};
-
-export type YtdlpPlaylistEntry = {
-	id: string,
-	title: string,
-	duration: number | null,
-	thumbnails: YtdlpThumbnail[],
-	channel: string | null,
-};
-
-export type YtdlpPlaylistInfo = {
-	id: string,
-	title: string,
-	entries: YtdlpPlaylistEntry[],
-};
-
-export type YtdlpSearchResult = {
-	id: string,
-	title: string,
-	duration: number | null,
-	thumbnail: string | null,
-	channel: string | null,
-};
-
-export type YtdlpStreamInfo = {
-	stream_url: string,
-	duration: number | null,
-	title: string | null,
-	container: string | null,
-	codec: string | null,
-	album: string | null,
-	artists: string[],
-	album_artists: string[],
-	upload_date: string | null,
-};
-
-export type YtdlpThumbnail = {
-	url: string,
-	width: number | null,
-	height: number | null,
 };
 
 /* Tauri Specta runtime */

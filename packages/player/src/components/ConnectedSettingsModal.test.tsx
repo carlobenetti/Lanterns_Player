@@ -28,9 +28,7 @@ describe('ConnectedSettingsModal', () => {
       'Appearance',
       'General',
       'History',
-      'Integrations',
       'Playback',
-      'Plugins',
     ]);
     expect(
       ConnectedSettingsModalWrapper.appTab('shortcuts').element,
@@ -64,14 +62,14 @@ describe('ConnectedSettingsModal', () => {
   it('selecting a category after an App tab returns to the general view with that section', async () => {
     await ConnectedSettingsModalWrapper.mount();
 
-    await ConnectedSettingsModalWrapper.appTab('app-plugins').click();
-    await ConnectedSettingsModalWrapper.category('plugins').click();
+    await ConnectedSettingsModalWrapper.appTab('logs').click();
+    await ConnectedSettingsModalWrapper.category('history').click();
 
     expect(
       await ConnectedSettingsModalWrapper.viewTitle('General'),
     ).toBeInTheDocument();
     expect(
-      ConnectedSettingsModalWrapper.section('plugins'),
+      ConnectedSettingsModalWrapper.section('history'),
     ).toBeInTheDocument();
   });
 });

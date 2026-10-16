@@ -28,7 +28,7 @@ export default defineConfig(({ command }) => {
           fileName: 'index',
         },
         rollupOptions: {
-          external: ['react', 'react-dom', 'hls.js'],
+          external: ['react', 'react-dom'],
           output: {
             globals: {
               react: 'React',

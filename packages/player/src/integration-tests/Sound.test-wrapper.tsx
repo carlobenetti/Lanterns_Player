@@ -91,9 +91,6 @@ export const SoundWrapper = {
   seekTo(seconds: number) {
     useSoundStore.getState().seekTo(seconds);
   },
-  setCrossfadeMs(ms: number) {
-    useSoundStore.getState().setCrossfadeMs(ms);
-  },
   getAudios(): NodeListOf<HTMLAudioElement> {
     return document.querySelectorAll('audio');
   },

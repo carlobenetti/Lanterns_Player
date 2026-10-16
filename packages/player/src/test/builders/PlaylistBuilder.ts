@@ -93,6 +93,17 @@ export class PlaylistBuilder {
     return this;
   }
 
+  withLocalTrackFiles(): this {
+    this.playlist.items = this.playlist.items.map((item) => ({
+      ...item,
+      track: {
+        ...item.track,
+        localFile: { fileUri: `C:/Music/${item.track.title}.mp3` },
+      },
+    }));
+    return this;
+  }
+
   withTrackArtworks(artworkUrls: string[]): this {
     this.playlist.items = artworkUrls.map((url, index) => ({
       id: uuidv4(),

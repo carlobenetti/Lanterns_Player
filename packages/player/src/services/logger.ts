@@ -14,23 +14,12 @@ export type ScopedLogger = {
 
 export const LOG_SCOPES = [
   'app',
-  'dashboard',
-  'discord',
-  'discovery',
-  'mcp',
-  'mpd',
   'playback',
   'streaming',
-  'plugins',
-  'http',
   'fs',
   'history',
   'settings',
-  'themes',
-  'updates',
   'queue',
-  'http-api',
-  'metadata',
   'playlists',
 ] as const;
 
@@ -62,18 +51,6 @@ export const Logger = LOG_SCOPES.reduce(
   },
   {} as Record<LogScope, ScopedLogger>,
 ) as LoggerType;
-
-const sanitizePluginId = (pluginId: string): string => {
-  if (!pluginId || typeof pluginId !== 'string') {
-    return 'unknown';
-  }
-  return pluginId.replace(/[[\]\n\r]/g, '_');
-};
-
-export const createPluginLogger = (pluginId: string): ScopedLogger => {
-  const sanitized = sanitizePluginId(pluginId);
-  return createScopedLogger(`plugin:${sanitized}`);
-};
 
 const truncateIfNeeded = (text: string): string => {
   if (text.length > MAX_LOG_LENGTH) {

@@ -1,1 +1,0 @@
-export { StatChip } from './StatChip';

@@ -1,15 +1,9 @@
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { produce } from 'immer';
-import partition from 'lodash-es/partition';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-import type {
-  Queue,
-  QueueItem,
-  StreamCandidate,
-  Track,
-} from '@nuclearplayer/model';
+import type { Queue, QueueItem, Track } from '@nuclearplayer/model';
 import { stripResolutionState } from '@nuclearplayer/model';
 
 import { eventBus } from '../services/eventBus';
@@ -34,9 +28,6 @@ type QueueStore = Queue & {
   clearQueue: () => void;
   reorder: (fromIndex: number, toIndex: number) => void;
   updateItemState: (id: string, updates: Partial<QueueItem>) => void;
-  updateCandidate: (itemId: string, candidate: StreamCandidate) => void;
-  removeCandidate: (itemId: string, candidateId: string) => void;
-  selectCandidate: (itemId: string, candidateId: string) => void;
   goToNext: () => void;
   goToPrevious: () => void;
   goToIndex: (index: number) => void;
@@ -277,60 +268,6 @@ export const useQueueStore = create<QueueStore>((set, get) => ({
       );
     },
   ),
-
-  updateCandidate: (itemId: string, candidate: StreamCandidate) => {
-    const item = get().getItemById(itemId);
-    if (!item) {
-      return;
-    }
-    const { track } = item;
-    get().updateItemState(itemId, {
-      track: {
-        ...track,
-        streamCandidates: track.streamCandidates?.map((current) => {
-          if (current.id === candidate.id) {
-            return candidate;
-          }
-          return current;
-        }),
-      },
-    });
-  },
-
-  removeCandidate: (itemId: string, candidateId: string) => {
-    const item = get().getItemById(itemId);
-    if (!item) {
-      return;
-    }
-    const { track } = item;
-    get().updateItemState(itemId, {
-      track: {
-        ...track,
-        streamCandidates: track.streamCandidates?.filter(
-          (current) => current.id !== candidateId,
-        ),
-      },
-    });
-  },
-
-  selectCandidate: (itemId: string, candidateId: string) => {
-    const item = get().getItemById(itemId);
-    if (!item) {
-      return;
-    }
-    const { track } = item;
-    const [selected, rest] = partition(
-      track.streamCandidates ?? [],
-      (candidate) => candidate.id === candidateId,
-    );
-    const retried = selected.map((candidate) => ({
-      ...candidate,
-      failed: false,
-    }));
-    get().updateItemState(itemId, {
-      track: { ...track, streamCandidates: [...retried, ...rest] },
-    });
-  },
 
   goToNext: withPersistence(() => {
     const state = get();

@@ -1,4 +1,4 @@
-import { act, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 
 import { AudioSource } from '@nuclearplayer/hifi';
 
@@ -11,7 +11,6 @@ vi.mock('@tauri-apps/api/core', () => ({
 }));
 
 const srcA: AudioSource = { url: '/a.mp3', protocol: 'http' };
-const srcB: AudioSource = { url: '/b.mp3', protocol: 'http' };
 
 describe('Sound component', () => {
   it('mounts app and renders Sound only after src is set', async () => {
@@ -56,26 +55,6 @@ describe('Sound component', () => {
       expect(audio?.currentTime).toBe(37);
     });
   });
-
-  it('crossfades on src change when crossfadeMs > 0', async () => {
-    await SoundWrapper.mount();
-    SoundWrapper.setCrossfadeMs(40);
-    SoundWrapper.setSrc(srcA);
-    SoundWrapper.play();
-
-    vi.useFakeTimers();
-    SoundWrapper.setSrc(srcB);
-    await act(async () => {
-      await vi.runOnlyPendingTimersAsync();
-    });
-    vi.useRealTimers();
-
-    const audios = SoundWrapper.getAudios();
-    const sources = [...audios].flatMap((a) =>
-      [...a.querySelectorAll('source')].map((s) => s.getAttribute('src')),
-    );
-    expect(sources.every((s) => s === '/b.mp3')).toBe(true);
-  });
 });
 
 describe('Repeat mode behavior when a track ends', () => {
@@ -85,7 +64,6 @@ describe('Repeat mode behavior when a track ends', () => {
       status: 'stopped',
       seek: 0,
       duration: 0,
-      crossfadeMs: 0,
       preload: 'auto',
       crossOrigin: '',
     });

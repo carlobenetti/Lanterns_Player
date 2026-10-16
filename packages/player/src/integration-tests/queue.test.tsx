@@ -1,18 +1,9 @@
 import { screen } from '@testing-library/react';
 
-import { providersHost } from '../services/providersHost';
 import { usePlaylistStore } from '../stores/playlistStore';
 import { useQueueStore } from '../stores/queueStore';
-import { useSettingsStore } from '../stores/settingsStore';
-import { MetadataProviderBuilder } from '../test/builders/MetadataProviderBuilder';
-import {
-  createMockCandidate,
-  createMockStream,
-  StreamingProviderBuilder,
-} from '../test/builders/StreamingProviderBuilder';
 import { createQueueItem } from '../test/fixtures/queue';
 import { resetInMemoryTauriStore } from '../test/utils/inMemoryTauriStore';
-import { AlbumWrapper } from '../views/Album/Album.test-wrapper';
 import { QueueWrapper } from './Queue.test-wrapper';
 
 vi.mock('@tauri-apps/api/core', () => ({
@@ -37,27 +28,10 @@ const resetQueueStore = () => {
 describe('Queue', () => {
   beforeEach(() => {
     resetQueueStore();
-
-    useSettingsStore.getState().setValue('playback.streamExpiryMs', 3600000);
-    useSettingsStore.getState().setValue('playback.streamResolutionRetries', 3);
-
-    providersHost.clear();
-
-    providersHost.register(
-      MetadataProviderBuilder.albumDetailsProvider().build(),
-    );
-
-    const streamingProvider = new StreamingProviderBuilder()
-      .withSearchForTrack(async (artist, title) => [
-        createMockCandidate(`yt-${title}`, `${artist} - ${title}`),
-      ])
-      .withGetStreamUrl(async (candidateId) => createMockStream(candidateId))
-      .build();
-    providersHost.register(streamingProvider);
   });
 
   it('should display an empty queue', async () => {
-    await AlbumWrapper.mountDirectly();
+    await QueueWrapper.mount();
     const items = QueueWrapper.getItems();
     expect(items).toHaveLength(0);
     expect(await screen.findByText('Queue is empty')).toBeInTheDocument();
@@ -66,40 +40,12 @@ describe('Queue', () => {
     ).toBeInTheDocument();
   });
 
-  it('should add album tracks to the queue', async () => {
-    await AlbumWrapper.mountDirectly();
-    await AlbumWrapper.addTrackToQueueByTitle('Countdown');
-    await QueueWrapper.waitForItems(1);
-    expect(QueueWrapper.getItems()).toMatchInlineSnapshot(`
-      [
-        {
-          "artist": "John Coltrane",
-          "duration": undefined,
-          "error": undefined,
-          "title": "Countdown",
-        },
-      ]
-    `);
-
-    expect(useQueueStore.getState().items[0].track.artists)
-      .toMatchInlineSnapshot(`
-      [
-        {
-          "name": "John Coltrane",
-          "roles": [],
-          "source": {
-            "id": "artist-1",
-            "provider": "test-metadata-provider",
-          },
-        },
-      ]
-    `);
-  });
-
   it('should select track on double click', async () => {
-    await AlbumWrapper.mountDirectly();
-    await AlbumWrapper.addTrackToQueueByTitle('Countdown');
-    await AlbumWrapper.addTrackToQueueByTitle('Giant Steps');
+    QueueWrapper.initQueue([
+      createQueueItem('Countdown'),
+      createQueueItem('Giant Steps'),
+    ]);
+    await QueueWrapper.mount();
 
     await QueueWrapper.selectItem('Giant Steps');
 
@@ -107,10 +53,9 @@ describe('Queue', () => {
   });
 
   it('should remove track when clicking X button', async () => {
-    await AlbumWrapper.mountDirectly();
-    await AlbumWrapper.addTrackToQueueByTitle('Countdown');
+    QueueWrapper.initQueue([createQueueItem('Countdown')]);
+    await QueueWrapper.mount();
     await QueueWrapper.waitForItems(1);
-    expect(QueueWrapper.getItems()).toHaveLength(1);
     await QueueWrapper.removeItemByTitle('Countdown');
     await QueueWrapper.waitForItems(0);
     expect(QueueWrapper.getItems()).toHaveLength(0);

@@ -9,148 +9,18 @@
     "core:default",
     "dialog:allow-open",
     "dialog:allow-save",
-    {
-      "identifier": "fs:allow-write-text-file",
-      "allow": [
-        {
-          "path": "$APPDATA/themes/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads/**/*"
-        }
-      ]
-    },
-    "log:default",
-    {
-      "identifier": "fs:allow-exists",
-      "allow": [
-        {
-          "path": "$APPDATA/themes"
-        },
-        {
-          "path": "$APPDATA/themes/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins"
-        },
-        {
-          "path": "$APPDATA/plugins/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads/**/*"
-        }
-      ]
-    },
-    {
-      "identifier": "fs:allow-read-dir",
-      "allow": [
-        {
-          "path": "$APPDATA/themes"
-        },
-        {
-          "path": "$APPDATA/themes/store"
-        },
-        {
-          "path": "$APPDATA/plugins/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads/**/*"
-        }
-      ]
-    },
-    {
-      "identifier": "fs:allow-mkdir",
-      "allow": [
-        {
-          "path": "$APPDATA/themes"
-        },
-        {
-          "path": "$APPDATA/themes/store"
-        },
-        {
-          "path": "$APPDATA/plugins"
-        },
-        {
-          "path": "$APPDATA/plugins/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads/**/*"
-        }
-      ]
-    },
-    {
-      "identifier": "fs:allow-watch",
-      "allow": [
-        {
-          "path": "$APPDATA/themes"
-        },
-        {
-          "path": "$APPDATA/themes/store"
-        },
-        {
-          "path": "$APPDATA/playlists"
-        }
-      ]
-    },
-    {
-      "identifier": "fs:allow-read-file",
-      "allow": [
-        {
-          "path": "$APPDATA/themes/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads/**/*"
-        }
-      ]
-    },
-    {
-      "identifier": "fs:allow-read-text-file",
-      "allow": [
-        {
-          "path": "$APPDATA/themes/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads/**/*"
-        }
-      ]
-    },
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file",
     {
       "identifier": "fs:allow-remove",
       "allow": [
         {
-          "path": "$APPDATA/themes/store/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/**/*"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads"
-        },
-        {
-          "path": "$APPDATA/plugins/.downloads/**/*"
+          "path": "$APPDATA/playlists/*"
         }
       ]
     },
+    "log:default",
     "store:default",
-    "upload:default",
     "opener:default",
     {
       "identifier": "opener:allow-reveal-item-in-dir",

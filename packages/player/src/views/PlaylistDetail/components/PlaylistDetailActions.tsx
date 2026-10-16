@@ -39,6 +39,9 @@ export const PlaylistDetailActions: FC<PlaylistDetailActionsProps> = ({
     <>
       <PlaylistActions
         tracks={tracks}
+        onPlay={
+          isFolderPlaylist ? () => navigate({ to: '/now-playing' }) : undefined
+        }
         menuItems={
           <>
             <Popover.Item

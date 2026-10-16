@@ -147,7 +147,7 @@ exports[`PlaylistDetail view > (Snapshot) renders playlist detail with tracks 1`
                     aria-expanded="false"
                     class="cursor-pointer"
                     data-headlessui-state=""
-                    id="headlessui-popover-button-:r5:"
+                    id="headlessui-popover-button-:r3:"
                   >
                     <button
                       class="inline-flex cursor-pointer items-center rounded-md whitespace-nowrap transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50 surface-muted border-border shadow-shadow hover:translate-x-shadow-x hover:translate-y-shadow-y border-(length:--border-width) hover:shadow-none size-10 justify-center"
@@ -211,7 +211,7 @@ exports[`PlaylistDetail view > (Snapshot) renders playlist detail with tracks 1`
                       <input
                         class="border-border focus-visible:ring-ring focus-visible:ring-offset-muted w-full px-3 transition-colors focus-visible:outline-none surface-input placeholder:text-input-foreground/60 h-9 text-sm rounded-l border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                         data-headlessui-state=""
-                        id="input-:r7:"
+                        id="input-:r5:"
                         placeholder="Filter tracks"
                         type="text"
                         value=""
@@ -504,7 +504,7 @@ exports[`PlaylistDetail view > (Snapshot) renders playlist detail with tracks 1`
                                 data-headlessui-state=""
                                 data-state="closed"
                                 data-testid="track-context-menu-button"
-                                id="radix-:ra:"
+                                id="radix-:r8:"
                                 type="button"
                               >
                                 <svg
@@ -700,7 +700,7 @@ exports[`PlaylistDetail view > (Snapshot) renders playlist detail with tracks 1`
                                 data-headlessui-state=""
                                 data-state="closed"
                                 data-testid="track-context-menu-button"
-                                id="radix-:rc:"
+                                id="radix-:ra:"
                                 type="button"
                               >
                                 <svg

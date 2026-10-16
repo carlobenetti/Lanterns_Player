@@ -12,12 +12,14 @@ type PlaylistActionsProps = {
   tracks: Track[];
   menuItems?: ReactNode;
   className?: string;
+  onPlay?: () => void;
 };
 
 export const PlaylistActions: FC<PlaylistActionsProps> = ({
   tracks,
   menuItems,
   className,
+  onPlay,
 }) => {
   const { t } = useTranslation('playlists');
   const { addToQueue, clearQueue } = useQueueActions();
@@ -26,6 +28,7 @@ export const PlaylistActions: FC<PlaylistActionsProps> = ({
     clearQueue();
     addToQueue(tracks);
     playbackManager.play();
+    onPlay?.();
   };
 
   const handleAddToQueue = () => {

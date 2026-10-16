@@ -1,11 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  createAlbumRef,
-  createArtistRef,
-  createProviderRef,
-  createTrack,
-} from '../test/fixtures/favorites';
+import { createProviderRef, createTrack } from '../test/fixtures/favorites';
 import { resetInMemoryTauriStore } from '../test/utils/inMemoryTauriStore';
 import { initializeFavoritesStore, useFavoritesStore } from './favoritesStore';
 
@@ -18,18 +13,14 @@ describe('useFavoritesStore', () => {
     resetInMemoryTauriStore();
     useFavoritesStore.setState({
       tracks: [],
-      albums: [],
-      artists: [],
       loaded: false,
     });
   });
 
   describe('initial state', () => {
-    it('starts with empty arrays and loaded: false', () => {
+    it('starts with no tracks and loaded: false', () => {
       const state = useFavoritesStore.getState();
       expect(state.tracks).toEqual([]);
-      expect(state.albums).toEqual([]);
-      expect(state.artists).toEqual([]);
       expect(state.loaded).toBe(false);
     });
   });
@@ -146,146 +137,16 @@ describe('useFavoritesStore', () => {
     });
   });
 
-  describe('albums', () => {
-    it('adds an album with timestamp', async () => {
-      const albumRef = createAlbumRef('spotify', 'album-1');
-      await useFavoritesStore.getState().addAlbum(albumRef);
-
-      const state = useFavoritesStore.getState();
-      expect(state.albums).toHaveLength(1);
-      expect(state.albums[0].ref).toEqual(albumRef);
-      expect(state.albums[0].addedAtIso).toBe(MOCK_ISO_DATE);
-    });
-
-    it('does not add duplicate album', async () => {
-      const albumRef = createAlbumRef('spotify', 'album-1');
-      await useFavoritesStore.getState().addAlbum(albumRef);
-      await useFavoritesStore.getState().addAlbum(albumRef);
-
-      const state = useFavoritesStore.getState();
-      expect(state.albums).toHaveLength(1);
-    });
-
-    it('removes album by provider + id', async () => {
-      const albumRef = createAlbumRef('spotify', 'album-1');
-      await useFavoritesStore.getState().addAlbum(albumRef);
-
-      await useFavoritesStore
-        .getState()
-        .removeAlbum(createProviderRef('spotify', 'album-1'));
-
-      const state = useFavoritesStore.getState();
-      expect(state.albums).toHaveLength(0);
-    });
-
-    it('removeAlbum does nothing if not found', async () => {
-      const albumRef = createAlbumRef('spotify', 'album-1');
-      await useFavoritesStore.getState().addAlbum(albumRef);
-
-      await useFavoritesStore
-        .getState()
-        .removeAlbum(createProviderRef('spotify', 'album-2'));
-
-      const state = useFavoritesStore.getState();
-      expect(state.albums).toHaveLength(1);
-    });
-
-    it('isAlbumFavorite returns correct value', async () => {
-      const albumRef = createAlbumRef('spotify', 'album-1');
-      await useFavoritesStore.getState().addAlbum(albumRef);
-
-      expect(
-        useFavoritesStore
-          .getState()
-          .isAlbumFavorite(createProviderRef('spotify', 'album-1')),
-      ).toBe(true);
-
-      expect(
-        useFavoritesStore
-          .getState()
-          .isAlbumFavorite(createProviderRef('spotify', 'album-2')),
-      ).toBe(false);
-    });
-  });
-
-  describe('artists', () => {
-    it('adds an artist with timestamp', async () => {
-      const artistRef = createArtistRef('spotify', 'artist-1');
-      await useFavoritesStore.getState().addArtist(artistRef);
-
-      const state = useFavoritesStore.getState();
-      expect(state.artists).toHaveLength(1);
-      expect(state.artists[0].ref).toEqual(artistRef);
-      expect(state.artists[0].addedAtIso).toBe(MOCK_ISO_DATE);
-    });
-
-    it('does not add duplicate artist', async () => {
-      const artistRef = createArtistRef('spotify', 'artist-1');
-      await useFavoritesStore.getState().addArtist(artistRef);
-      await useFavoritesStore.getState().addArtist(artistRef);
-
-      const state = useFavoritesStore.getState();
-      expect(state.artists).toHaveLength(1);
-    });
-
-    it('removes artist by provider + id', async () => {
-      const artistRef = createArtistRef('spotify', 'artist-1');
-      await useFavoritesStore.getState().addArtist(artistRef);
-
-      await useFavoritesStore
-        .getState()
-        .removeArtist(createProviderRef('spotify', 'artist-1'));
-
-      const state = useFavoritesStore.getState();
-      expect(state.artists).toHaveLength(0);
-    });
-
-    it('removeArtist does nothing if not found', async () => {
-      const artistRef = createArtistRef('spotify', 'artist-1');
-      await useFavoritesStore.getState().addArtist(artistRef);
-
-      await useFavoritesStore
-        .getState()
-        .removeArtist(createProviderRef('spotify', 'artist-2'));
-
-      const state = useFavoritesStore.getState();
-      expect(state.artists).toHaveLength(1);
-    });
-
-    it('isArtistFavorite returns correct value', async () => {
-      const artistRef = createArtistRef('spotify', 'artist-1');
-      await useFavoritesStore.getState().addArtist(artistRef);
-
-      expect(
-        useFavoritesStore
-          .getState()
-          .isArtistFavorite(createProviderRef('spotify', 'artist-1')),
-      ).toBe(true);
-
-      expect(
-        useFavoritesStore
-          .getState()
-          .isArtistFavorite(createProviderRef('spotify', 'artist-2')),
-      ).toBe(false);
-    });
-  });
-
   describe('persistence', () => {
     it('loadFromDisk restores state and sets loaded: true', async () => {
       const trackRef = createTrack('spotify', 'track-1');
-      const albumRef = createAlbumRef('spotify', 'album-1');
-      const artistRef = createArtistRef('spotify', 'artist-1');
 
       await useFavoritesStore.getState().addTrack(trackRef);
-      await useFavoritesStore.getState().addAlbum(albumRef);
-      await useFavoritesStore.getState().addArtist(artistRef);
 
       await new Promise((resolve) => setTimeout(resolve, 10));
 
       useFavoritesStore.setState({
         tracks: [],
-        albums: [],
-        artists: [],
         loaded: false,
       });
 
@@ -294,10 +155,6 @@ describe('useFavoritesStore', () => {
       const state = useFavoritesStore.getState();
       expect(state.tracks).toHaveLength(1);
       expect(state.tracks[0].ref.title).toBe('Track track-1');
-      expect(state.albums).toHaveLength(1);
-      expect(state.albums[0].ref.title).toBe('Album album-1');
-      expect(state.artists).toHaveLength(1);
-      expect(state.artists[0].ref.name).toBe('Artist artist-1');
       expect(state.loaded).toBe(true);
     });
 
@@ -313,8 +170,6 @@ describe('useFavoritesStore', () => {
 
       useFavoritesStore.setState({
         tracks: [],
-        albums: [],
-        artists: [],
         loaded: false,
       });
 

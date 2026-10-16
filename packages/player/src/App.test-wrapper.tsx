@@ -2,7 +2,6 @@ import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { useLayoutStore } from './stores/layoutStore';
-import { useStartupStore } from './stores/startupStore';
 
 export const AppWrapper = {
   async toggleLeftSidebar() {
@@ -32,6 +31,5 @@ export const AppWrapper = {
       leftSidebar: { isCollapsed: false, width: 200 },
       rightSidebar: { isCollapsed: false, width: 200 },
     });
-    useStartupStore.setState({ isStartingUp: false });
   },
 };

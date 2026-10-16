@@ -9,8 +9,8 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": false,
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": []
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/*.test.tsx"]
+  "exclude": ["node_modules", "dist"]
 }

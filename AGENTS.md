@@ -10,28 +10,21 @@ Nuclear is a free, open-source music player without ads or tracking. Search for 
 
 - `@nuclearplayer/player` - Main Tauri app (React + Rust)
 - `@nuclearplayer/ui` - Shared UI components
-- `@nuclearplayer/plugin-sdk` - Plugin system (published to npm)
+- `@nuclearplayer/plugin-sdk` - Shared types only (settings, events, favorites) and the `useSetting` hook. The plugin system itself was removed from this fork
 - `@nuclearplayer/model` - Data model
 - `@nuclearplayer/themes` - Theming system
-- `@nuclearplayer/hifi` - Advanced HTML5 audio component
+- `@nuclearplayer/hifi` - HTML5 audio component (plays local files served over HTTP)
 - `@nuclearplayer/tailwind-config` - Shared Tailwind config
 - `@nuclearplayer/eslint-config` - Shared linting rules
 - `@nuclearplayer/i18n` - Internationalization
 - `@nuclearplayer/storybook` - Component demos
-- `@nuclearplayer/videos` - Remotion videos rendered from UI components
-- `@nuclearplayer/tools` - Build and maintenance utilities
-- `@nuclearplayer/docs` - Documentation
-- `@nuclearplayer/website` - Project website (Astro)
 
 ## Commands
 
 ```bash
 # Development
 pnpm dev                    # Run player in dev mode
-pnpm dev:remote             # Same, but binds Vite to 0.0.0.0 so the remote control UI is reachable from other devices
 pnpm storybook              # Run Storybook
-pnpm --filter @nuclearplayer/videos dev      # Run the Remotion Studio
-pnpm --filter @nuclearplayer/videos render   # Render a video to packages/videos/out
 
 # Build
 pnpm build                  # Build all packages
@@ -141,36 +134,10 @@ When adding a new component to `@nuclearplayer/ui`:
 - **Toasts**: Sonner
 - **Dates**: Luxon
 - **Utilities**: lodash-es (use individual imports: `import isEqual from 'lodash-es/isEqual'`)
-- **HTTP**: Native fetch via ApiClient base class (no axios)
 
-### Adding New Domains
+### No plugins or integrations
 
-A "domain" is a feature area exposed to plugins (e.g., settings, queue, favorites). When adding a new domain:
-
-1. **Types** (`packages/plugin-sdk/src/types/myDomain.ts`)
-   - Define the `MyDomainHost` interface (the contract between player and SDK)
-   - Export any related types plugins will use
-
-2. **API class** (`packages/plugin-sdk/src/api/myDomain.ts`)
-   - Create a class that wraps the host and exposes methods to plugins
-   - Add to `NuclearAPI` constructor in `packages/plugin-sdk/src/api/index.ts`
-
-3. **Store** (`packages/player/src/stores/myDomainStore.ts`)
-   - Zustand store holding the domain state
-   - Persists to disk via `@tauri-apps/plugin-store` if needed
-
-4. **Host** (`packages/player/src/services/myDomainHost.ts`)
-   - Implements the `MyDomainHost` interface
-   - Bridges the SDK API to the Zustand store
-   - Passed to `NuclearAPI` when initializing plugins
-
-### External API Clients
-
-Live in `packages/player/src/apis/`. Use `ApiClient` base class (fetch→json→Zod).
-
-- Validate external data with Zod schemas
-- Export singleton instances
-- One class per external service
+This fork plays local folders only. Plugins, online providers (search, artist/album pages, streaming, discovery, dashboard widgets) and integrations (Nuclear Jam, MCP, MPD, Discord) were removed on purpose. Do not reintroduce them.
 
 ### Internationalization
 
@@ -297,15 +264,10 @@ packages/ui/src/components/Badge/
 
 The Tauri backend lives in `packages/player/src-tauri/src/`. Modules:
 
-- `bridge/` - bidirectional RPC. Lets Rust servers call into the frontend (`Bridge::call` emits a `bridge:request` event, frontend replies via the `bridge_respond` command).
-- `http_api/` - Axum REST + SSE server for Nuclear Jam remote control
-- `mcp/` - MCP server exposing player functions as tools to LLM clients
-- `mpd/` - MPD-protocol TCP server for clients like ncmpcpp
-- `stream_server.rs` - local audio proxy adding CORS + Range so the browser can play blocked streams
-- `http.rs` - `http_fetch` command, a CORS-bypassing HTTP proxy for the frontend
-- `ytdlp.rs` / `ytdlp_setup.rs` - yt-dlp subprocess wrapper; auto-downloads the binary
-- `discord.rs` - Discord Rich Presence
-- `commands.rs` - filesystem helpers (zip, download, flatpak detection)
+- `stream_server.rs` - local HTTP server that serves audio files from disk with CORS + Range support
+- `local_library.rs` - scans music folders and reads audio tags/covers
+- `history/`, `db.rs` - listening history (SQLite)
+- `commands.rs` - flatpak detection
 - `net.rs`, `setup.rs`, `logging.rs` - port binding, log plugin config, startup log ring buffer
 - `lib.rs` - declares modules, registers all commands, runs `init_*` in `.setup()`. `main.rs` - binary entry, env fixups.
 
@@ -338,40 +300,10 @@ Assume TanStack Router routes regenerate on dev - don't regenerate manually.
 
 ## Changelog
 
-`packages/player/changelog.json` is the source of truth for the in-app "What's New" tab and auto-generated GitHub release notes.
+`packages/player/changelog.json` is the source of truth for the in-app "What's New" tab. Entries are written in Brazilian Portuguese.
 
 When building a user-facing feature, fix, or improvement, add an entry to the top of the array according to the format you find there.
 
 ## Releasing
 
-### Nuclear Player
-
-Releases are triggered by git tags. The workflow builds for macOS (arm64/x64), Linux, and Windows. Release notes are auto-generated from `packages/player/changelog.json`.
-
-```bash
-# 1. Bump versions, update the appstream metainfo, commit, and tag
-pnpm release:prepare X.Y.Z
-
-# 2. Push the tag
-git push origin player@X.Y.Z
-```
-
-`release:prepare` does everything that's needed for a release. Do not bump versions or edit any files by hand when preparing a release.
-
-The `release-player.yml` workflow creates a GitHub release with platform binaries.
-
-### Plugin SDK
-
-Published to npm via the `release-plugin-sdk.yml` workflow.
-
-```bash
-# 1. Update version in packages/plugin-sdk/package.json
-# 2. Commit the version bump
-git add packages/plugin-sdk/package.json && git commit -m "plugin-sdk@X.Y.Z"
-
-# 3. Tag and push
-git tag plugin-sdk@X.Y.Z
-git push origin plugin-sdk@X.Y.Z
-```
-
-The workflow builds with `build:npm`, runs tests, and publishes to npm.
+There is no release pipeline. Build installers locally with `pnpm tauri build`. Upstream Nuclear packaging (Flatpak, Snap, AUR, Winget, Homebrew), the npm publishing of the plugin SDK, the website, docs and promo videos were removed on purpose. Do not reintroduce them.

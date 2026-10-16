@@ -3,8 +3,6 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useAudioEvents } from './hooks/useAudioEvents';
 import { useAudioLoader } from './hooks/useAudioLoader';
 import { useAudioSeek } from './hooks/useAudioSeek';
-import { useHlsSource } from './hooks/useHlsSource';
-import { useMseSource } from './hooks/useMseSource';
 import { usePlaybackStatus } from './hooks/usePlaybackStatus';
 import { useStartPosition } from './hooks/useStartPosition';
 import { SoundProps } from './types';
@@ -21,16 +19,19 @@ export const Sound: React.FC<SoundProps> = ({
   onLoadStart,
   onCanPlay,
   onError,
-  onSourceInvalid,
+  onAudioElement,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useAudioSeek(audioRef, seek);
   useStartPosition(audioRef, src);
   useAudioLoader(audioRef, src);
-  useHlsSource(audioRef, src);
-  useMseSource(audioRef, src, onError, onSourceInvalid);
   usePlaybackStatus(audioRef, status, src.url, onError);
+
+  useEffect(() => {
+    onAudioElement?.(audioRef.current);
+    return () => onAudioElement?.(null);
+  }, [onAudioElement]);
 
   useEffect(() => {
     const audio = audioRef.current;

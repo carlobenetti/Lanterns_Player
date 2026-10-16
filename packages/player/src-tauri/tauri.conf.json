@@ -38,8 +38,8 @@
   "bundle": {
     "active": true,
     "category": "Music",
-    "shortDescription": "Music streaming app for your desktop",
-    "longDescription": "Nuclear is a free, open-source music player without ads or tracking. Search for any song or artist, build playlists, and start listening.",
+    "shortDescription": "Local music folder player",
+    "longDescription": "Lanterns Player plays the music folders on your computer. Each folder becomes a playlist. Based on Nuclear.",
     "copyright": "Copyright 2025-2026 nukeop",
     "homepage": "https://nuclearplayer.com",
     "createUpdaterArtifacts": false,

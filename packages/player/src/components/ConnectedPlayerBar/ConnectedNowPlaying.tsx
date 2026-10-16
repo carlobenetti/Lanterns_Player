@@ -21,8 +21,6 @@ export const ConnectedNowPlaying: FC = () => {
   const artwork = pickArtwork(track?.artwork, 'thumbnail', 64);
   const title = track?.title ?? t('noTrackPlaying');
   const artist = track?.artists[0]?.name ?? '';
-  const artistSource = track?.artists[0]?.source;
-  const album = track?.album;
 
   const handleToggleFavorite = () => {
     if (!track) {
@@ -40,35 +38,7 @@ export const ConnectedNowPlaying: FC = () => {
       title={title}
       artist={artist}
       coverUrl={artwork?.url}
-      onArtistClick={
-        artist
-          ? () => {
-              if (artistSource) {
-                navigate({
-                  to: '/artist/$providerId/$artistId',
-                  params: {
-                    providerId: artistSource.provider,
-                    artistId: artistSource.id,
-                  },
-                });
-              } else {
-                navigate({ to: '/search', search: { q: artist } });
-              }
-            }
-          : undefined
-      }
-      onTitleClick={
-        album
-          ? () =>
-              navigate({
-                to: '/album/$providerId/$albumId',
-                params: {
-                  providerId: album.source.provider,
-                  albumId: album.source.id,
-                },
-              })
-          : undefined
-      }
+      onCoverClick={track ? () => navigate({ to: '/now-playing' }) : undefined}
       action={
         track && (
           <FavoriteButton

@@ -1,8 +1,3 @@
-import type { FC } from 'react';
-
-export type SettingSource =
-  { type: 'core' } | { type: 'plugin'; pluginId: string; pluginName?: string };
-
 export type SettingCategory = string;
 
 export type BooleanWidget = { type: 'toggle' };
@@ -38,7 +33,6 @@ export type BooleanSettingDefinition = {
   kind: 'boolean';
   default?: boolean;
   hidden?: boolean;
-  source?: SettingSource;
   widget?: BooleanWidget;
 };
 
@@ -50,7 +44,6 @@ export type NumberSettingDefinition = {
   kind: 'number';
   default?: number;
   hidden?: boolean;
-  source?: SettingSource;
   widget?: NumberWidget;
   min?: number;
   max?: number;
@@ -68,7 +61,6 @@ export type StringSettingDefinition = {
   kind: 'string';
   default?: string;
   hidden?: boolean;
-  source?: SettingSource;
   widget?: StringWidget;
   format?: StringFormat;
   pattern?: string;
@@ -87,28 +79,14 @@ export type EnumSettingDefinition = {
   options: EnumOption[];
   default?: string;
   hidden?: boolean;
-  source?: SettingSource;
   widget?: EnumWidget;
-};
-
-export type CustomSettingDefinition = {
-  id: string;
-  title: string;
-  description?: string;
-  category: SettingCategory;
-  kind: 'custom';
-  widgetId: string;
-  default?: SettingValue;
-  hidden?: boolean;
-  source?: SettingSource;
 };
 
 export type SettingDefinition =
   | BooleanSettingDefinition
   | NumberSettingDefinition
   | StringSettingDefinition
-  | EnumSettingDefinition
-  | CustomSettingDefinition;
+  | EnumSettingDefinition;
 
 export type JsonSerializable =
   | string
@@ -120,46 +98,11 @@ export type JsonSerializable =
 
 export type SettingValue = JsonSerializable | undefined;
 
-export type CustomWidgetProps<API = unknown> = {
-  value: SettingValue | undefined;
-  setValue: (value: SettingValue) => void;
-  definition: CustomSettingDefinition;
-  api: API;
-};
-
-export type CustomWidgetComponent<API = unknown> = FC<CustomWidgetProps<API>>;
-
-export type SettingsRegistration = {
-  settings: SettingDefinition[];
-};
-
-export type SettingsRegistrationResult = {
-  registered: string[];
-};
-
-export type WidgetRegistry = {
-  register(
-    pluginId: string,
-    widgetId: string,
-    component: CustomWidgetComponent,
-  ): void;
-  unregister(pluginId: string, widgetId: string): void;
-  get(pluginId: string, widgetId: string): CustomWidgetComponent | undefined;
-};
-
 export type SettingsHost = {
-  register(defs: SettingDefinition[]): Promise<SettingsRegistrationResult>;
   get<T extends SettingValue = SettingValue>(
     id: string,
   ): Promise<T | undefined>;
   set<T extends SettingValue = SettingValue>(
-    id: string,
-    value: T,
-  ): Promise<void>;
-  getGlobal<T extends SettingValue = SettingValue>(
-    id: string,
-  ): Promise<T | undefined>;
-  setGlobal<T extends SettingValue = SettingValue>(
     id: string,
     value: T,
   ): Promise<void>;

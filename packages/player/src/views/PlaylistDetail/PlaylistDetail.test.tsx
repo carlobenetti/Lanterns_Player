@@ -4,20 +4,11 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, type Mock } from 'vitest';
 
-import type { PlaylistItem } from '@nuclearplayer/model';
-
 import { PlayerBarWrapper } from '../../integration-tests/PlayerBar.test-wrapper';
 import { QueueWrapper } from '../../integration-tests/Queue.test-wrapper';
-import { providersHost } from '../../services/providersHost';
+import { LOCAL_FOLDER_PROVIDER } from '../../services/localFolders';
 import { useQueueStore } from '../../stores/queueStore';
-import { useStartupStore } from '../../stores/startupStore';
-import { MetadataProviderBuilder } from '../../test/builders/MetadataProviderBuilder';
 import { PlaylistBuilder } from '../../test/builders/PlaylistBuilder';
-import {
-  createMockCandidate,
-  createMockStream,
-  StreamingProviderBuilder,
-} from '../../test/builders/StreamingProviderBuilder';
 import { resetInMemoryTauriStore } from '../../test/utils/inMemoryTauriStore';
 import { mockUuid } from '../../test/utils/mockUuid';
 import { PlaylistDetailWrapper } from './PlaylistDetail.test-wrapper';
@@ -56,8 +47,6 @@ describe('PlaylistDetail view', () => {
     mockUuid.reset();
     resetInMemoryTauriStore();
     useQueueStore.setState({ items: [], currentIndex: 0 });
-    useStartupStore.setState({ isStartingUp: false });
-    providersHost.clear();
     PlaylistDetailWrapper.seedPlaylist(defaultPlaylist());
     (dialog.save as Mock).mockResolvedValue(null);
     toastError.mockClear();
@@ -127,14 +116,7 @@ describe('PlaylistDetail view', () => {
   });
 
   it('adds all tracks to queue and plays', async () => {
-    providersHost.register(
-      new StreamingProviderBuilder()
-        .withSearchForTrack(async (artist: string, title: string) => [
-          createMockCandidate(`candidate-${title}`, `${artist} - ${title}`),
-        ])
-        .build(),
-    );
-
+    PlaylistDetailWrapper.seedPlaylist(defaultPlaylist().withLocalTrackFiles());
     await PlaylistDetailWrapper.mount('test-playlist');
 
     await PlaylistDetailWrapper.playButton.click();
@@ -148,67 +130,19 @@ describe('PlaylistDetail view', () => {
     });
   });
 
-  it('asks the streaming provider for fresh streams even when the playlist contains previously resolved candidates', async () => {
-    const staleItem: PlaylistItem = {
-      id: 'stale-item-1',
-      addedAtIso: new Date().toISOString(),
-      track: {
-        title: 'Paranoid Android',
-        artists: [{ name: 'Radiohead', roles: ['primary'] }],
-        source: { provider: 'test', id: 'paranoid-android' },
-        streamCandidates: [
-          {
-            id: 'stale-candidate',
-            title: 'Paranoid Android',
-            failed: false,
-            source: { provider: 'yt', id: 'stale-yt-id' },
-            stream: {
-              url: 'https://stale.example.com/expired.m4a?token=dead',
-              protocol: 'https',
-              source: { provider: 'yt', id: 'stale-yt-id' },
-            },
-            lastResolvedAtIso: new Date(Date.now() - 1000).toISOString(),
-          },
-        ],
-      },
-    };
-
+  it('opens Now playing after playing a folder playlist', async () => {
     PlaylistDetailWrapper.seedPlaylist(
       new PlaylistBuilder()
-        .withId('stale-playlist')
-        .withName('OK Computer')
-        .withItems([staleItem]),
+        .withId('folder-playlist')
+        .withName('Chill')
+        .withOrigin({ provider: LOCAL_FOLDER_PROVIDER, id: 'C:/Music/Chill' })
+        .withTrackNames(['Giant Steps', 'So What']),
     );
+    await PlaylistDetailWrapper.mount('folder-playlist');
 
-    providersHost.register(
-      MetadataProviderBuilder.albumDetailsProvider().build(),
-    );
-    const searchForTrack = vi.fn(async (artist: string, title: string) => [
-      createMockCandidate(`fresh-${title}`, `${artist} - ${title}`),
-    ]);
-    const getStreamUrl = vi.fn(async (candidateId: string) =>
-      createMockStream(candidateId, { mimeType: 'audio/mpeg' }),
-    );
-    providersHost.register(
-      new StreamingProviderBuilder()
-        .withSearchForTrack(searchForTrack)
-        .withGetStreamUrl(getStreamUrl)
-        .build(),
-    );
-
-    await PlaylistDetailWrapper.mount('stale-playlist');
     await PlaylistDetailWrapper.playButton.click();
 
-    await waitFor(() => {
-      expect(searchForTrack).toHaveBeenCalledWith(
-        'Radiohead',
-        'Paranoid Android',
-        undefined,
-      );
-    });
-    await waitFor(() => {
-      expect(getStreamUrl).toHaveBeenCalledWith('fresh-Paranoid Android');
-    });
+    expect(await PlaylistDetailWrapper.nowPlayingView()).toBeInTheDocument();
   });
 
   it('shows empty state when playlist has no tracks', async () => {

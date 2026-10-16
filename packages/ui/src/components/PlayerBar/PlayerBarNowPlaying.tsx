@@ -11,6 +11,7 @@ type PlayerBarNowPlayingProps = {
   action?: ReactNode;
   onTitleClick?: () => void;
   onArtistClick?: () => void;
+  onCoverClick?: () => void;
 };
 
 export const PlayerBarNowPlaying: FC<PlayerBarNowPlayingProps> = ({
@@ -21,9 +22,17 @@ export const PlayerBarNowPlaying: FC<PlayerBarNowPlayingProps> = ({
   action,
   onTitleClick,
   onArtistClick,
+  onCoverClick,
 }) => (
   <div className={cn('flex min-w-0 items-center gap-3', className)}>
-    <div className="border-border bg-muted size-12 shrink-0 overflow-hidden rounded-md border-(length:--border-width)">
+    <div
+      className={cn(
+        'border-border bg-muted size-12 shrink-0 overflow-hidden rounded-md border-(length:--border-width)',
+        { 'cursor-pointer transition-transform hover:scale-105': onCoverClick },
+      )}
+      data-testid="player-now-playing-cover"
+      onClick={onCoverClick}
+    >
       {coverUrl ? (
         <img
           src={coverUrl}

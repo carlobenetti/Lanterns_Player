@@ -1,14 +1,12 @@
 import { createRootRoute } from '@tanstack/react-router';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import {
-  CableIcon,
-  DiscIcon,
+  AudioLinesIcon,
   GaugeIcon,
   HistoryIcon,
   ListMusicIcon,
   MusicIcon,
   SettingsIcon,
-  UserIcon,
 } from 'lucide-react';
 import { useEffect } from 'react';
 
@@ -28,7 +26,6 @@ import {
   QueueHeaderActions,
 } from '../components/ConnectedQueuePanel';
 import { ConnectedSettingsModal } from '../components/ConnectedSettingsModal';
-import { ConnectedStreamVerification } from '../components/ConnectedStreamVerification';
 import { ConnectedTitleBar } from '../components/ConnectedTitleBar';
 import { ConnectedTopBar } from '../components/ConnectedTopBar';
 import { FlatpakWarningBanner } from '../components/FlatpakWarningBanner';
@@ -37,7 +34,6 @@ import { StreamResolver } from '../components/StreamResolver';
 import { GlobalShortcuts } from '../shortcuts';
 import { useLayoutStore } from '../stores/layoutStore';
 import { useSettingsModalStore } from '../stores/settingsModalStore';
-import { useStartupStore } from '../stores/startupStore';
 
 const RootComponent = () => {
   const { t } = useTranslation('navigation');
@@ -51,7 +47,6 @@ const RootComponent = () => {
     setRightSidebarWidth,
   } = useLayoutStore();
   const openSettings = useSettingsModalStore((state) => state.open);
-  const isStartingUp = useStartupStore((state) => state.isStartingUp);
   useEffect(() => {
     const window = getCurrentWindow();
     window.show().then(() => window.setFocus());
@@ -64,7 +59,7 @@ const RootComponent = () => {
         <FlatpakWarningBanner />
         <ConnectedTopBar />
       </div>
-      {!isStartingUp && <StreamResolver />}
+      <StreamResolver />
       <SoundProvider>
         <PlayerWorkspace>
           <PlayerWorkspace.LeftSidebar
@@ -76,24 +71,19 @@ const RootComponent = () => {
             <SidebarNavigation isCompact={leftSidebar.isCollapsed}>
               <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
                 <SidebarNavigationItem
+                  to="/now-playing"
+                  icon={<AudioLinesIcon />}
+                  label={t('nowPlaying')}
+                />
+                <SidebarNavigationItem
                   to="/dashboard"
                   icon={<GaugeIcon />}
                   label={t('dashboard')}
                 />
                 <SidebarNavigationItem
-                  to="/favorites/albums"
-                  icon={<DiscIcon />}
-                  label={t('favoriteAlbums')}
-                />
-                <SidebarNavigationItem
                   to="/favorites/tracks"
                   icon={<MusicIcon />}
                   label={t('favoriteTracks')}
-                />
-                <SidebarNavigationItem
-                  to="/favorites/artists"
-                  icon={<UserIcon />}
-                  label={t('favoriteArtists')}
                 />
                 <SidebarNavigationItem
                   to="/playlists"
@@ -104,11 +94,6 @@ const RootComponent = () => {
                   to="/history"
                   icon={<HistoryIcon />}
                   label={t('history')}
-                />
-                <SidebarNavigationItem
-                  to="/sources"
-                  icon={<CableIcon />}
-                  label={t('sources')}
                 />
               </div>
               <SidebarNavigationItem
@@ -129,7 +114,6 @@ const RootComponent = () => {
             onWidthChange={setRightSidebarWidth}
             onToggle={toggleRightSidebar}
             headerActions={<QueueHeaderActions />}
-            footer={<ConnectedStreamVerification />}
           >
             <ConnectedQueuePanel isCollapsed={rightSidebar.isCollapsed} />
           </PlayerWorkspace.RightSidebar>

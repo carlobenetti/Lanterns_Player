@@ -1,5 +1,61 @@
 [
   {
+    "date": "2026-10-14T13:00",
+    "description": "Saiu a opção Crossfade das configurações: ela aparecia, mas não fazia nada. Também saíram do projeto o site, a documentação e os vídeos de divulgação do Nuclear original, os pacotes de instalação dele (Flatpak, Snap, AUR, Winget, Homebrew) e o que sobrava do sistema de configurações de plugins. O instalador agora se gera no próprio computador.",
+    "type": "chore",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Minimalismo",
+        "color": "yellow"
+      }
+    ]
+  },
+  {
+    "date": "2026-10-14T12:00",
+    "description": "Faxina por dentro: saíram o motor de streaming online (HLS/MSE) do áudio, as traduções de telas que não existem mais, os favoritos de álbuns e artistas que ninguém usava e permissões de pastas que sobraram dos temas. O app ficou cerca de um terço menor (o código principal caiu de 1,86 MB para 1,27 MB) e abre carregando menos coisa. Nada muda no uso.",
+    "type": "chore",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Minimalismo",
+        "color": "yellow"
+      },
+      {
+        "label": "Desempenho",
+        "color": "green"
+      }
+    ]
+  },
+  {
+    "date": "2026-10-14T00:00",
+    "description": "O app agora é só um player de pastas do computador. Saíram os plugins (aba Plugins e loja), a tela Sources, a Busca, as páginas de Artista e Álbum, os álbuns e artistas favoritos, os widgets online do Dashboard, o modo Discovery, a escolha de fontes de stream e o download automático do yt-dlp. Também saíram as integrações: controle pelo celular (Nuclear Jam e o botão de QR code), servidor MCP, servidor MPD e Discord. Nada disso é mais carregado quando o app abre.",
+    "type": "chore",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Minimalismo",
+        "color": "yellow"
+      }
+    ]
+  },
+  {
+    "date": "2026-10-14T00:00",
+    "description": "Nova tela Tocando agora: capa grande, nome da música e do artista, um visualizador de espectro que pula de verdade com o som, barra de progresso e controles com um botão de play redondo e grande. Abre pelo menu lateral, clicando na capa da barra de baixo ou automaticamente ao dar play numa pasta. A fila continua à direita, como uma playlist.",
+    "type": "feature",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Tocando agora",
+        "color": "green"
+      },
+      {
+        "label": "Visual",
+        "color": "cyan"
+      }
+    ]
+  },
+  {
     "date": "2026-10-04T00:00",
     "description": "Saiu o ícone de palmeira do canto da tela, que abria um painel escondido de ferramentas de desenvolvedor. O app fica mais limpo e um pouco mais leve.",
     "type": "chore",

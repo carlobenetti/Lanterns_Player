@@ -42,12 +42,6 @@ export default defineConfig(() => ({
     warmup: {
       clientFiles: ['./src/main.tsx', './src/initPlayerApp.tsx'],
     },
-    proxy: {
-      '/api': {
-        target: 'http://localhost:4120',
-        changeOrigin: true,
-      },
-    },
   },
   test: {
     globals: true,

@@ -23,8 +23,6 @@ const labels = {
   repeatOff: 'Repeat: off',
   repeatAll: 'Repeat: all',
   repeatOne: 'Repeat: one',
-  discoveryOn: 'Discovery: on',
-  discoveryOff: 'Discovery: off',
 };
 
 export const Default: Story = {
@@ -53,7 +51,6 @@ export const Default: Story = {
             onPrevious={noop}
             onShuffleToggle={noop}
             onRepeatToggle={noop}
-            showDiscovery={false}
           />
         }
         right={<PlayerBar.Volume defaultValue={75} />}
@@ -83,15 +80,12 @@ export const ActiveStates: Story = {
             isPlaying
             isShuffleActive
             repeatMode="all"
-            isDiscoveryActive
-            showDiscovery
             labels={labels}
             onPlayPause={noop}
             onNext={noop}
             onPrevious={noop}
             onShuffleToggle={noop}
             onRepeatToggle={noop}
-            onDiscoveryToggle={noop}
           />
         }
         right={<PlayerBar.Volume defaultValue={60} />}
@@ -123,7 +117,6 @@ export const NoArtwork: Story = {
             onPrevious={noop}
             onShuffleToggle={noop}
             onRepeatToggle={noop}
-            showDiscovery={false}
           />
         }
         right={<PlayerBar.Volume defaultValue={30} />}
@@ -156,7 +149,6 @@ export const LongMetadata: Story = {
             onPrevious={noop}
             onShuffleToggle={noop}
             onRepeatToggle={noop}
-            showDiscovery={false}
           />
         }
         right={<PlayerBar.Volume defaultValue={50} />}

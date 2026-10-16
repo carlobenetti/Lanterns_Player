@@ -20,8 +20,6 @@ describe('FavoriteTracks view', () => {
     resetInMemoryTauriStore();
     useFavoritesStore.setState({
       tracks: [],
-      albums: [],
-      artists: [],
       loaded: true,
     });
   });

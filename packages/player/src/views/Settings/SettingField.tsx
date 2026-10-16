@@ -7,7 +7,6 @@ import type {
   SettingValue,
 } from '@nuclearplayer/plugin-sdk';
 
-import { CustomWidgetField } from './CustomWidgetField';
 import { InfoField } from './InfoField';
 import { NumberInputField } from './NumberInputField';
 import { SelectField } from './SelectField';
@@ -27,16 +26,6 @@ export const SettingField: FC<SettingFieldProps> = ({
   value,
   setValue,
 }) => {
-  if (definition.kind === 'custom') {
-    return (
-      <CustomWidgetField
-        definition={definition}
-        value={value}
-        setValue={setValue}
-      />
-    );
-  }
-
   const {
     title: label,
     description,

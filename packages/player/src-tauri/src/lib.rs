@@ -1,21 +1,13 @@
-pub mod bridge;
 pub mod commands;
 pub mod db;
-pub mod discord;
 pub mod history;
-pub mod http;
-pub mod http_api;
 pub mod local_library;
 pub mod logging;
-pub mod mcp;
-pub mod mpd;
 pub mod net;
 pub mod pagination;
 pub mod profile;
 mod setup;
 pub mod stream_server;
-pub mod ytdlp;
-pub mod ytdlp_setup;
 
 // Maximizes the window when running as a non-steam app in steam
 #[cfg(target_os = "linux")]
@@ -39,32 +31,12 @@ fn typescript_export_config() -> specta_typescript::Typescript {
 fn specta_builder() -> tauri_specta::Builder<tauri::Wry> {
     tauri_specta::Builder::<tauri::Wry>::new().commands(tauri_specta::collect_commands![
         commands::is_flatpak,
-        commands::copy_dir_recursive,
-        commands::extract_zip,
-        commands::download_file,
-        http::http_fetch,
-        ytdlp::ytdlp_search,
-        ytdlp::ytdlp_get_stream,
-        ytdlp::ytdlp_get_playlist,
         logging::get_startup_logs,
-        mcp::mcp_start,
-        mcp::mcp_stop,
-        http_api::http_api_start,
-        http_api::http_api_stop,
-        mpd::mpd_start,
-        mpd::mpd_stop,
         stream_server::stream_server_port,
         local_library::scan_music_folder,
         local_library::save_playlist_cover,
         local_library::resolve_music_folders,
         local_library::read_audio_tags,
-        ytdlp_setup::ytdlp_ensure_installed,
-        discord::discord_connect,
-        discord::discord_disconnect,
-        discord::discord_set_activity,
-        discord::discord_clear_activity,
-        bridge::bridge_respond,
-        bridge::bridge_notify,
         history::commands::history_record_event,
         history::commands::history_fetch,
         history::commands::history_delete_range,
@@ -79,8 +51,6 @@ fn specta_builder() -> tauri_specta::Builder<tauri::Wry> {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let is_flatpak = std::env::var("FLATPAK_ID").is_ok();
-
     let profile = profile::parse_profile(std::env::args()).unwrap_or_else(|message| {
         eprintln!("{message}");
         std::process::exit(1);
@@ -105,13 +75,12 @@ pub fn run() {
         )
         .expect("failed to export typescript bindings");
 
-    let mut builder = tauri::Builder::default()
+    tauri::Builder::default()
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_store::Builder::new().build())
-        .plugin(tauri_plugin_upload::init())
         .plugin(
             tauri_plugin_window_state::Builder::default()
                 .with_state_flags(
@@ -120,14 +89,7 @@ pub fn run() {
                 )
                 .build(),
         )
-        .plugin(setup::log_plugin());
-
-    if !is_flatpak {
-        builder = builder
-            .plugin(tauri_plugin_process::init());
-    }
-
-    builder
+        .plugin(setup::log_plugin())
         .invoke_handler(specta_builder.invoke_handler())
         .manage(profile::DefaultIdentifier(default_identifier))
         .setup(move |app| {
@@ -135,12 +97,7 @@ pub fn run() {
                 log::info!("Using profile {name}");
             }
             logging::mark_startup_complete();
-            bridge::init_bridge(app.handle().clone());
-            mcp::init_mcp(app.handle().clone());
-            mpd::init_mpd(app.handle().clone());
-            http_api::init_http_api(app.handle().clone());
             stream_server::init_stream_server(app.handle().clone());
-            discord::init_discord(app.handle().clone());
             history::init_history(app.handle().clone());
 
             #[cfg(target_os = "linux")]

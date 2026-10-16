@@ -76,9 +76,7 @@ component_management:
         - "packages/themes/src/**"
 
 ignore:
-  - "packages/docs/**"
   - "packages/storybook/**"
-  - "packages/website/**"
   - "packages/tailwind-config/**"
   - "packages/eslint-config/**"
   - "packages/i18n/**"
@@ -90,7 +88,6 @@ ignore:
   - "**/*.snap"
   - "packages/**/dist/**"
   - "**/*.d.ts"
-  - "packages/tools/**"
   - "packages/player/src-tauri/**"
   - "**/routeTree.gen.ts"
   - "**/*.test-wrapper.tsx"

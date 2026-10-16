@@ -132,6 +132,10 @@ export const PlaylistDetailWrapper = {
     },
   },
 
+  nowPlayingView() {
+    return screen.findByTestId('now-playing-view');
+  },
+
   async addToQueueFromActions() {
     await PlaylistDetailWrapper.actionsButton.click();
     await user.click(screen.getByTestId('add-to-queue-action'));

@@ -14,8 +14,6 @@ import { useCoreSetting } from '../hooks/useCoreSetting';
 import { useFramelessWindow } from '../hooks/useFramelessWindow';
 import { AddFolderButton } from './AddFolderButton';
 import { ConnectedThemeController } from './ConnectedThemeController';
-import { JamQrCodeButton } from './JamQrCodeButton';
-import { SearchBox } from './SearchBox';
 
 export const ConnectedTopBar: FC = () => {
   const router = useRouter();
@@ -46,10 +44,8 @@ export const ConnectedTopBar: FC = () => {
           canGoForward={canGoForward}
         />
       </div>
-      <SearchBox />
       <div className="flex flex-row items-center justify-end gap-2">
         <AddFolderButton />
-        <JamQrCodeButton />
         <ConnectedThemeController />
       </div>
     </TopBar>

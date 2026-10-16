@@ -1,9 +1,4 @@
-import {
-  BlocksIcon,
-  KeyboardIcon,
-  ScrollTextIcon,
-  SparklesIcon,
-} from 'lucide-react';
+import { KeyboardIcon, ScrollTextIcon, SparklesIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import { useTranslation } from '@nuclearplayer/i18n';
@@ -12,7 +7,6 @@ import { SettingsNavigationSection } from '@nuclearplayer/ui';
 import { useSettingsModalStore } from '../stores/settingsModalStore';
 import { KeyboardShortcuts } from '../views/KeyboardShortcuts';
 import { Logs } from '../views/Logs/Logs';
-import { Plugins } from '../views/Plugins/Plugins';
 import { Settings } from '../views/Settings/Settings';
 import { useSettingsGroups } from '../views/Settings/useSettingsGroups';
 import { WhatsNew } from '../views/WhatsNew';
@@ -23,12 +17,6 @@ const APP_TABS = [
     labelKey: 'shortcuts.title',
     icon: <KeyboardIcon />,
     view: <KeyboardShortcuts />,
-  },
-  {
-    id: 'app-plugins',
-    labelKey: 'plugins.title',
-    icon: <BlocksIcon />,
-    view: <Plugins />,
   },
   {
     id: 'logs',

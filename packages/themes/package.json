@@ -29,7 +29,6 @@
   "dependencies": {
     "@nuclearplayer/eslint-config": "workspace:*",
     "@nuclearplayer/tailwind-config": "workspace:*",
-    "culori": "^4.0.2",
     "tailwindcss": "^4.1.11",
     "zod": "^4.0.0"
   },
@@ -39,7 +38,6 @@
     "@tailwindcss/vite": "^4.1.11",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.0",
-    "@types/culori": "^4.0.0",
     "@types/react": "^18.3.23",
     "@vitejs/plugin-react": "^6.0.0",
     "@vitest/coverage-v8": "^5.0.0",

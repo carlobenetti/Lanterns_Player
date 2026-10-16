@@ -22,7 +22,7 @@ describe('reportError', () => {
     render(<Toaster richColors />);
 
     const error = new Error('Connection refused: ECONNREFUSED 127.0.0.1:3000');
-    await reportError('plugins', {
+    await reportError('playlists', {
       userMessage: 'Failed to load plugin',
       error,
     });
@@ -40,7 +40,7 @@ describe('reportError', () => {
 
     const longMessage = 'x'.repeat(200);
     const error = new Error(longMessage);
-    await reportError('http', {
+    await reportError('fs', {
       userMessage: 'Request failed',
       error,
     });
@@ -59,13 +59,13 @@ describe('reportError', () => {
     const error = new Error('Connection refused');
     error.stack = 'Error: Connection refused\n    at test.js:1:1';
 
-    await reportError('plugins', {
+    await reportError('playlists', {
       userMessage: 'Failed to load plugin',
       error,
     });
 
     expect(tauriLog.error).toHaveBeenCalledWith(
-      expect.stringContaining('[plugins]'),
+      expect.stringContaining('[playlists]'),
     );
     expect(tauriLog.error).toHaveBeenCalledWith(
       expect.stringContaining('Connection refused'),

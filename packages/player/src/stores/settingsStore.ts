@@ -3,7 +3,6 @@ import { create } from 'zustand';
 
 import type {
   SettingDefinition,
-  SettingSource,
   SettingValue,
 } from '@nuclearplayer/plugin-sdk';
 
@@ -18,13 +17,12 @@ type State = {
   values: Values;
   loaded: boolean;
   loadFromDisk: () => Promise<void>;
-  register: (
-    definitions: SettingDefinition[],
-    source: SettingSource,
-  ) => string[];
+  register: (definitions: SettingDefinition[]) => string[];
   getValue: (fullyQualifiedId: string) => SettingValue;
   setValue: (fullyQualifiedId: string, value: SettingValue) => Promise<void>;
 };
+
+export const toCoreSettingId = (id: string): string => `core.${id}`;
 
 export const useSettingsStore = create<State>((set, get) => ({
   definitions: {},
@@ -38,16 +36,12 @@ export const useSettingsStore = create<State>((set, get) => ({
     }
     set({ values: loadedValues, loaded: true });
   },
-  register: (definitions, source) => {
+  register: (definitions) => {
     const fullyQualifiedIds: string[] = [];
     const definitionsMap: Registry = { ...get().definitions };
     for (const definition of definitions) {
-      const fullyQualifiedId = normalizeId(source, definition.id);
-      const fullDefinition: SettingDefinition = {
-        ...definition,
-        source,
-      };
-      definitionsMap[fullyQualifiedId] = fullDefinition;
+      const fullyQualifiedId = toCoreSettingId(definition.id);
+      definitionsMap[fullyQualifiedId] = definition;
       fullyQualifiedIds.push(fullyQualifiedId);
     }
     set({ definitions: definitionsMap });
@@ -69,22 +63,13 @@ export const useSettingsStore = create<State>((set, get) => ({
   },
 }));
 
-const normalizeId = (source: SettingSource, id: string): string => {
-  if (source.type === 'plugin') {
-    return `plugin.${source.pluginId}.${id}`;
-  }
-  return `core.${id}`;
-};
-
 export const initializeSettingsStore = async (): Promise<void> => {
   await useSettingsStore.getState().loadFromDisk();
 };
 
 export const registerCoreSettings = (
   definitions: SettingDefinition[],
-): string[] => {
-  return useSettingsStore.getState().register(definitions, { type: 'core' });
-};
+): string[] => useSettingsStore.getState().register(definitions);
 
 export const getSetting = (fullyQualifiedId: string): SettingValue =>
   useSettingsStore.getState().getValue(fullyQualifiedId);
