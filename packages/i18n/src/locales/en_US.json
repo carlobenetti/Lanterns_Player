@@ -27,10 +27,11 @@
   },
   "navigation": {
     "nowPlaying": "Now playing",
-    "dashboard": "Dashboard",
+    "dashboard": "Library",
     "favoriteTracks": "Favorite tracks",
-    "playlists": "Playlists",
-    "history": "History"
+    "history": "History",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
   },
   "history": {
     "title": "History",
@@ -123,18 +124,23 @@
     "descriptionPlaceholder": "Add a description..."
   },
   "dashboard": {
-    "title": "Dashboard",
+    "title": "Library",
     "empty-state": "Welcome to Nuclear",
-    "empty-state-description": "Use the Add folder button at the top to turn a music folder into a playlist, or install a plugin to see top tracks and new releases here.",
+    "empty-state-description": "Use Add folder in the sidebar to turn a music folder into a playlist.",
     "add-folder": "Add folder",
-    "add-folder-tooltip": "Turn a music folder into a playlist. A folder of folders turns each one into a playlist.",
     "folders-title": "My folders",
     "folder-adding": "Reading your music...",
-    "folder-added": "\"{{name}}\" is now on your dashboard",
-    "library-added": "{{count}} playlist is now on your dashboard",
-    "library-added_other": "{{count}} playlists are now on your dashboard",
+    "folder-added": "\"{{name}}\" is now in your library",
+    "library-added": "{{count}} playlist is now in your library",
+    "library-added_other": "{{count}} playlists are now in your library",
     "folder-empty": "No music found in this folder",
-    "folder-add-error": "Could not add this folder"
+    "folder-add-error": "Could not add this folder",
+    "all-music": "All music",
+    "all-music-description": "Every track from your folders in one list",
+    "all-music-count": "{{count}} track",
+    "all-music-count_other": "{{count}} tracks",
+    "all-music-empty": "No music yet",
+    "all-music-empty-description": "Add a music folder to see all your tracks here"
   },
   "flatpak": {
     "sandboxWarning": "You're running Nuclear in a Flatpak sandbox. Some features may not work correctly. If you experience issues, try the .deb or AppImage instead.",
@@ -289,8 +295,10 @@
     "seek": "Track position",
     "empty": {
       "title": "Nothing playing",
-      "description": "Open a folder on the Dashboard and press play"
-    }
+      "description": "Open a folder in the Library and press play"
+    },
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen"
   },
   "logs": {
     "title": "Logs",

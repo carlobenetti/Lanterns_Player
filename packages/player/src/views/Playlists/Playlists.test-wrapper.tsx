@@ -11,6 +11,8 @@ import { PlaylistBuilder } from '../../test/builders/PlaylistBuilder';
 
 const user = userEvent.setup();
 
+const section = () => screen.getByTestId('playlists-view');
+
 export const PlaylistsWrapper = {
   createPlaylists(...builders: PlaylistBuilder[]) {
     const playlists = builders.map((b) => b.build());
@@ -22,7 +24,7 @@ export const PlaylistsWrapper = {
   },
 
   async mount(): Promise<RenderResult> {
-    const history = createMemoryHistory({ initialEntries: ['/playlists'] });
+    const history = createMemoryHistory({ initialEntries: ['/dashboard'] });
     const router = createRouter({ routeTree, history });
     const component = render(<App routerProp={router} />);
     await screen.findByTestId('playlists-view');
@@ -30,10 +32,10 @@ export const PlaylistsWrapper = {
   },
 
   get emptyState() {
-    return screen.queryByTestId('empty-state');
+    return within(section()).queryByTestId('empty-state');
   },
   get filterEmptyState() {
-    return screen.queryByTestId('filter-empty-state');
+    return within(section()).queryByTestId('filter-empty-state');
   },
   filter: {
     get input() {
@@ -47,10 +49,10 @@ export const PlaylistsWrapper = {
     },
   },
   get cards() {
-    return screen.queryAllByTestId('card');
+    return within(section()).queryAllByTestId('card');
   },
   get cardNames() {
-    return screen
+    return within(section())
       .getAllByTestId('card')
       .map((card) => within(card).getByTestId('card-title').textContent);
   },
@@ -68,7 +70,7 @@ export const PlaylistsWrapper = {
   card(index: number) {
     return {
       get element() {
-        return screen.getAllByTestId('card')[index];
+        return within(section()).getAllByTestId('card')[index];
       },
       get name() {
         return within(this.element).getByTestId('card-title').textContent;

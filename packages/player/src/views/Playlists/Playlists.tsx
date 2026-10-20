@@ -1,11 +1,12 @@
 import { useNavigate } from '@tanstack/react-router';
 import isEmpty from 'lodash-es/isEmpty';
 import { ListMusic, SearchX } from 'lucide-react';
-import { type FC } from 'react';
+import { useMemo, type FC } from 'react';
 
 import { useTranslation } from '@nuclearplayer/i18n';
-import { EmptyState, ScrollableArea, ViewShell } from '@nuclearplayer/ui';
+import { EmptyState } from '@nuclearplayer/ui';
 
+import { isFolderPlaylist } from '../../services/localFolders';
 import { usePlaylistStore } from '../../stores/playlistStore';
 import { CreatePlaylistDialog } from './components/CreatePlaylistDialog';
 import { PlaylistCardGrid } from './components/PlaylistCardGrid';
@@ -14,12 +15,18 @@ import { usePlaylistFilter } from './hooks/usePlaylistFilter';
 import { usePlaylistSort } from './hooks/usePlaylistSort';
 import { PlaylistsProvider } from './PlaylistsContext';
 
+const EMPTY_ICON_SIZE = 40;
+
 const PlaylistsContent: FC = () => {
   const { t } = useTranslation('playlists');
   const navigate = useNavigate();
   const index = usePlaylistStore((state) => state.index);
+  const userPlaylists = useMemo(
+    () => index.filter((entry) => !isFolderPlaylist(entry)),
+    [index],
+  );
   const { filter, setFilter, filteredPlaylists, hasFilter } =
-    usePlaylistFilter(index);
+    usePlaylistFilter(userPlaylists);
   const {
     sortBy,
     setSortBy,
@@ -27,11 +34,12 @@ const PlaylistsContent: FC = () => {
     toggleSortDirection,
     sortedPlaylists,
   } = usePlaylistSort(filteredPlaylists);
-  const hasPlaylists = !isEmpty(index);
+  const hasPlaylists = !isEmpty(userPlaylists);
   const hasResults = !isEmpty(filteredPlaylists);
 
   return (
-    <ViewShell data-testid="playlists-view" title={t('title')}>
+    <section data-testid="playlists-view" className="flex flex-col gap-4">
+      <h2 className="text-foreground text-lg font-bold">{t('title')}</h2>
       <PlaylistsToolbar
         filter={filter}
         onFilterChange={setFilter}
@@ -44,43 +52,41 @@ const PlaylistsContent: FC = () => {
 
       {!hasPlaylists && (
         <EmptyState
-          icon={<ListMusic size={48} />}
+          size="sm"
+          icon={<ListMusic size={EMPTY_ICON_SIZE} />}
           title={t('empty')}
           description={t('emptyDescription')}
-          className="flex-1"
         />
       )}
 
       {hasPlaylists && hasFilter && !hasResults && (
         <EmptyState
-          icon={<SearchX size={48} />}
+          size="sm"
+          icon={<SearchX size={EMPTY_ICON_SIZE} />}
           title={t('filterNoResults')}
           description={t('filterNoResultsDescription')}
-          className="flex-1"
           data-testid="filter-empty-state"
         />
       )}
 
       {hasPlaylists && hasResults && (
-        <ScrollableArea className="flex-1 overflow-hidden">
-          <PlaylistCardGrid
-            playlists={sortedPlaylists}
-            onCardClick={(id) =>
-              navigate({
-                to: '/playlists/$playlistId',
-                params: { playlistId: id },
-              })
-            }
-          />
-        </ScrollableArea>
+        <PlaylistCardGrid
+          playlists={sortedPlaylists}
+          onCardClick={(id) =>
+            navigate({
+              to: '/playlists/$playlistId',
+              params: { playlistId: id },
+            })
+          }
+        />
       )}
 
       <CreatePlaylistDialog />
-    </ViewShell>
+    </section>
   );
 };
 
-export const Playlists: FC = () => (
+export const PlaylistsSection: FC = () => (
   <PlaylistsProvider>
     <PlaylistsContent />
   </PlaylistsProvider>

@@ -1,3 +1,4 @@
+import { useFullscreenStore } from '../../stores/fullscreenStore';
 import { useQueueStore } from '../../stores/queueStore';
 import { useSoundStore } from '../../stores/soundStore';
 import { NowPlayingWrapper as Wrapper } from './NowPlaying.test-wrapper';
@@ -5,6 +6,7 @@ import { NowPlayingWrapper as Wrapper } from './NowPlaying.test-wrapper';
 beforeEach(() => {
   useQueueStore.setState({ items: [], currentIndex: 0 });
   useSoundStore.setState({ status: 'stopped', seek: 0, duration: 0 });
+  useFullscreenStore.setState({ isFullscreen: false });
 });
 
 describe('Now playing view', () => {
@@ -45,7 +47,58 @@ describe('Now playing view', () => {
     Wrapper.seedQueue(Wrapper.fixtures.album());
     await Wrapper.mount();
 
-    expect(Wrapper.spectrumBars.length).toBeGreaterThan(0);
+    expect(Wrapper.spectrumVisualizer).toBeInTheDocument();
+    expect(Wrapper.starfield).toBeInTheDocument();
+  });
+
+  it('hides the bottom player bar while Now playing is open', async () => {
+    Wrapper.seedQueue(Wrapper.fixtures.album());
+    await Wrapper.mount('/dashboard');
+    expect(Wrapper.playerBarCover).toBeInTheDocument();
+
+    await Wrapper.openFromPlayerBarCover();
+
+    expect(Wrapper.playerBarCover).not.toBeInTheDocument();
+  });
+
+  it('shows only the cover, the track name, the wave and the queue in fullscreen', async () => {
+    Wrapper.seedQueue(Wrapper.fixtures.album(), 1);
+    await Wrapper.mount();
+
+    await Wrapper.fullscreenButton.click();
+
+    expect(Wrapper.isWindowFullscreen).toBe(true);
+    expect(Wrapper.fullscreenStage).toBeInTheDocument();
+    expect(Wrapper.title).toHaveTextContent('Fibernet Speed');
+    expect(Wrapper.artist).toHaveTextContent('Wavelength');
+    expect(Wrapper.cover).toBeInTheDocument();
+    expect(Wrapper.spectrumVisualizer).toBeInTheDocument();
+    expect(Wrapper.queuePanel).toBeInTheDocument();
+    expect(Wrapper.leftSidebar).not.toBeInTheDocument();
+    expect(Wrapper.controls).not.toBeInTheDocument();
+  });
+
+  it('leaves fullscreen with the exit button', async () => {
+    Wrapper.seedQueue(Wrapper.fixtures.album());
+    await Wrapper.mount();
+
+    await Wrapper.fullscreenButton.click();
+    await Wrapper.exitFullscreenButton.click();
+
+    expect(Wrapper.isWindowFullscreen).toBe(false);
+    expect(Wrapper.fullscreenStage).not.toBeInTheDocument();
+    expect(Wrapper.leftSidebar).toBeInTheDocument();
+  });
+
+  it('leaves fullscreen with Escape', async () => {
+    Wrapper.seedQueue(Wrapper.fixtures.album());
+    await Wrapper.mount();
+
+    await Wrapper.fullscreenButton.click();
+    await Wrapper.pressEscape();
+
+    expect(Wrapper.isWindowFullscreen).toBe(false);
+    expect(Wrapper.fullscreenStage).not.toBeInTheDocument();
   });
 
   it('resumes and pauses playback', async () => {

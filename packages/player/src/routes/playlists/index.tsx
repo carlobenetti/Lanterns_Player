@@ -1,7 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router';
-
-import { PlaylistsView } from '../../views/Playlists';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/playlists/')({
-  component: PlaylistsView,
+  beforeLoad: () => {
+    throw redirect({
+      to: '/dashboard',
+    });
+  },
 });

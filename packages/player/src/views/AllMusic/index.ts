@@ -1,0 +1,1 @@
+export { AllMusic } from './AllMusic';

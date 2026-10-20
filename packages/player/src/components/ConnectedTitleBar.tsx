@@ -10,6 +10,7 @@ const appWindow = getCurrentWindow();
 
 export const ConnectedTitleBar: FC = () => {
   const [isEnabled] = useCoreSetting<boolean>('appearance.customTitleBar');
+  const [isFrameless] = useCoreSetting<boolean>('appearance.framelessWindow');
   const { t } = useTranslation('titleBar');
   const [titleBarStyle] = useCoreSetting<string>('appearance.titleBarStyle');
 
@@ -19,7 +20,7 @@ export const ConnectedTitleBar: FC = () => {
       : (titleBarStyle as 'macos' | 'windows');
 
   return (
-    isEnabled && (
+    (isEnabled || isFrameless) && (
       <TitleBar
         title={t('title')}
         styleOverride={styleOverride}

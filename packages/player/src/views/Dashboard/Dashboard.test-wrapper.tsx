@@ -56,6 +56,54 @@ export const DashboardWrapper = {
     },
   },
 
+  themeToggle: {
+    get element() {
+      return screen.getByTestId('theme-toggle');
+    },
+    async click() {
+      await userEvent.click(this.element);
+    },
+  },
+
+  get isDarkTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'dark';
+  },
+
+  get folderCardNames() {
+    return within(screen.getByTestId('dashboard-folder-playlists'))
+      .getAllByTestId('card-title')
+      .map((title) => title.textContent);
+  },
+
+  get playlistCardNames() {
+    return within(screen.getByTestId('playlists-view'))
+      .queryAllByTestId('card-title')
+      .map((title) => title.textContent);
+  },
+
+  get createPlaylistButton() {
+    return within(screen.getByTestId('playlists-view')).getByTestId(
+      'create-playlist-button',
+    );
+  },
+
+  allMusic: {
+    get link() {
+      return screen.queryByTestId('all-music-link');
+    },
+    get count() {
+      return screen.getByTestId('all-music-count');
+    },
+    async open() {
+      await userEvent.click(screen.getByTestId('all-music-link'));
+      await screen.findByTestId('all-music-view');
+    },
+    async findTrack(title: string) {
+      const table = await screen.findByRole('table');
+      return within(table).findByText(title);
+    },
+  },
+
   folders: {
     async findSkeleton() {
       return screen.findByTestId('dashboard-folder-playlists-skeleton');
@@ -123,6 +171,19 @@ export const DashboardWrapper = {
   },
 
   fixtures: {
+    userPlaylist(name: string) {
+      return new PlaylistBuilder().withName(name).withTrackCount(1);
+    },
+    folderPlaylistWithTracks(
+      name: string,
+      folderPath: string,
+      trackNames: string[],
+    ) {
+      return new PlaylistBuilder()
+        .withName(name)
+        .withOrigin({ provider: LOCAL_FOLDER_PROVIDER, id: folderPath })
+        .withTrackNames(trackNames);
+    },
     folderPlaylist(name: string, folderPath: string) {
       return new PlaylistBuilder()
         .withName(name)

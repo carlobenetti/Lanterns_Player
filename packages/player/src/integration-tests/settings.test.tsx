@@ -62,7 +62,7 @@ describe('Settings integration', () => {
 
     render(<App />);
 
-    const toggle = await screen.findByRole('switch', { name: 'Toggle theme' });
+    const toggle = await screen.findByRole('button', { name: 'Dark mode' });
     await userEvent.click(toggle);
 
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
@@ -77,8 +77,8 @@ describe('Settings integration', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole('switch', { name: 'Toggle theme' }),
-      ).toHaveAttribute('aria-checked', 'true');
+        screen.getByRole('button', { name: 'Light mode' }),
+      ).toBeInTheDocument();
       expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     });
   });

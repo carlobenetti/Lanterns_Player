@@ -1,4 +1,5 @@
 import isEmpty from 'lodash-es/isEmpty';
+import sumBy from 'lodash-es/sumBy';
 import { FC, useMemo } from 'react';
 
 import { useTranslation } from '@nuclearplayer/i18n';
@@ -7,6 +8,8 @@ import { ViewShell } from '@nuclearplayer/ui';
 
 import { isFolderPlaylist } from '../../services/localFolders';
 import { usePlaylistStore } from '../../stores/playlistStore';
+import { PlaylistsSection } from '../Playlists';
+import { AllMusicBanner } from './components/AllMusicBanner';
 import { DashboardEmptyState } from './components/DashboardEmptyState';
 import { FolderPlaylistsSection } from './components/FolderPlaylistsSection';
 
@@ -36,10 +39,18 @@ export const Dashboard: FC = () => {
 
   return (
     <ViewShell data-testid="dashboard-view" title={t('title')}>
-      <DashboardContent
-        folderPlaylists={folderPlaylists}
-        isSyncingLibrary={isSyncingLibrary}
-      />
+      <div className="flex flex-col gap-10 pb-8">
+        <DashboardContent
+          folderPlaylists={folderPlaylists}
+          isSyncingLibrary={isSyncingLibrary}
+        />
+        {!isEmpty(folderPlaylists) && (
+          <AllMusicBanner
+            trackCount={sumBy(folderPlaylists, (entry) => entry.itemCount)}
+          />
+        )}
+        <PlaylistsSection />
+      </div>
     </ViewShell>
   );
 };

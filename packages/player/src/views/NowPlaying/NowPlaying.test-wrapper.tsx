@@ -7,6 +7,7 @@ import type { QueueItem } from '@nuclearplayer/model';
 
 import App from '../../App';
 import { routeTree } from '../../routeTree.gen';
+import { useFullscreenStore } from '../../stores/fullscreenStore';
 import { useQueueStore } from '../../stores/queueStore';
 import { useSoundStore } from '../../stores/soundStore';
 import { createQueueItem } from '../../test/fixtures/queue';
@@ -75,8 +76,36 @@ export const NowPlayingWrapper = {
   get coverPlaceholder() {
     return within(this.view).getByTestId('now-playing-stage-cover-placeholder');
   },
-  get spectrumBars() {
-    return within(this.view).getAllByTestId('spectrum-bar');
+  get spectrumVisualizer() {
+    return within(this.view).getByTestId('spectrum-visualizer');
+  },
+  get starfield() {
+    return within(this.view).getByTestId('starfield-background');
+  },
+  get playerBarCover() {
+    return screen.queryByTestId('player-now-playing-cover');
+  },
+  get leftSidebar() {
+    return screen.queryByTestId('sidebar-left');
+  },
+  get queuePanel() {
+    return screen.queryByTestId('sidebar-right');
+  },
+  get controls() {
+    return within(this.view).queryByTestId('now-playing-play-button');
+  },
+  get fullscreenStage() {
+    return within(this.view).queryByTestId('now-playing-fullscreen');
+  },
+  get isWindowFullscreen() {
+    return useFullscreenStore.getState().isFullscreen;
+  },
+
+  fullscreenButton: button('now-playing-fullscreen-button'),
+  exitFullscreenButton: button('now-playing-exit-fullscreen-button'),
+
+  async pressEscape() {
+    await user.keyboard('{Escape}');
   },
   get elapsed() {
     return within(this.view).getByTestId('now-playing-elapsed');

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as LibraryRouteImport } from './routes/library'
 import { Route as NowPlayingRouteImport } from './routes/now-playing'
 import { Route as FavoritesTracksRouteImport } from './routes/favorites/tracks'
 import { Route as PlaylistsIndexRouteImport } from './routes/playlists/index'
@@ -30,6 +31,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NowPlayingRoute = NowPlayingRouteImport.update({
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
+  '/library': typeof LibraryRoute
   '/now-playing': typeof NowPlayingRoute
   '/favorites/tracks': typeof FavoritesTracksRoute
   '/playlists/$playlistId': typeof PlaylistsPlaylistIdRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
+  '/library': typeof LibraryRoute
   '/now-playing': typeof NowPlayingRoute
   '/favorites/tracks': typeof FavoritesTracksRoute
   '/playlists/$playlistId': typeof PlaylistsPlaylistIdRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/history': typeof HistoryRoute
+  '/library': typeof LibraryRoute
   '/now-playing': typeof NowPlayingRoute
   '/favorites/tracks': typeof FavoritesTracksRoute
   '/playlists/$playlistId': typeof PlaylistsPlaylistIdRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/history'
+    | '/library'
     | '/now-playing'
     | '/favorites/tracks'
     | '/playlists/$playlistId'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/history'
+    | '/library'
     | '/now-playing'
     | '/favorites/tracks'
     | '/playlists/$playlistId'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/history'
+    | '/library'
     | '/now-playing'
     | '/favorites/tracks'
     | '/playlists/$playlistId'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
   HistoryRoute: typeof HistoryRoute
+  LibraryRoute: typeof LibraryRoute
   NowPlayingRoute: typeof NowPlayingRoute
   FavoritesTracksRoute: typeof FavoritesTracksRoute
   PlaylistsPlaylistIdRoute: typeof PlaylistsPlaylistIdRoute
@@ -142,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/history'
       fullPath: '/history'
       preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/now-playing': {
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
   HistoryRoute: HistoryRoute,
+  LibraryRoute: LibraryRoute,
   NowPlayingRoute: NowPlayingRoute,
   FavoritesTracksRoute: FavoritesTracksRoute,
   PlaylistsPlaylistIdRoute: PlaylistsPlaylistIdRoute,

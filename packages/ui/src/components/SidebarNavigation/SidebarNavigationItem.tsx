@@ -11,6 +11,7 @@ type SidebarNavigationItemProps = {
   isSelected?: boolean;
   to?: string;
   onClick?: () => void;
+  'data-testid'?: string;
 };
 
 const MaybeNavLink: FC<{
@@ -30,6 +31,7 @@ export const SidebarNavigationItem: FC<SidebarNavigationItemProps> = ({
   isSelected,
   to,
   onClick,
+  'data-testid': testId = 'sidebar-navigation-item',
 }) => {
   const isCompact = useSidebarCompact();
 
@@ -40,7 +42,7 @@ export const SidebarNavigationItem: FC<SidebarNavigationItemProps> = ({
           <div
             role={onClick ? 'button' : undefined}
             onClick={onClick}
-            data-testid="sidebar-navigation-item"
+            data-testid={testId}
             className={cn(
               'flex w-full items-center overflow-hidden rounded-md border-(length:--border-width)',
               {

@@ -1,1 +1,1 @@
-export { Playlists as PlaylistsView } from './Playlists';
+export { PlaylistsSection } from './Playlists';

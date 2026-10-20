@@ -1,5 +1,25 @@
 [
   {
+    "date": "2026-10-16T12:00",
+    "description": "Tela mais limpa: a barra de cima saiu, e os botões Add folder e modo claro/escuro foram para o topo da barra lateral, no mesmo estilo dos outros itens. Dashboard e Playlists viraram uma tela só, a Library: as pastas ficam em cima e, embaixo, um atalho para All music (todas as músicas das suas pastas numa lista só) e as suas playlists, com o botão de criar. Na tela Now playing a barra de player de baixo some, porque os controles já estão ali. Novo modo tela cheia, só com a capa, o nome da música, a onda e a fila à direita (Esc sai). E a onda virou uma viagem espacial no estilo Lanterna Verde: maior, espelhada, com brilho verde e um campo de estrelas que acelera com a batida.",
+    "type": "feature",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Minimalismo",
+        "color": "yellow"
+      },
+      {
+        "label": "Tocando agora",
+        "color": "green"
+      },
+      {
+        "label": "Visual",
+        "color": "cyan"
+      }
+    ]
+  },
+  {
     "date": "2026-10-14T13:00",
     "description": "Saiu a opção Crossfade das configurações: ela aparecia, mas não fazia nada. Também saíram do projeto o site, a documentação e os vídeos de divulgação do Nuclear original, os pacotes de instalação dele (Flatpak, Snap, AUR, Winget, Homebrew) e o que sobrava do sistema de configurações de plugins. O instalador agora se gera no próprio computador.",
     "type": "chore",

@@ -48,8 +48,14 @@ vi.mock('@tauri-apps/api/window', () => ({
     isMaximized: vi.fn().mockResolvedValue(false),
     show: vi.fn().mockResolvedValue(undefined),
     setFocus: vi.fn(),
+    setFullscreen: vi.fn().mockResolvedValue(undefined),
   }),
 }));
+
+Object.defineProperty(window.HTMLCanvasElement.prototype, 'getContext', {
+  writable: true,
+  value: vi.fn(() => null),
+});
 
 vi.mock('@tauri-apps/plugin-dialog', () => ({
   open: () => Promise.resolve(undefined),
