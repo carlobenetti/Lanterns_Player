@@ -2,9 +2,11 @@
 
 Guidelines for AI coding agents working on Nuclear.
 
+**Before you change anything, read [BUGLOG.md](BUGLOG.md).** It lists every bug hit so far and the rule that prevents it. When you finish a change, add a dated section at the top of it with the bugs you hit, even the ones you caught and fixed yourself.
+
 ## Project Overview
 
-Nuclear is a free, open-source music player without ads or tracking. Search for any song or artist, build playlists, and start listening. It's a desktop app built with Tauri (Rust + React), organized as a pnpm monorepo managed with Turborepo.
+Nuclear is a free, open-source music player without ads or tracking. Search for any song or artist, build playlists, and start listening. It's a Tauri app (Rust + React) for desktop and Android, organized as a pnpm monorepo managed with Turborepo.
 
 ### Packages
 
@@ -29,6 +31,7 @@ pnpm storybook              # Run Storybook
 # Build
 pnpm build                  # Build all packages
 pnpm tauri build            # Build Tauri app
+pnpm android:build          # Build the signed Android APK (see ANDROID.md)
 
 # Quality
 pnpm lint                   # Lint all packages
@@ -134,6 +137,15 @@ When adding a new component to `@nuclearplayer/ui`:
 - **Toasts**: Sonner
 - **Dates**: Luxon
 - **Utilities**: lodash-es (use individual imports: `import isEqual from 'lodash-es/isEqual'`)
+
+### Desktop and Android
+
+`isMobilePlatform()` (`packages/player/src/services/platform.ts`) picks the shell in `routes/__root.tsx`:
+
+- **Desktop** (`DesktopRoot`): the original layout with sidebars, title bar, player bar and keyboard shortcuts. Keep it as is.
+- **Android** (`MobileRoot` → `components/mobile/MobileShell`): header (add folder, settings), the routed screen, a mini player and a bottom tab bar (`/dashboard`, `/now-playing`, `/queue`, `/favorites/tracks`, `/history`). Folders are picked with the in-app `FolderBrowserDialog`, and the default library is `/storage/emulated/0/Music`.
+
+Call `isMobilePlatform()` at render time, never at module load: tests switch the platform per test with `vi.mocked(platform).mockReturnValue('android')`. Window APIs (`@tauri-apps/api/window`) are desktop-only. The native Android project lives in `packages/player/src-tauri/gen/android` (committed). `MainActivity.kt` (permissions, system-bar insets, attaches the media bridge), `PlaybackService.kt` (keeps playback alive in the background, owns the `MediaSession` and the media notification) and `MediaControls.kt` (the `window.LanternsMedia` bridge) are hand-written. The web side of the bridge is `services/androidMediaControls.ts`.
 
 ### No plugins or integrations
 
@@ -265,7 +277,8 @@ packages/ui/src/components/Badge/
 The Tauri backend lives in `packages/player/src-tauri/src/`. Modules:
 
 - `stream_server.rs` - local HTTP server that serves audio files from disk with CORS + Range support
-- `local_library.rs` - scans music folders and reads audio tags/covers
+- `local_library.rs` - scans music folders and reads audio tags/covers (tags are read in parallel with rayon)
+- `folder_browser.rs` - lists storage roots and subfolders for the in-app folder browser (Android)
 - `history/`, `db.rs` - listening history (SQLite)
 - `commands.rs` - flatpak detection
 - `net.rs`, `setup.rs`, `logging.rs` - port binding, log plugin config, startup log ring buffer
@@ -306,4 +319,4 @@ When building a user-facing feature, fix, or improvement, add an entry to the to
 
 ## Releasing
 
-There is no release pipeline. Build installers locally with `pnpm tauri build`. Upstream Nuclear packaging (Flatpak, Snap, AUR, Winget, Homebrew), the npm publishing of the plugin SDK, the website, docs and promo videos were removed on purpose. Do not reintroduce them.
+There is no release pipeline. Build installers locally with `pnpm tauri build` (desktop) and `pnpm android:build` (Android APK). Upstream Nuclear packaging (Flatpak, Snap, AUR, Winget, Homebrew), the npm publishing of the plugin SDK, the website, docs and promo videos were removed on purpose. Do not reintroduce them.

@@ -30,7 +30,8 @@
     "dashboard": "Painel",
     "favoriteTracks": "Tracks favoritos",
     "playlists": "Playlists",
-    "history": "History"
+    "history": "History",
+    "queue": "Fila"
   },
   "history": {
     "title": "History",
@@ -120,7 +121,18 @@
   "dashboard": {
     "title": "Painel",
     "empty-state": "Welcome to Nuclear",
-    "empty-state-description": "Install a plugin to see top tracks, new releases, and recommendations here."
+    "empty-state-description": "Install a plugin to see top tracks, new releases, and recommendations here.",
+    "empty-state-description-mobile": "Toque no botão de pasta no topo para escolher uma pasta de músicas do celular.",
+    "folder-browser-title": "Escolha uma pasta de músicas",
+    "folder-browser-hint": "Escolha uma pasta com músicas, ou uma pasta de pastas: cada subpasta vira uma playlist.",
+    "folder-browser-internal-storage": "Armazenamento interno",
+    "folder-browser-storage": "Armazenamento",
+    "folder-browser-up": "Voltar uma pasta",
+    "folder-browser-confirm": "Usar esta pasta",
+    "folder-browser-empty": "Nenhuma pasta aqui",
+    "folder-browser-audio-count": "{{count}} música nesta pasta",
+    "folder-browser-audio-count_other": "{{count}} músicas nesta pasta",
+    "folder-browser-error": "Não foi possível abrir esta pasta. Verifique se o Lanterns Player tem acesso aos arquivos nas configurações do Android."
   },
   "updater": {
     "updateAvailable": "Update available",

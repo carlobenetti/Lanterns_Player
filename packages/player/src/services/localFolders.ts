@@ -37,6 +37,15 @@ export const localCoverArtwork = (imagePath: string): ArtworkSet => ({
   items: [{ url: convertFileSrc(imagePath), purpose: 'cover' }],
 });
 
+const ASSET_URL_PREFIXES = ['http://asset.localhost/', 'asset://localhost/'];
+
+export const localPathFromAssetUrl = (url: string): string | null => {
+  const prefix = ASSET_URL_PREFIXES.find((candidate) =>
+    url.startsWith(candidate),
+  );
+  return prefix ? decodeURIComponent(url.slice(prefix.length)) : null;
+};
+
 const parseFileName = (fileName: string) => {
   const separatorIndex = fileName.indexOf(ARTIST_TITLE_SEPARATOR);
   if (separatorIndex <= 0) {

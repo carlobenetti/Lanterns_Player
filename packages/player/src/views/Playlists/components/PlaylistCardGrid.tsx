@@ -9,7 +9,7 @@ import { PlaylistArtwork } from './PlaylistArtwork';
 type PlaylistCardGridSize = 'default' | 'large';
 
 export const LARGE_GRID_CLASSES =
-  'grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] gap-6';
+  'grid-cols-2 gap-3 sm:grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] sm:gap-6';
 
 const LARGE_CARD_CLASSES =
   'w-full p-3 [&_[data-testid=card-title]]:text-lg [&_[data-testid=card-title]~div]:text-sm';

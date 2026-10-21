@@ -10,7 +10,13 @@ import {
 import { useQueueActions } from '../hooks/useQueueActions';
 import { useTrackActions } from '../hooks/useTrackActions';
 import { useTrackTableLabels } from '../hooks/useTrackTableLabels';
+import { isMobilePlatform } from '../services/platform';
 import { ConnectedTrackContextMenu } from './ConnectedTrackContextMenu';
+
+const MOBILE_DISPLAY = {
+  displayDuration: false,
+  displayQueueControls: false,
+};
 
 type ConnectedTrackTableProps = Omit<
   TrackTableProps<Track>,
@@ -32,6 +38,7 @@ export const ConnectedTrackTable: FC<ConnectedTrackTableProps> = (props) => {
       display={{
         displayFavorite: true,
         ...restProps.display,
+        ...(isMobilePlatform() && MOBILE_DISPLAY),
       }}
       actions={{
         onAddToQueue: trackActions.addToQueue,

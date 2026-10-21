@@ -31,7 +31,8 @@
     "favoriteTracks": "Favorite tracks",
     "history": "History",
     "lightMode": "Light mode",
-    "darkMode": "Dark mode"
+    "darkMode": "Dark mode",
+    "queue": "Queue"
   },
   "history": {
     "title": "History",
@@ -140,7 +141,18 @@
     "all-music-count": "{{count}} track",
     "all-music-count_other": "{{count}} tracks",
     "all-music-empty": "No music yet",
-    "all-music-empty-description": "Add a music folder to see all your tracks here"
+    "all-music-empty-description": "Add a music folder to see all your tracks here",
+    "empty-state-description-mobile": "Tap the folder button at the top to choose a music folder on your phone.",
+    "folder-browser-title": "Choose a music folder",
+    "folder-browser-hint": "Pick a folder with music, or a folder of folders: each subfolder becomes a playlist.",
+    "folder-browser-internal-storage": "Internal storage",
+    "folder-browser-storage": "Storage",
+    "folder-browser-up": "Up one folder",
+    "folder-browser-confirm": "Use this folder",
+    "folder-browser-empty": "No folders here",
+    "folder-browser-audio-count": "{{count}} song in this folder",
+    "folder-browser-audio-count_other": "{{count}} songs in this folder",
+    "folder-browser-error": "Can't open this folder. Check that Lanterns Player has file access in the Android settings."
   },
   "flatpak": {
     "sandboxWarning": "You're running Nuclear in a Flatpak sandbox. Some features may not work correctly. If you experience issues, try the .deb or AppImage instead.",

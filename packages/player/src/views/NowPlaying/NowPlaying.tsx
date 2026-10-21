@@ -7,6 +7,7 @@ import { Button, cn, EmptyState } from '@nuclearplayer/ui';
 
 import { ConnectedVolume } from '../../components/ConnectedPlayerBar/ConnectedVolume';
 import { useQueue } from '../../hooks/useQueue';
+import { isMobilePlatform } from '../../services/platform';
 import { useFullscreenStore } from '../../stores/fullscreenStore';
 import { NowPlayingControls } from './components/NowPlayingControls';
 import { NowPlayingSeekBar } from './components/NowPlayingSeekBar';
@@ -99,6 +100,46 @@ const useExitFullscreenOnEscape = (isFullscreen: boolean) => {
   }, [isFullscreen, exit]);
 };
 
+type StageProps = {
+  coverUrl?: string;
+  title: string;
+  artist: string;
+};
+
+const CompactStage: FC<StageProps> = ({ coverUrl, title, artist }) => {
+  const { t } = useTranslation('nowPlaying');
+
+  return (
+    <div
+      data-testid="now-playing-compact"
+      className="relative flex h-full w-full flex-col items-center justify-center gap-6 px-6 py-6"
+    >
+      <LanternCover coverUrl={coverUrl} className="w-[min(78vw,42dvh)]" />
+      <div className="flex w-full min-w-0 flex-col items-center gap-1 text-center">
+        <span className="text-xs font-bold tracking-[0.25em] uppercase opacity-60">
+          {t('label')}
+        </span>
+        <h1
+          data-testid="now-playing-stage-title"
+          className="font-heading line-clamp-2 text-2xl leading-tight font-extrabold"
+        >
+          {title}
+        </h1>
+        <p
+          data-testid="now-playing-stage-artist"
+          className="w-full truncate opacity-80"
+        >
+          {artist}
+        </p>
+      </div>
+      <div className="flex w-full flex-col gap-4">
+        <NowPlayingSeekBar />
+        <NowPlayingControls />
+      </div>
+    </div>
+  );
+};
+
 export const NowPlaying: FC = () => {
   const { t } = useTranslation('nowPlaying');
   const { items, currentIndex } = useQueue();
@@ -127,6 +168,26 @@ export const NowPlaying: FC = () => {
 
   const coverUrl = pickArtwork(track.artwork, 'cover', COVER_SIZE_PX)?.url;
   const artist = track.artists.map(({ name }) => name).join(', ');
+
+  if (isMobilePlatform()) {
+    return (
+      <div
+        data-testid="now-playing-view"
+        className="surface-background relative flex h-full w-full overflow-hidden"
+      >
+        {coverUrl && (
+          <img
+            src={coverUrl}
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute inset-0 size-full scale-125 object-cover opacity-15 blur-2xl select-none"
+          />
+        )}
+        <CompactStage coverUrl={coverUrl} title={track.title} artist={artist} />
+      </div>
+    );
+  }
+
   const details = [
     track.album?.title,
     t('trackPosition', { current: currentIndex + 1, total: items.length }),

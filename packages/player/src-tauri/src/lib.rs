@@ -1,5 +1,6 @@
 pub mod commands;
 pub mod db;
+pub mod folder_browser;
 pub mod history;
 pub mod local_library;
 pub mod logging;
@@ -24,6 +25,7 @@ fn maximize_for_gamescope(app: &tauri::App) {
     }
 }
 
+#[cfg(all(debug_assertions, desktop))]
 fn typescript_export_config() -> specta_typescript::Typescript {
     specta_typescript::Typescript::default().header("/* eslint-disable */")
 }
@@ -37,6 +39,8 @@ fn specta_builder() -> tauri_specta::Builder<tauri::Wry> {
         local_library::save_playlist_cover,
         local_library::resolve_music_folders,
         local_library::read_audio_tags,
+        folder_browser::storage_roots,
+        folder_browser::list_folder,
         history::commands::history_record_event,
         history::commands::history_fetch,
         history::commands::history_delete_range,
@@ -64,7 +68,7 @@ pub fn run() {
 
     let specta_builder = specta_builder();
 
-    #[cfg(debug_assertions)]
+    #[cfg(all(debug_assertions, desktop))]
     specta_builder
         .export(
             typescript_export_config(),
@@ -75,20 +79,24 @@ pub fn run() {
         )
         .expect("failed to export typescript bindings");
 
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_store::Builder::new().build())
-        .plugin(
-            tauri_plugin_window_state::Builder::default()
-                .with_state_flags(
-                    tauri_plugin_window_state::StateFlags::all()
-                        .difference(tauri_plugin_window_state::StateFlags::VISIBLE),
-                )
-                .build(),
-        )
+        .plugin(tauri_plugin_store::Builder::new().build());
+
+    #[cfg(desktop)]
+    let builder = builder.plugin(
+        tauri_plugin_window_state::Builder::default()
+            .with_state_flags(
+                tauri_plugin_window_state::StateFlags::all()
+                    .difference(tauri_plugin_window_state::StateFlags::VISIBLE),
+            )
+            .build(),
+    );
+
+    builder
         .plugin(setup::log_plugin())
         .invoke_handler(specta_builder.invoke_handler())
         .manage(profile::DefaultIdentifier(default_identifier))

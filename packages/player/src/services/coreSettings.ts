@@ -54,7 +54,7 @@ export const CORE_SETTINGS: SettingDefinition[] = [
     description: 'preferences.theme.dark.description',
     category: 'appearance',
     kind: 'boolean',
-    default: false,
+    default: true,
     hidden: true,
     widget: { type: 'toggle' },
   },

@@ -34,7 +34,7 @@ vi.mock('@tauri-apps/api/path', () => ({
 }));
 
 vi.mock('@tauri-apps/plugin-os', () => ({
-  platform: () => 'linux',
+  platform: vi.fn(() => 'linux'),
 }));
 
 vi.mock('@tauri-apps/api/window', () => ({

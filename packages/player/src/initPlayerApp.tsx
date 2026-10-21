@@ -2,12 +2,14 @@ import React from 'react';
 
 import App from './App';
 import { initLogStream } from './hooks/useLogStream';
+import { initAndroidMediaControls } from './services/androidMediaControls';
 import { registerBuiltInCoreSettings } from './services/coreSettings';
 import { initHistoryService } from './services/history';
 import {
   applyLanguageFromSettings,
   initLanguageWatcher,
 } from './services/languageService';
+import { isMobilePlatform } from './services/platform';
 import { initPlaybackEventBridge } from './services/playbackEventBridge';
 import { initializeFavoritesStore } from './stores/favoritesStore';
 import { initializePlaylistStore } from './stores/playlistStore';
@@ -35,6 +37,10 @@ export const initPlayerApp = async (
     .then(() => initPlaybackEventBridge())
     .then(() => initHistoryService())
     .then(() => initLanguage());
+
+  if (isMobilePlatform()) {
+    initAndroidMediaControls();
+  }
 
   root.render(
     <React.StrictMode>

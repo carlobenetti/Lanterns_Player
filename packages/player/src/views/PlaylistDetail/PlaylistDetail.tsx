@@ -32,7 +32,7 @@ export const PlaylistDetail: FC = () => {
         <PlaylistDetailHeader
           playlist={playlist}
           thumbnails={thumbnails}
-          className="mx-6 mt-6"
+          className="mx-3 mt-3 sm:mx-6 sm:mt-6"
         >
           <PlaylistDetailActions
             playlistId={playlistId}
@@ -49,7 +49,7 @@ export const PlaylistDetail: FC = () => {
           className="flex-1"
         />
       ) : (
-        <div className="h-full p-6">
+        <div className="h-full p-3 sm:p-6">
           <ConnectedTrackTable
             tracks={tracks}
             getItemId={editing.getItemId}

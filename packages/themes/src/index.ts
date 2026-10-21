@@ -20,10 +20,10 @@ const BUILT_INS: BasicThemeMeta[] = [
     id: DEFAULT_THEME_ID,
     name: 'Green Lantern',
     palette: [
-      'oklch(0.76 0.14 152)',
-      'oklch(0.86 0.12 192)',
-      'oklch(0.45 0.1 152)',
-      'oklch(0.19 0.03 205)',
+      'oklch(0.46 0.065 178)',
+      'oklch(0.68 0.08 175)',
+      'oklch(0.29 0.042 188)',
+      'oklch(0.17 0.022 205)',
     ],
   },
 ];

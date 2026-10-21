@@ -12,6 +12,8 @@ export const commands = {
 	savePlaylistCover: (playlistId: string, sourcePath: string) => typedError<string, string>(__TAURI_INVOKE("save_playlist_cover", { playlistId, sourcePath })),
 	resolveMusicFolders: (path: string) => typedError<MusicFolderSelection, string>(__TAURI_INVOKE("resolve_music_folders", { path })),
 	readAudioTags: (paths: string[]) => typedError<LocalAudioTags[], string>(__TAURI_INVOKE("read_audio_tags", { paths })),
+	storageRoots: () => __TAURI_INVOKE<FolderEntry[]>("storage_roots"),
+	listFolder: (path: string) => typedError<FolderListing, string>(__TAURI_INVOKE("list_folder", { path })),
 	historyRecordEvent: (event: PlayEvent) => typedError<null, string>(__TAURI_INVOKE("history_record_event", { event })),
 	historyFetch: (page: PageRequest) => typedError<Page<HistoryEntry>, string>(__TAURI_INVOKE("history_fetch", { page })),
 	historyDeleteRange: (range: TimeRange) => typedError<null, string>(__TAURI_INVOKE("history_delete_range", { range })),
@@ -33,6 +35,19 @@ export type DailyListeningTime = {
 
 export type FirstPlay = {
 	at: number,
+};
+
+export type FolderEntry = {
+	path: string,
+	name: string,
+};
+
+export type FolderListing = {
+	path: string,
+	name: string,
+	parent: string | null,
+	folders: FolderEntry[],
+	audioFileCount: number,
 };
 
 export type HistoryEntry = {

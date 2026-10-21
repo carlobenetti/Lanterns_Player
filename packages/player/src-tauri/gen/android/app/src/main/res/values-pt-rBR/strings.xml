@@ -1,0 +1,6 @@
+<resources>
+    <string name="media_play">Tocar</string>
+    <string name="media_pause">Pausar</string>
+    <string name="media_next">Próxima música</string>
+    <string name="media_previous">Música anterior</string>
+</resources>

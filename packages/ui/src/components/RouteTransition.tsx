@@ -31,6 +31,34 @@ const slideVariants = {
   },
 };
 
+const fadeVariants = {
+  enter: { opacity: 0 },
+  center: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
+const FADE_DURATION_SECONDS = 0.12;
+
+const transitions = {
+  slide: {
+    variants: slideVariants,
+    transition: {
+      type: 'spring',
+      stiffness: 400,
+      damping: 30,
+      mass: 0.8,
+    },
+    className: 'will-change-[transform,filter]',
+  },
+  fade: {
+    variants: fadeVariants,
+    transition: { duration: FADE_DURATION_SECONDS },
+    className: 'will-change-[opacity]',
+  },
+} as const;
+
+type TransitionVariant = keyof typeof transitions;
+
 const createFrozenStore = <TValue,>(value: TValue) => ({
   get: () => value,
   subscribe: () => ({ unsubscribe: () => {} }),
@@ -64,7 +92,10 @@ const createFrozenRouter = (
   return frozenRouter;
 };
 
-const AnimatedOutlet = forwardRef<HTMLDivElement>((_props, ref) => {
+const AnimatedOutlet = forwardRef<
+  HTMLDivElement,
+  { variant: TransitionVariant }
+>(({ variant }, ref) => {
   const router = useRouter();
   const isPresent = useIsPresent();
   const frozenState = useRef(router.state);
@@ -80,17 +111,12 @@ const AnimatedOutlet = forwardRef<HTMLDivElement>((_props, ref) => {
   return (
     <motion.div
       ref={ref}
-      className="absolute inset-0 h-full w-full will-change-[transform,filter]"
-      variants={slideVariants}
+      className={`absolute inset-0 h-full w-full ${transitions[variant].className}`}
+      variants={transitions[variant].variants}
       initial="enter"
       animate="center"
       exit="exit"
-      transition={{
-        type: 'spring',
-        stiffness: 400,
-        damping: 30,
-        mass: 0.8,
-      }}
+      transition={transitions[variant].transition}
     >
       <RouterContextProvider router={frozenRouter.current}>
         <Outlet />
@@ -99,7 +125,13 @@ const AnimatedOutlet = forwardRef<HTMLDivElement>((_props, ref) => {
   );
 });
 
-export const RouteTransition = () => {
+type RouteTransitionProps = {
+  variant?: TransitionVariant;
+};
+
+export const RouteTransition = ({
+  variant = 'slide',
+}: RouteTransitionProps) => {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
@@ -107,7 +139,7 @@ export const RouteTransition = () => {
   return (
     <div className="relative h-full w-full overflow-hidden">
       <AnimatePresence mode="popLayout" initial={false}>
-        <AnimatedOutlet key={pathname} />
+        <AnimatedOutlet key={pathname} variant={variant} />
       </AnimatePresence>
     </div>
   );

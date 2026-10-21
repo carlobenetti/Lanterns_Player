@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "turbo dev --filter=@nuclearplayer/player",
     "build": "turbo build",
+    "android:build": "pnpm --filter @nuclearplayer/player android:build",
     "lint": "turbo lint",
     "lint:fix": "turbo lint:fix",
     "test": "turbo test",

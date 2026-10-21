@@ -1,5 +1,61 @@
 [
   {
+    "date": "2026-10-20T23:30",
+    "description": "Novo visual tirado do uniforme da Lanterna Verde do filme: as cores saíram do verde-menta e do verde neon e foram para o verde-petróleo escuro do traje, com fundo quase preto azulado e destaques num verde fosco. Cartões, barras e botões ganharam a textura do tecido do uniforme (grão fino, manchas suaves de material gasto e uma luz fraca vindo de cima). O modo escuro agora é o padrão, e o celular ganhou um botão de modo claro/escuro no topo (antes o celular ficava sempre no modo claro). O modo claro continua disponível, numa versão limpa e sem textura. O logo não mudou.",
+    "type": "improvement",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Visual",
+        "color": "cyan"
+      },
+      {
+        "label": "Android",
+        "color": "green"
+      }
+    ]
+  },
+  {
+    "date": "2026-10-20T22:00",
+    "description": "No Android, os controles da música agora aparecem na tela de bloqueio e na barra de notificações: capa, nome da música, artista, barra de progresso e os botões tocar/pausar, anterior e próxima. Os botões de fones de ouvido Bluetooth usam esses mesmos controles (ainda falta testar num fone de verdade). Os controles e o app ficam sempre sincronizados. Também saiu o ícone padrão do Tauri: o app agora aparece no celular com o emblema da Lanterna Verde, e as listas de músicas mostram o nome de cada música no celular (antes só aparecia o artista).",
+    "type": "feature",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Android",
+        "color": "green"
+      }
+    ]
+  },
+  {
+    "date": "2026-10-20T12:30",
+    "description": "Chegou a versão Android! Instale o arquivo .apk no celular e, na primeira abertura, permita o acesso aos arquivos. A pasta Music do celular já vira a sua biblioteca automaticamente (cada subpasta é uma playlist), e o botão de pasta no topo abre um navegador de pastas para escolher qualquer outra pasta do celular ou do cartão SD. No celular a tela é mais enxuta: abas embaixo (Library, Tocando agora, Fila, Favoritas e Histórico), um mini player com capa, play e próxima, e a tela Tocando agora sem as animações pesadas, para gastar menos bateria. O app fica ativo em segundo plano (com um aviso fixo na barra de notificações) para a música continuar com a tela desligada.",
+    "type": "feature",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Android",
+        "color": "green"
+      },
+      {
+        "label": "Minimalismo",
+        "color": "yellow"
+      }
+    ]
+  },
+  {
+    "date": "2026-10-20T12:00",
+    "description": "O app abre mais rápido, no computador e no celular: cada tela agora só carrega quando você abre ela pela primeira vez (o código carregado na abertura caiu de 1,28 MB para cerca de 0,16 MB). A leitura das tags e capas das músicas ao adicionar uma pasta usa todos os núcleos do processador, então pastas grandes entram bem mais rápido. Nada muda no uso.",
+    "type": "improvement",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Desempenho",
+        "color": "orange"
+      }
+    ]
+  },
+  {
     "date": "2026-10-16T12:00",
     "description": "Tela mais limpa: a barra de cima saiu, e os botões Add folder e modo claro/escuro foram para o topo da barra lateral, no mesmo estilo dos outros itens. Dashboard e Playlists viraram uma tela só, a Library: as pastas ficam em cima e, embaixo, um atalho para All music (todas as músicas das suas pastas numa lista só) e as suas playlists, com o botão de criar. Na tela Now playing a barra de player de baixo some, porque os controles já estão ali. Novo modo tela cheia, só com a capa, o nome da música, a onda e a fila à direita (Esc sai). E a onda virou uma viagem espacial no estilo Lanterna Verde: maior, espelhada, com brilho verde e um campo de estrelas que acelera com a batida.",
     "type": "feature",

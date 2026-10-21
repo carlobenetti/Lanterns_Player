@@ -1,14 +1,21 @@
 import { LazyStore } from '@tauri-apps/plugin-store';
 
+import { isMobilePlatform } from './platform';
+
 const ROOTS_KEY = 'roots';
 
-export const DEFAULT_LIBRARY_ROOTS = ['G:\\Meu Drive\\Music'];
+const DESKTOP_LIBRARY_ROOTS = ['G:\\Meu Drive\\Music'];
+
+const MOBILE_LIBRARY_ROOTS = ['/storage/emulated/0/Music'];
+
+const defaultLibraryRoots = () =>
+  isMobilePlatform() ? MOBILE_LIBRARY_ROOTS : DESKTOP_LIBRARY_ROOTS;
 
 const store = new LazyStore('library.json');
 
 export const libraryRoots = {
   async list(): Promise<string[]> {
-    return (await store.get<string[]>(ROOTS_KEY)) ?? DEFAULT_LIBRARY_ROOTS;
+    return (await store.get<string[]>(ROOTS_KEY)) ?? defaultLibraryRoots();
   },
 
   async add(folderPath: string): Promise<void> {

@@ -240,6 +240,9 @@ export const usePlaylistStore = create<PlaylistStore>((set, get) => ({
   },
 
   syncLibraryRoots: async () => {
+    if (get().isSyncingLibrary) {
+      return;
+    }
     const knownFolders = new Set(
       get()
         .index.filter(isFolderPlaylist)

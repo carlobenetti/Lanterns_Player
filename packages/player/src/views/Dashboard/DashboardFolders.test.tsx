@@ -168,6 +168,17 @@ describe('Dashboard folders', () => {
     ]);
   });
 
+  it('uses the Google Drive music folder as the default library on desktop', async () => {
+    programMusicLibrary();
+
+    await DashboardWrapper.mount();
+    await DashboardWrapper.simulateRestart();
+
+    expect(commandMocks.command('resolveMusicFolders')).toHaveBeenCalledWith(
+      'G:\\Meu Drive\\Music',
+    );
+  });
+
   it('shows placeholder cards while the music library is loading', async () => {
     commandMocks
       .command('resolveMusicFolders')

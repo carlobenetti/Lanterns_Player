@@ -13,3 +13,7 @@ test-results
 .env
 .env.*
 !.env.example
+
+# Android APKs
+packages/player/release/
+*.apk

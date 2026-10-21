@@ -7,6 +7,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use lofty::picture::{Picture, PictureType};
 use lofty::prelude::*;
+use rayon::prelude::*;
 use serde::Serialize;
 use specta::Type;
 use tauri::{AppHandle, Manager};
@@ -283,7 +284,7 @@ pub async fn read_audio_tags(
     tauri::async_runtime::spawn_blocking(move || {
         fs::create_dir_all(&covers_dir).map_err(|err| err.to_string())?;
         Ok(paths
-            .iter()
+            .par_iter()
             .map(|path| read_tags(Path::new(path), &covers_dir))
             .collect())
     })

@@ -62,10 +62,10 @@ describe('Settings integration', () => {
 
     render(<App />);
 
-    const toggle = await screen.findByRole('button', { name: 'Dark mode' });
+    const toggle = await screen.findByRole('button', { name: 'Light mode' });
     await userEvent.click(toggle);
 
-    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    expect(document.documentElement.getAttribute('data-theme')).toBeNull();
 
     // Simulate player restart
     cleanup();
@@ -77,9 +77,9 @@ describe('Settings integration', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole('button', { name: 'Light mode' }),
+        screen.getByRole('button', { name: 'Dark mode' }),
       ).toBeInTheDocument();
-      expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+      expect(document.documentElement.getAttribute('data-theme')).toBeNull();
     });
   });
 });

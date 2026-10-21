@@ -29,9 +29,12 @@ import { ConnectedSettingsModal } from '../components/ConnectedSettingsModal';
 import { ConnectedThemeController } from '../components/ConnectedThemeController';
 import { ConnectedTitleBar } from '../components/ConnectedTitleBar';
 import { FlatpakWarningBanner } from '../components/FlatpakWarningBanner';
+import { MobileShell } from '../components/mobile/MobileShell';
 import { SoundProvider } from '../components/SoundProvider';
 import { StreamResolver } from '../components/StreamResolver';
 import { useFramelessWindow } from '../hooks/useFramelessWindow';
+import { useApplyThemeMode } from '../hooks/useThemeMode';
+import { isMobilePlatform } from '../services/platform';
 import { GlobalShortcuts } from '../shortcuts';
 import { useFullscreenStore } from '../stores/fullscreenStore';
 import { useLayoutStore } from '../stores/layoutStore';
@@ -39,7 +42,7 @@ import { useSettingsModalStore } from '../stores/settingsModalStore';
 
 const NOW_PLAYING_PATH = '/now-playing';
 
-const RootComponent = () => {
+const DesktopRoot = () => {
   const { t } = useTranslation('navigation');
   const { t: tPrefs } = useTranslation('preferences');
   const {
@@ -139,6 +142,22 @@ const RootComponent = () => {
       <ConnectedSettingsModal />
     </PlayerShell>
   );
+};
+
+const MobileRoot = () => (
+  <>
+    <StreamResolver />
+    <SoundProvider>
+      <MobileShell />
+    </SoundProvider>
+    <Toaster position="top-center" />
+    <ConnectedSettingsModal />
+  </>
+);
+
+const RootComponent = () => {
+  useApplyThemeMode();
+  return isMobilePlatform() ? <MobileRoot /> : <DesktopRoot />;
 };
 
 export const Route = createRootRoute({

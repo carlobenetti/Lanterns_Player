@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">"Lanterns Player"</string>
+    <string name="main_activity_title">"Lanterns Player"</string>
+    <string name="media_play">Play</string>
+    <string name="media_pause">Pause</string>
+    <string name="media_next">Next track</string>
+    <string name="media_previous">Previous track</string>
+</resources>

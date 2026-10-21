@@ -7,6 +7,7 @@
     "dev": "tauri dev --no-dev-server-wait",
     "build": "tsc && vite build && tauri build",
     "build:frontend": "tsc && vite build",
+    "android:build": "node scripts/build-android.mjs",
     "tauri": "tauri",
     "preview": "vite preview",
     "lint": "eslint .",

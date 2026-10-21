@@ -135,7 +135,7 @@ describe('Playlists view', () => {
     await PlaylistsWrapper.mount();
     await PlaylistsWrapper.card(0).click();
 
-    expect(PlaylistsWrapper.detailView).toBeInTheDocument();
+    expect(await PlaylistsWrapper.findDetailView()).toBeInTheDocument();
   });
 
   it('hides the filter input when there are no playlists', async () => {

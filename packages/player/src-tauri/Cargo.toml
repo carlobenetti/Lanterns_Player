@@ -29,7 +29,6 @@ tokio = { version = "1", features = ["full"] }
 base64 = "0.23"
 tempfile = "3.10"
 tauri-plugin-opener = "2"
-fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 axum = { version = "0.8", default-features = false, features = ["http1", "tokio", "json"] }
 mime_guess = "2"
 tokio-util = { version = "0.7", features = ["rt", "io"] }
@@ -40,7 +39,9 @@ specta = { version = "=2.0.0-rc.25", features = ["derive"] }
 specta-typescript = "0.0.12"
 tauri-specta = { version = "=2.0.0-rc.25", features = ["derive", "typescript"] }
 lofty = "0.22.2"
+rayon = "1.10"
 
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
 tauri-plugin-window-state = "2.4.1"
+fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 

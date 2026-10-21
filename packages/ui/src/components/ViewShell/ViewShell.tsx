@@ -25,14 +25,14 @@ export const ViewShell: FC<ViewShellProps> = ({
 }) => (
   <div
     className={cn(
-      'surface-background relative flex h-full min-h-0 w-full flex-1 flex-col items-start justify-start px-6 pt-6',
+      'surface-background relative flex h-full min-h-0 w-full flex-1 flex-col items-start justify-start px-4 pt-4 sm:px-6 sm:pt-6',
       classes?.root,
     )}
     data-testid={dataTestId}
   >
     {title && (
       <h1
-        className="mb-6 flex w-full flex-0 flex-row text-center text-3xl font-bold"
+        className="mb-4 flex w-full flex-0 flex-row text-center text-2xl font-bold sm:mb-6 sm:text-3xl"
         data-testid="title"
       >
         {title}

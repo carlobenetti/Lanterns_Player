@@ -8,6 +8,7 @@ fn main() {
     #[cfg(target_os = "linux")]
     appimage_wayland::preload_host_wayland_client();
 
+    #[cfg(desktop)]
     let _ = fix_path_env::fix_all_vars();
 
     #[cfg(target_os = "macos")]

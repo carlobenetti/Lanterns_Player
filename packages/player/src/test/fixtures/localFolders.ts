@@ -1,4 +1,6 @@
 import type {
+  FolderEntry,
+  FolderListing,
   LocalAudioTags,
   LocalFolderScan,
   MusicFolderSelection,
@@ -110,4 +112,60 @@ export const MUSIC_LIBRARY_SCANS: Record<string, LocalFolderScan> = {
 export const EMPTY_FOLDER_SELECTION: MusicFolderSelection = {
   isLibrary: true,
   folders: [],
+};
+
+export const ANDROID_STORAGE_PATH = '/storage/emulated/0';
+
+export const ANDROID_MUSIC_PATH = `${ANDROID_STORAGE_PATH}/Music`;
+
+export const ANDROID_CHILL_PATH = `${ANDROID_MUSIC_PATH}/Chill`;
+
+export const ANDROID_STORAGE_ROOTS: FolderEntry[] = [
+  { path: ANDROID_STORAGE_PATH, name: ANDROID_STORAGE_PATH },
+];
+
+export const ANDROID_FOLDER_LISTINGS: Record<string, FolderListing> = {
+  [ANDROID_STORAGE_PATH]: {
+    path: ANDROID_STORAGE_PATH,
+    name: '0',
+    parent: null,
+    folders: [
+      { path: `${ANDROID_STORAGE_PATH}/Download`, name: 'Download' },
+      { path: ANDROID_MUSIC_PATH, name: 'Music' },
+    ],
+    audioFileCount: 0,
+  },
+  [ANDROID_MUSIC_PATH]: {
+    path: ANDROID_MUSIC_PATH,
+    name: 'Music',
+    parent: ANDROID_STORAGE_PATH,
+    folders: [{ path: ANDROID_CHILL_PATH, name: 'Chill' }],
+    audioFileCount: 0,
+  },
+  [ANDROID_CHILL_PATH]: {
+    path: ANDROID_CHILL_PATH,
+    name: 'Chill',
+    parent: ANDROID_MUSIC_PATH,
+    folders: [],
+    audioFileCount: 2,
+  },
+};
+
+export const ANDROID_CHILL_SCAN: LocalFolderScan = {
+  ...CHILL_FOLDER_SCAN,
+  folderPath: ANDROID_CHILL_PATH,
+  files: CHILL_FOLDER_SCAN.files.map((file) => ({
+    ...file,
+    path: file.path.replace(CHILL_FOLDER_PATH, ANDROID_CHILL_PATH),
+  })),
+};
+
+export const ANDROID_CHILL_SELECTION: MusicFolderSelection = {
+  isLibrary: false,
+  folders: [ANDROID_CHILL_PATH],
+};
+
+export const ANDROID_MUSIC_SELECTION: MusicFolderSelection = {
+  isLibrary: true,
+  folders: [ANDROID_CHILL_PATH],
 };
