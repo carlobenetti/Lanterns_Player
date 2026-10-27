@@ -19,17 +19,13 @@ const RELEASE_PER_FRAME = 0.86;
 const PEAK_FALL_PER_SECOND = 0.4;
 const PEAK_GAP_PX = 6;
 const PEAK_RADIUS_RATIO = 0.32;
-const HORIZON_RATIO = 0.66;
+const HORIZON_RATIO = 0.86;
 const UP_REACH_RATIO = 0.94;
 const DOWN_REACH_RATIO = 0.85;
 const HORIZON_GAP_PX = 3;
 const BAR_FILL_RATIO = 0.58;
 const BEAM_GLOW_PX = 22;
 const REFLECTION_ALPHA = 0.28;
-const AURA_BASE_ALPHA = 0.1;
-const AURA_ENERGY_ALPHA = 0.45;
-const AURA_BASE_RADIUS = 0.22;
-const AURA_ENERGY_RADIUS = 0.4;
 const HORIZON_BASE_ALPHA = 0.45;
 const COLOR_REFRESH_FRAMES = 30;
 const SIDES = [1, -1] as const;
@@ -70,23 +66,6 @@ const createLanternDrawer = (): CanvasDrawer => {
       side > 0
         ? centerX + index * slot + barInset
         : centerX - index * slot - barInset - barWidth;
-
-    const auraRadius =
-      Math.max(width, height) *
-      (AURA_BASE_RADIUS + energy * AURA_ENERGY_RADIUS);
-    const aura = context.createRadialGradient(
-      centerX,
-      horizon,
-      0,
-      centerX,
-      horizon,
-      auraRadius,
-    );
-    aura.addColorStop(0, colors.deep);
-    aura.addColorStop(1, 'transparent');
-    context.globalAlpha = AURA_BASE_ALPHA + energy * AURA_ENERGY_ALPHA;
-    context.fillStyle = aura;
-    context.fillRect(0, 0, width, height);
 
     const beams = new Path2D();
     const reflections = new Path2D();

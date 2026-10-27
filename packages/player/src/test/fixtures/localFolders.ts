@@ -36,6 +36,18 @@ export const CHILL_FOLDER_SCAN_WITH_NEW_FILE: LocalFolderScan = {
   ],
 };
 
+export const CHILL_FOLDER_SCAN_WITH_RENAMED_FILE: LocalFolderScan = {
+  ...CHILL_FOLDER_SCAN,
+  files: [
+    {
+      path: `${CHILL_FOLDER_PATH}/Air - Sexy Boy.mp3`,
+      fileName: 'Air - Sexy Boy',
+      extension: 'mp3',
+    },
+    CHILL_FOLDER_SCAN.files[1],
+  ],
+};
+
 export const CHILL_FOLDER_SELECTION: MusicFolderSelection = {
   isLibrary: false,
   folders: [CHILL_FOLDER_PATH],

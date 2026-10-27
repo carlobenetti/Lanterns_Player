@@ -57,6 +57,14 @@ const RootComponent = () => {
   const isFullscreen = useFullscreenStore((state) => state.isFullscreen);
   useFramelessWindow();
   const exitFullscreen = useFullscreenStore((state) => state.exit);
+  const isFullscreenQueueOpen = useFullscreenStore(
+    (state) => state.isQueueOpen,
+  );
+  const toggleFullscreenQueue = useFullscreenStore(
+    (state) => state.toggleQueue,
+  );
+  const isQueueVisible = !isFullscreen || isFullscreenQueueOpen;
+  const isQueueCollapsed = isFullscreen ? false : rightSidebar.isCollapsed;
   useEffect(() => {
     const window = getCurrentWindow();
     window.show().then(() => window.setFocus());
@@ -122,15 +130,19 @@ const RootComponent = () => {
             <RouteTransition />
           </PlayerWorkspace.Main>
 
-          <PlayerWorkspace.RightSidebar
-            width={rightSidebar.width}
-            isCollapsed={rightSidebar.isCollapsed}
-            onWidthChange={setRightSidebarWidth}
-            onToggle={toggleRightSidebar}
-            headerActions={<QueueHeaderActions />}
-          >
-            <ConnectedQueuePanel isCollapsed={rightSidebar.isCollapsed} />
-          </PlayerWorkspace.RightSidebar>
+          {isQueueVisible && (
+            <PlayerWorkspace.RightSidebar
+              width={rightSidebar.width}
+              isCollapsed={isQueueCollapsed}
+              onWidthChange={setRightSidebarWidth}
+              onToggle={
+                isFullscreen ? toggleFullscreenQueue : toggleRightSidebar
+              }
+              headerActions={<QueueHeaderActions />}
+            >
+              <ConnectedQueuePanel isCollapsed={isQueueCollapsed} />
+            </PlayerWorkspace.RightSidebar>
+          )}
         </PlayerWorkspace>
       </SoundProvider>
 

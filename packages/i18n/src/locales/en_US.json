@@ -140,7 +140,10 @@
     "all-music-count": "{{count}} track",
     "all-music-count_other": "{{count}} tracks",
     "all-music-empty": "No music yet",
-    "all-music-empty-description": "Add a music folder to see all your tracks here"
+    "all-music-empty-description": "Add a music folder to see all your tracks here",
+    "refresh-library": "Refresh",
+    "refresh-library-success": "Music folders refreshed",
+    "refresh-library-error": "Some music folders could not be read"
   },
   "flatpak": {
     "sandboxWarning": "You're running Nuclear in a Flatpak sandbox. Some features may not work correctly. If you experience issues, try the .deb or AppImage instead.",
@@ -298,7 +301,9 @@
       "description": "Open a folder in the Library and press play"
     },
     "fullscreen": "Fullscreen",
-    "exitFullscreen": "Exit fullscreen"
+    "exitFullscreen": "Exit fullscreen",
+    "showQueue": "Show queue",
+    "hideQueue": "Hide queue"
   },
   "logs": {
     "title": "Logs",

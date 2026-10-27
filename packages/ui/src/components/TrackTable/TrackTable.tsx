@@ -39,6 +39,7 @@ function TrackTableBase<T extends Track = Track>({
   features,
   actions,
   meta,
+  toolbarActions,
   rowHeight = DEFAULT_ROW_HEIGHT,
   overscan = DEFAULT_OVERSCAN,
 }: TrackTableProps<T>) {
@@ -123,6 +124,7 @@ function TrackTableBase<T extends Track = Track>({
         <Toolbar
           filterValue={globalFilter}
           onFilterChange={setGlobalFilter}
+          extraActions={toolbarActions}
           className="mb-2 shrink-0"
         />
         <ScrollableArea

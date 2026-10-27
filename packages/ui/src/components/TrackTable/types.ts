@@ -74,6 +74,7 @@ export type TrackTableProps<T extends Track = Track> = {
   rowHeight?: number;
   overscan?: number;
   classes?: TrackTableClasses;
+  toolbarActions?: ReactNode;
   labels: TrackTableLabels;
   'aria-label'?: string;
 };

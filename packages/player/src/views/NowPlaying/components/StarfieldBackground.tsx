@@ -1,6 +1,6 @@
 import mean from 'lodash-es/mean';
 import range from 'lodash-es/range';
-import { FC } from 'react';
+import { FC, useCallback, useRef } from 'react';
 
 import { cn } from '@nuclearplayer/ui';
 
@@ -9,6 +9,7 @@ import {
   readLanternColors,
   type LanternColors,
 } from './audioSpectrum';
+import { createEmeraldPlanetPainter } from './emeraldPlanet';
 import { useCanvasAnimation, type CanvasDrawer } from './useCanvasAnimation';
 
 const STAR_COUNT = 280;
@@ -25,8 +26,10 @@ const STAR_MIN_WIDTH = 0.4;
 const STAR_MAX_WIDTH = 2.6;
 const EDGE_STAR_RATIO = 0.3;
 const NEBULA_BASE_ALPHA = 0.08;
-const NEBULA_ENERGY_ALPHA = 0.22;
+const NEBULA_ENERGY_ALPHA = 0.4;
 const NEBULA_RADIUS_RATIO = 0.7;
+const DEFAULT_PLANET_RADIUS_RATIO = 0.09;
+const VANISHING_POINT_RATIO = 0.375;
 const COLOR_REFRESH_FRAMES = 30;
 export const LANTERN_ENERGY_VARIABLE = '--lantern-energy';
 
@@ -44,16 +47,22 @@ const spawnStar = (depth: number): Star => ({
   isEdgeColored: Math.random() < EDGE_STAR_RATIO,
 });
 
-const createStarfieldDrawer = (): CanvasDrawer => {
+const createStarfieldDrawer = (
+  getPlanetRadiusRatio: () => number,
+): CanvasDrawer => {
   const readSpectrum = createSpectrumReader(BAND_COUNT);
   const stars = range(STAR_COUNT).map(() => spawnStar(Math.random()));
   let energy = 0;
   let colors: LanternColors | null = null;
+  let paintPlanet: ReturnType<typeof createEmeraldPlanetPainter> = null;
   let frameCount = 0;
 
   return ({ canvas, context, width, height, deltaSeconds }) => {
     if (!colors || frameCount % COLOR_REFRESH_FRAMES === 0) {
       colors = readLanternColors(canvas);
+    }
+    if (frameCount === 0) {
+      paintPlanet = createEmeraldPlanetPainter();
     }
     frameCount++;
 
@@ -72,7 +81,8 @@ const createStarfieldDrawer = (): CanvasDrawer => {
     );
 
     const centerX = width / 2;
-    const centerY = height / 2;
+    const centerY = height * VANISHING_POINT_RATIO;
+    const spreadY = height / 2;
     const speed = BASE_SPEED_PER_SECOND + energy * ENERGY_SPEED_PER_SECOND;
 
     const nebula = context.createRadialGradient(
@@ -89,13 +99,22 @@ const createStarfieldDrawer = (): CanvasDrawer => {
     context.fillStyle = nebula;
     context.fillRect(0, 0, width, height);
 
+    paintPlanet?.(context, {
+      centerX,
+      centerY,
+      radius: Math.min(width, height) * getPlanetRadiusRatio(),
+      energy,
+      deltaSeconds,
+      colors,
+    });
+
     const { core, edge } = colors;
     context.lineCap = 'round';
     stars.forEach((star, index) => {
       star.depth -= speed * deltaSeconds;
       const tailDepth = star.depth + speed * STREAK_SECONDS;
       const x = centerX + (star.x / star.depth) * centerX;
-      const y = centerY + (star.y / star.depth) * centerY;
+      const y = centerY + (star.y / star.depth) * spreadY;
       const isOffscreen = x < 0 || x > width || y < 0 || y > height;
       if (star.depth <= MIN_DEPTH || isOffscreen) {
         stars[index] = spawnStar(1);
@@ -110,7 +129,7 @@ const createStarfieldDrawer = (): CanvasDrawer => {
       context.beginPath();
       context.moveTo(
         centerX + (star.x / tailDepth) * centerX,
-        centerY + (star.y / tailDepth) * centerY,
+        centerY + (star.y / tailDepth) * spreadY,
       );
       context.lineTo(x, y);
       context.stroke();
@@ -120,13 +139,21 @@ const createStarfieldDrawer = (): CanvasDrawer => {
 };
 
 type StarfieldBackgroundProps = {
+  planetRadiusRatio?: number;
   className?: string;
 };
 
 export const StarfieldBackground: FC<StarfieldBackgroundProps> = ({
+  planetRadiusRatio = DEFAULT_PLANET_RADIUS_RATIO,
   className,
 }) => {
-  const canvasRef = useCanvasAnimation(createStarfieldDrawer);
+  const planetRadiusRatioRef = useRef(planetRadiusRatio);
+  planetRadiusRatioRef.current = planetRadiusRatio;
+  const createDrawer = useCallback(
+    () => createStarfieldDrawer(() => planetRadiusRatioRef.current),
+    [],
+  );
+  const canvasRef = useCanvasAnimation(createDrawer);
 
   return (
     <canvas

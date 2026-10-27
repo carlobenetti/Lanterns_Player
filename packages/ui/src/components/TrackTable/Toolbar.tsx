@@ -1,4 +1,5 @@
 import { FilterIcon, PlayIcon, PlusIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 import { cn } from '../../utils';
 import { Button } from '../Button';
@@ -9,17 +10,24 @@ import { useTrackTableContext } from './TrackTableContext';
 type ToolbarProps = {
   filterValue: string;
   onFilterChange: (value: string) => void;
+  extraActions?: ReactNode;
   className?: string;
 };
 
 export function Toolbar({
   filterValue,
   onFilterChange,
+  extraActions,
   className,
 }: ToolbarProps) {
   const { features, actions, labels } = useTrackTableContext();
 
-  if (!features.playAll && !features.addAllToQueue && !features.filterable) {
+  if (
+    !features.playAll &&
+    !features.addAllToQueue &&
+    !features.filterable &&
+    !extraActions
+  ) {
     return null;
   }
 
@@ -48,6 +56,7 @@ export function Toolbar({
           </Button>
         </Tooltip>
       )}
+      {extraActions}
       {features.filterable && (
         <div className="ml-auto inline-flex w-full max-w-sm items-stretch">
           <Input

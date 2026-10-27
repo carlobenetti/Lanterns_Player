@@ -102,6 +102,17 @@ export const DashboardWrapper = {
       const table = await screen.findByRole('table');
       return within(table).findByText(title);
     },
+    hasTrack(title: string) {
+      return within(screen.getByRole('table')).queryByText(title) !== null;
+    },
+    refreshButton: {
+      get element() {
+        return screen.getByTestId('refresh-library-button');
+      },
+      async click() {
+        await userEvent.click(this.element);
+      },
+    },
   },
 
   folders: {

@@ -103,6 +103,7 @@ export const NowPlayingWrapper = {
 
   fullscreenButton: button('now-playing-fullscreen-button'),
   exitFullscreenButton: button('now-playing-exit-fullscreen-button'),
+  queueToggleButton: button('now-playing-queue-toggle'),
 
   async pressEscape() {
     await user.keyboard('{Escape}');

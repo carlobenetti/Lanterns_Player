@@ -1,5 +1,5 @@
-import { Maximize2, Minimize2, Music2 } from 'lucide-react';
-import { FC, useEffect } from 'react';
+import { ListMusic, Maximize2, Minimize2, Music2 } from 'lucide-react';
+import { FC, ReactNode, useEffect } from 'react';
 
 import { useTranslation } from '@nuclearplayer/i18n';
 import { pickArtwork } from '@nuclearplayer/model';
@@ -21,6 +21,8 @@ const PLACEHOLDER_ICON_SIZE = 64;
 const FULLSCREEN_ICON_SIZE = 18;
 const LANTERN_GLOW_BASE_OPACITY = 0.15;
 const LANTERN_GLOW_ENERGY_OPACITY = 1.2;
+const QUEUE_ICON_SIZE = 18;
+const FULLSCREEN_PLANET_RADIUS_RATIO = 0.15;
 
 const LanternCover: FC<{ coverUrl?: string; className?: string }> = ({
   coverUrl,
@@ -81,6 +83,37 @@ const FullscreenButton: FC<{ className?: string }> = ({ className }) => {
     </Button>
   );
 };
+
+const FullscreenQueueButton: FC = () => {
+  const { t } = useTranslation('nowPlaying');
+  const isQueueOpen = useFullscreenStore((state) => state.isQueueOpen);
+  const toggleQueue = useFullscreenStore((state) => state.toggleQueue);
+
+  return (
+    <Button
+      size="icon"
+      variant="text"
+      className="rounded-full opacity-25 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+      onClick={toggleQueue}
+      aria-label={isQueueOpen ? t('hideQueue') : t('showQueue')}
+      aria-pressed={isQueueOpen}
+      data-testid="now-playing-queue-toggle"
+    >
+      <ListMusic size={QUEUE_ICON_SIZE} />
+    </Button>
+  );
+};
+
+const PlaybackPanel: FC<{ leading?: ReactNode }> = ({ leading }) => (
+  <div className="relative flex shrink-0 flex-col gap-4">
+    <NowPlayingSeekBar />
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center">
+      <div className="justify-self-start">{leading}</div>
+      <NowPlayingControls />
+      <ConnectedVolume className="justify-self-end" />
+    </div>
+  </div>
+);
 
 const useExitFullscreenOnEscape = (isFullscreen: boolean) => {
   const exit = useFullscreenStore((state) => state.exit);
@@ -145,33 +178,42 @@ export const NowPlaying: FC = () => {
           className="pointer-events-none absolute inset-0 size-full scale-125 object-cover opacity-15 blur-3xl select-none"
         />
       )}
-      <StarfieldBackground />
+      <StarfieldBackground
+        planetRadiusRatio={
+          isFullscreen ? FULLSCREEN_PLANET_RADIUS_RATIO : undefined
+        }
+      />
 
       {isFullscreen ? (
         <div
           data-testid="now-playing-fullscreen"
-          className="relative flex h-full w-full flex-col items-center gap-6 px-10 pt-12 pb-8"
+          className="relative flex h-full w-full flex-col justify-end gap-4 px-10 pb-8"
         >
-          <FullscreenButton className="absolute top-4 right-4" />
-          <LanternCover
-            coverUrl={coverUrl}
-            className="w-[clamp(9rem,34vh,24rem)]"
-          />
-          <div className="flex max-w-xl min-w-0 flex-col items-center gap-1 text-center">
-            <p
-              data-testid="now-playing-stage-title"
-              className="font-heading w-full truncate text-lg font-bold"
-            >
-              {track.title}
-            </p>
-            <p
-              data-testid="now-playing-stage-artist"
-              className="w-full truncate text-sm opacity-60"
-            >
-              {artist}
-            </p>
+          <div className="absolute top-8 left-10 flex w-[clamp(7rem,13vw,11rem)] flex-col gap-3">
+            <LanternCover coverUrl={coverUrl} className="w-full" />
+            <div className="flex min-w-0 flex-col gap-1">
+              <p
+                data-testid="now-playing-stage-title"
+                className="font-heading line-clamp-2 text-base leading-tight font-bold"
+              >
+                {track.title}
+              </p>
+              <p
+                data-testid="now-playing-stage-artist"
+                className="truncate text-sm opacity-60"
+              >
+                {artist}
+              </p>
+            </div>
           </div>
-          <SpectrumVisualizer className="min-h-48 flex-1" />
+          <div className="absolute top-4 right-4 flex items-center gap-1">
+            <FullscreenQueueButton />
+            <FullscreenButton />
+          </div>
+          <div className="pointer-events-none h-[40%] shrink-0">
+            <SpectrumVisualizer className="h-full" />
+          </div>
+          <PlaybackPanel />
         </div>
       ) : (
         <div className="relative flex h-full w-full flex-col gap-6 px-10 py-8">
@@ -205,16 +247,9 @@ export const NowPlaying: FC = () => {
             </div>
           </header>
 
-          <SpectrumVisualizer className="min-h-40 flex-1" />
+          <SpectrumVisualizer className="pointer-events-none min-h-40 flex-1 translate-y-[20%]" />
 
-          <div className="flex shrink-0 flex-col gap-4">
-            <NowPlayingSeekBar />
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center">
-              <FullscreenButton className="justify-self-start" />
-              <NowPlayingControls />
-              <ConnectedVolume className="justify-self-end" />
-            </div>
-          </div>
+          <PlaybackPanel leading={<FullscreenButton />} />
         </div>
       )}
     </div>

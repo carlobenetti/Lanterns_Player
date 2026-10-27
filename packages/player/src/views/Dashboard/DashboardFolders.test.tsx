@@ -8,6 +8,7 @@ import {
   CHILL_FOLDER_PATH,
   CHILL_FOLDER_SCAN,
   CHILL_FOLDER_SCAN_WITH_NEW_FILE,
+  CHILL_FOLDER_SCAN_WITH_RENAMED_FILE,
   CHILL_FOLDER_SELECTION,
   CHILL_FOLDER_TAGS,
   EMPTY_FOLDER_SELECTION,
@@ -242,6 +243,45 @@ describe('Dashboard folders', () => {
 
     expect(
       await DashboardWrapper.openedPlaylist.findTrack('In the Waiting Line'),
+    ).toBeInTheDocument();
+  });
+
+  it('picks up renamed files when All music is refreshed', async () => {
+    programChillFolder();
+
+    await DashboardWrapper.mount();
+    await DashboardWrapper.addFolderButton.click();
+    await DashboardWrapper.allMusic.open();
+    expect(
+      await DashboardWrapper.allMusic.findTrack("La Femme d'Argent"),
+    ).toBeInTheDocument();
+
+    commandMocks
+      .command('scanMusicFolder')
+      .mockResolvedValue(ok(CHILL_FOLDER_SCAN_WITH_RENAMED_FILE));
+    await DashboardWrapper.allMusic.refreshButton.click();
+
+    expect(
+      await DashboardWrapper.allMusic.findTrack('Sexy Boy'),
+    ).toBeInTheDocument();
+    expect(DashboardWrapper.allMusic.hasTrack("La Femme d'Argent")).toBe(false);
+  });
+
+  it('adds new subfolders of the music library when All music is refreshed', async () => {
+    programMusicLibrary();
+
+    await DashboardWrapper.mount();
+    await DashboardWrapper.addFolderButton.click();
+    await DashboardWrapper.folders.folder('Mix - Tarzan Boy').find();
+    await DashboardWrapper.allMusic.open();
+
+    commandMocks
+      .command('resolveMusicFolders')
+      .mockResolvedValue(ok(MUSIC_LIBRARY_SELECTION_WITH_NEW_FOLDER));
+    await DashboardWrapper.allMusic.refreshButton.click();
+
+    expect(
+      await DashboardWrapper.allMusic.findTrack('Africa'),
     ).toBeInTheDocument();
   });
 });

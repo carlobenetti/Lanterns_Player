@@ -6,6 +6,7 @@ import { useTranslation } from '@nuclearplayer/i18n';
 import { EmptyState, Loader, ViewShell } from '@nuclearplayer/ui';
 
 import { ConnectedTrackTable } from '../../components/ConnectedTrackTable';
+import { RefreshLibraryButton } from './RefreshLibraryButton';
 import { useAllMusicTracks } from './useAllMusicTracks';
 
 const EMPTY_ICON_SIZE = 48;
@@ -49,6 +50,7 @@ export const AllMusic: FC = () => {
             displayDuration: tracks.some((track) => track.durationMs != null),
             displayQueueControls: true,
           }}
+          toolbarActions={<RefreshLibraryButton />}
         />
       )}
     </ViewShell>

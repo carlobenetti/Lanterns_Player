@@ -61,7 +61,7 @@ describe('Now playing view', () => {
     expect(Wrapper.playerBarCover).not.toBeInTheDocument();
   });
 
-  it('shows only the cover, the track name, the wave and the queue in fullscreen', async () => {
+  it('shows the cover, the track name, the wave and the controls in fullscreen', async () => {
     Wrapper.seedQueue(Wrapper.fixtures.album(), 1);
     await Wrapper.mount();
 
@@ -73,9 +73,47 @@ describe('Now playing view', () => {
     expect(Wrapper.artist).toHaveTextContent('Wavelength');
     expect(Wrapper.cover).toBeInTheDocument();
     expect(Wrapper.spectrumVisualizer).toBeInTheDocument();
-    expect(Wrapper.queuePanel).toBeInTheDocument();
+    expect(Wrapper.queuePanel).not.toBeInTheDocument();
     expect(Wrapper.leftSidebar).not.toBeInTheDocument();
-    expect(Wrapper.controls).not.toBeInTheDocument();
+    expect(Wrapper.controls).toBeInTheDocument();
+    expect(Wrapper.elapsed).toBeInTheDocument();
+  });
+
+  it('controls playback from fullscreen', async () => {
+    Wrapper.seedQueue(Wrapper.fixtures.album());
+    Wrapper.seedPausedTrack();
+    await Wrapper.mount();
+    await Wrapper.fullscreenButton.click();
+
+    await Wrapper.playButton.click();
+    expect(Wrapper.status).toBe('playing');
+
+    await Wrapper.pauseButton.click();
+    expect(Wrapper.status).toBe('paused');
+  });
+
+  it('opens and closes the queue from a button in fullscreen', async () => {
+    Wrapper.seedQueue(Wrapper.fixtures.album());
+    await Wrapper.mount();
+    await Wrapper.fullscreenButton.click();
+
+    await Wrapper.queueToggleButton.click();
+    expect(Wrapper.queuePanel).toBeInTheDocument();
+
+    await Wrapper.queueToggleButton.click();
+    expect(Wrapper.queuePanel).not.toBeInTheDocument();
+  });
+
+  it('closes the fullscreen queue when leaving fullscreen', async () => {
+    Wrapper.seedQueue(Wrapper.fixtures.album());
+    await Wrapper.mount();
+    await Wrapper.fullscreenButton.click();
+    await Wrapper.queueToggleButton.click();
+
+    await Wrapper.exitFullscreenButton.click();
+    await Wrapper.fullscreenButton.click();
+
+    expect(Wrapper.queuePanel).not.toBeInTheDocument();
   });
 
   it('leaves fullscreen with the exit button', async () => {

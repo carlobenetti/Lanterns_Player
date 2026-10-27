@@ -1,3 +1,4 @@
+import isEmpty from 'lodash-es/isEmpty';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
@@ -42,6 +43,7 @@ type PlaylistStore = {
   addFolderPlaylist: (folderPath: string) => Promise<string>;
   syncLibraryRoots: () => Promise<void>;
   syncFolderPlaylist: (id: string) => Promise<void>;
+  refreshLibrary: () => Promise<void>;
   setPlaylistCover: (id: string, imagePath: string) => Promise<void>;
   reorderTracks: (
     playlistId: string,
@@ -360,6 +362,30 @@ export const usePlaylistStore = create<PlaylistStore>((set, get) => ({
       playlists: new Map(state.playlists).set(id, updated),
       index,
     }));
+  },
+
+  refreshLibrary: async () => {
+    const folderIds = get()
+      .index.filter(isFolderPlaylist)
+      .map((entry) => entry.id);
+
+    await get().syncLibraryRoots();
+
+    const failedFolders: string[] = [];
+    for (const id of folderIds) {
+      try {
+        await get().syncFolderPlaylist(id);
+      } catch (error) {
+        Logger.playlists.warn(
+          `Could not refresh folder playlist ${id}: ${String(error)}`,
+        );
+        failedFolders.push(id);
+      }
+    }
+
+    if (!isEmpty(failedFolders)) {
+      throw new Error(`${failedFolders.length} folder(s) could not be read`);
+    }
   },
 
   setPlaylistCover: async (id: string, imagePath: string) => {
