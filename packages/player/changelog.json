@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-11-01T12:00",
+    "description": "O modo aleatório ficou justo: agora ele toca todas as músicas da fila uma vez, em ordem sorteada, antes de repetir qualquer uma, então nenhuma música aparece toda hora enquanto outras ficam esquecidas. Quando todas já tocaram, começa uma rodada nova, e as músicas que fecharam a rodada anterior não abrem a próxima. Tocar uma playlist no aleatório também já começa de uma música sorteada, não mais sempre da primeira. O botão Anterior volta para a música que tocou antes de verdade, e a rodada continua de onde parou mesmo depois de fechar o app. Com o repetir desligado, o aleatório para quando todas as músicas tiverem tocado; com repetir tudo, ele segue em rodadas novas.",
+    "type": "improvement",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Aleatório",
+        "color": "purple"
+      }
+    ]
+  },
+  {
     "date": "2026-10-23T12:00",
     "description": "Os controles voltaram para a tela cheia do Now playing: embaixo das barras agora ficam a barra de tempo, os botões de tocar/pausar, anterior, próxima, aleatório e repetir, e o volume, igual à tela normal. Dá para controlar a música sem sair da tela cheia.",
     "type": "fix",

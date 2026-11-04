@@ -2,6 +2,20 @@
 
 Bugs encontrados durante as mudanças e a regra para não repetir.
 
+## 2026-11-01 — Aleatório justo (shuffle bag)
+
+### Músicas repetindo muito no aleatório
+- **O que quebrou:** no aleatório algumas músicas voltavam várias vezes enquanto outras quase nunca tocavam.
+- **Por quê:** cada próxima música era sorteada da fila inteira, sem lembrar nada além da música atual. Isso é sorteio com reposição: numa fila de 100 músicas, depois de ~12 já é mais provável que alguma tenha repetido. Além disso, "Tocar tudo" sempre começava pela primeira música, e o Anterior sorteava outra música em vez de voltar.
+- **Correção:** `stores/shuffleBag.ts` guarda a rodada (quem já tocou), o histórico (para o Anterior) e as músicas que fecharam a rodada anterior (que não podem abrir a próxima). A rodada é salva junto com a fila em `queue.json`. Fila nova no aleatório começa de uma música sorteada.
+- **Regra:** aleatório nunca é sorteio independente a cada faixa; é uma permutação por rodada. Qualquer estado que muda o que toca em seguida (rodada, histórico) precisa ser salvo junto com a fila, senão reiniciar o app desfaz a justiça.
+
+### `set` recebendo o objeto com o nome errado (pego nos testes)
+- **O que quebrou:** `goToIndex` e `goToId` passavam `{ index, shuffle }` direto para o `set` do zustand. O store ganhou um campo `index` solto e o `currentIndex` não mudava.
+- **Por quê:** o TypeScript não acusa propriedade sobrando quando o objeto vem de uma variável ou função (a checagem de excesso só vale para objeto literal), e o `set` aceita objeto parcial.
+- **Correção:** `set({ currentIndex: index, shuffle })` escrito por extenso.
+- **Regra:** nunca passar o retorno de um helper direto para o `set`; montar o objeto literal com os nomes de campo do store.
+
 ## 2026-10-23 — Controles de volta na tela cheia
 
 ### Tela cheia sem controles

@@ -11,12 +11,20 @@ import { Logger } from '../services/logger';
 import { errorMessage } from '../utils/errorMessage';
 import { secondsToMs } from '../utils/time';
 import { getSetting } from './settingsStore';
+import {
+  EMPTY_SHUFFLE,
+  pickNextShuffled,
+  popPrevious,
+  recordMove,
+  ShuffleState,
+} from './shuffleBag';
 import { useSoundStore } from './soundStore';
 
 const QUEUE_FILE = 'queue.json';
 const store = new LazyStore(QUEUE_FILE);
 
 type QueueStore = Queue & {
+  shuffle: ShuffleState;
   isLoading: boolean;
   isReady: boolean;
   loadFromDisk: () => Promise<void>;
@@ -43,21 +51,21 @@ const createQueueItem = (track: Track): QueueItem => ({
   addedAtIso: new Date().toISOString(),
 });
 
+const isShuffleEnabled = () =>
+  (getSetting('core.playback.shuffle') as boolean) ?? false;
+
+const getRepeatMode = () =>
+  (getSetting('core.playback.repeat') as string) ?? 'off';
+
 const getDirectionalIndex = (
   state: Pick<QueueStore, 'items' | 'currentIndex'>,
   direction: 'forward' | 'backward',
 ): number => {
   const { items, currentIndex } = state;
-  const shuffleEnabled =
-    (getSetting('core.playback.shuffle') as boolean) ?? false;
-  const repeatMode = (getSetting('core.playback.repeat') as string) ?? 'off';
+  const repeatMode = getRepeatMode();
 
   if (items.length === 0) {
     return currentIndex;
-  }
-
-  if (shuffleEnabled) {
-    return getShuffledIndex(items.length, currentIndex);
   }
 
   if (direction === 'forward') {
@@ -74,17 +82,59 @@ const getDirectionalIndex = (
   return repeatMode === 'all' ? items.length - 1 : currentIndex;
 };
 
-const getShuffledIndex = (length: number, currentIndex: number): number => {
-  if (length <= 1) {
-    return currentIndex;
+type Move = { index: number; shuffle: ShuffleState };
+
+const getItemIds = (items: QueueItem[]) => items.map((item) => item.id);
+
+const getSequentialMove = (
+  state: Pick<QueueStore, 'items' | 'currentIndex' | 'shuffle'>,
+  index: number,
+): Move => {
+  const fromItem = state.items[state.currentIndex];
+  const toItem = state.items[index];
+  if (!fromItem || !toItem || index === state.currentIndex) {
+    return { index, shuffle: state.shuffle };
+  }
+  return { index, shuffle: recordMove(state.shuffle, fromItem.id, toItem.id) };
+};
+
+const getNextMove = (
+  state: Pick<QueueStore, 'items' | 'currentIndex' | 'shuffle'>,
+): Move => {
+  const currentItem = state.items[state.currentIndex];
+  if (!isShuffleEnabled() || !currentItem) {
+    return getSequentialMove(state, getDirectionalIndex(state, 'forward'));
   }
 
-  let nextIndex = currentIndex;
-  while (nextIndex === currentIndex) {
-    nextIndex = Math.floor(Math.random() * length);
+  const itemIds = getItemIds(state.items);
+  const pick = pickNextShuffled(
+    state.shuffle,
+    itemIds,
+    currentItem.id,
+    getRepeatMode() === 'all',
+  );
+  if (!pick) {
+    return { index: state.currentIndex, shuffle: state.shuffle };
+  }
+  return { index: itemIds.indexOf(pick.nextId), shuffle: pick.shuffle };
+};
+
+const getPreviousMove = (
+  state: Pick<QueueStore, 'items' | 'currentIndex' | 'shuffle'>,
+): Move => {
+  if (!isShuffleEnabled()) {
+    return getSequentialMove(state, getDirectionalIndex(state, 'backward'));
   }
 
-  return nextIndex;
+  const itemIds = getItemIds(state.items);
+  const previous = popPrevious(state.shuffle, itemIds);
+  if (!previous) {
+    return { index: state.currentIndex, shuffle: state.shuffle };
+  }
+  return {
+    index: itemIds.indexOf(previous.previousId),
+    shuffle: previous.shuffle,
+  };
 };
 
 const emitSkip = (): void => {
@@ -98,6 +148,7 @@ const saveToDisk = async (): Promise<void> => {
     const state = useQueueStore.getState();
     await store.set('queue.items', state.items);
     await store.set('queue.currentIndex', state.currentIndex);
+    await store.set('queue.shuffle', state.shuffle);
     await store.save();
   } catch (error) {
     Logger.queue.error(`Failed to save queue: ${errorMessage(error)}`);
@@ -116,6 +167,7 @@ const withPersistence = <T extends unknown[]>(
 export const useQueueStore = create<QueueStore>((set, get) => ({
   items: [],
   currentIndex: 0,
+  shuffle: EMPTY_SHUFFLE,
   isReady: false,
   isLoading: false,
 
@@ -123,6 +175,8 @@ export const useQueueStore = create<QueueStore>((set, get) => ({
     set({ isLoading: true });
     const items = (await store.get<QueueItem[]>('queue.items')) ?? [];
     const currentIndex = (await store.get<number>('queue.currentIndex')) ?? 0;
+    const shuffle =
+      (await store.get<ShuffleState>('queue.shuffle')) ?? EMPTY_SHUFFLE;
 
     const sanitizedIndex =
       currentIndex >= 0 && currentIndex < items.length ? currentIndex : 0;
@@ -136,6 +190,7 @@ export const useQueueStore = create<QueueStore>((set, get) => ({
     set({
       items: resetItems,
       currentIndex: sanitizedIndex,
+      shuffle,
       isReady: true,
       isLoading: false,
     });
@@ -146,8 +201,12 @@ export const useQueueStore = create<QueueStore>((set, get) => ({
   addToQueue: withPersistence((tracks: Track[]) => {
     set(
       produce((state: QueueStore) => {
+        const wasEmpty = state.items.length === 0;
         const newItems = tracks.map(createQueueItem);
         state.items.push(...newItems);
+        if (wasEmpty && isShuffleEnabled()) {
+          state.currentIndex = Math.floor(Math.random() * state.items.length);
+        }
       }),
     );
     Logger.queue.debug(`Added ${tracks.length} tracks to queue`);
@@ -228,7 +287,7 @@ export const useQueueStore = create<QueueStore>((set, get) => ({
 
   clearQueue: withPersistence(() => {
     const itemCount = get().items.length;
-    set({ items: [], currentIndex: 0 });
+    set({ items: [], currentIndex: 0, shuffle: EMPTY_SHUFFLE });
     useSoundStore.getState().stop();
     Logger.queue.info(`Cleared queue (${itemCount} items removed)`);
   }),
@@ -271,42 +330,52 @@ export const useQueueStore = create<QueueStore>((set, get) => ({
 
   goToNext: withPersistence(() => {
     const state = get();
-    const nextIndex = getDirectionalIndex(state, 'forward');
-    if (nextIndex !== state.currentIndex) {
+    const { index, shuffle } = getNextMove(state);
+    if (index !== state.currentIndex) {
       emitSkip();
       useSoundStore.getState().stop();
-      set({ currentIndex: nextIndex });
-      Logger.queue.debug(`Moved to next track (index ${nextIndex})`);
+      set({ currentIndex: index, shuffle });
+      Logger.queue.debug(`Moved to next track (index ${index})`);
     }
   }),
 
   goToPrevious: withPersistence(() => {
     const state = get();
-    const previousIndex = getDirectionalIndex(state, 'backward');
-    if (previousIndex !== state.currentIndex) {
+    const { index, shuffle } = getPreviousMove(state);
+    if (index !== state.currentIndex) {
       emitSkip();
       useSoundStore.getState().stop();
-      set({ currentIndex: previousIndex });
-      Logger.queue.debug(`Moved to previous track (index ${previousIndex})`);
+      set({ currentIndex: index, shuffle });
+      Logger.queue.debug(`Moved to previous track (index ${index})`);
     }
   }),
 
   goToIndex: withPersistence((index: number) => {
-    const { items, currentIndex } = get();
-    if (index >= 0 && index < items.length && index !== currentIndex) {
+    const state = get();
+    if (
+      index >= 0 &&
+      index < state.items.length &&
+      index !== state.currentIndex
+    ) {
       emitSkip();
       useSoundStore.getState().stop();
-      set({ currentIndex: index });
+      set({
+        currentIndex: index,
+        shuffle: getSequentialMove(state, index).shuffle,
+      });
     }
   }),
 
   goToId: withPersistence((id: string) => {
-    const { items, currentIndex } = get();
-    const index = items.findIndex((item) => item.id === id);
-    if (index !== -1 && index !== currentIndex) {
+    const state = get();
+    const index = state.items.findIndex((item) => item.id === id);
+    if (index !== -1 && index !== state.currentIndex) {
       emitSkip();
       useSoundStore.getState().stop();
-      set({ currentIndex: index });
+      set({
+        currentIndex: index,
+        shuffle: getSequentialMove(state, index).shuffle,
+      });
     }
   }),
 
