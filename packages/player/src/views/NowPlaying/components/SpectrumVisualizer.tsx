@@ -20,7 +20,6 @@ const PEAK_FALL_PER_SECOND = 0.4;
 const PEAK_GAP_PX = 6;
 const PEAK_RADIUS_RATIO = 0.32;
 const HORIZON_RATIO = 0.86;
-const UP_REACH_RATIO = 0.94;
 const DOWN_REACH_RATIO = 0.85;
 const HORIZON_GAP_PX = 3;
 const BAR_FILL_RATIO = 0.58;
@@ -60,7 +59,9 @@ const createLanternDrawer = (): CanvasDrawer => {
     const slot = width / (BAND_COUNT * 2);
     const barWidth = slot * BAR_FILL_RATIO;
     const barInset = (slot - barWidth) / 2;
-    const upReach = horizon * UP_REACH_RATIO;
+    const peakRadius = Math.max(1, barWidth * PEAK_RADIUS_RATIO);
+    const headroom = BEAM_GLOW_PX + PEAK_GAP_PX + peakRadius * 2;
+    const upReach = Math.max(0, horizon - headroom);
     const downReach = (height - horizon) * DOWN_REACH_RATIO;
     const barX = (index: number, side: (typeof SIDES)[number]) =>
       side > 0
@@ -70,7 +71,6 @@ const createLanternDrawer = (): CanvasDrawer => {
     const beams = new Path2D();
     const reflections = new Path2D();
     const peakDots = new Path2D();
-    const peakRadius = Math.max(1, barWidth * PEAK_RADIUS_RATIO);
     levels.forEach((level, index) => {
       const up = Math.max(barWidth, level * upReach);
       const down = level * downReach;

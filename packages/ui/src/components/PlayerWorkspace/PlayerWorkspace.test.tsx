@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { PlayerWorkspace } from './PlayerWorkspace';
 
@@ -75,5 +76,59 @@ describe('PlayerWorkspace', () => {
     );
 
     expect(screen.getByTestId('persistent-footer')).toBeInTheDocument();
+  });
+
+  describe('peek on hover', () => {
+    const PEEK_DELAY_MS = 50;
+
+    const renderCollapsedSidebar = () =>
+      render(
+        <PlayerWorkspace>
+          <PlayerWorkspace.LeftSidebar
+            width={200}
+            isCollapsed={true}
+            peekDelayMs={PEEK_DELAY_MS}
+            onWidthChange={() => {}}
+            onToggle={() => {}}
+          >
+            {({ isCompact }) => (
+              <span data-testid="sidebar-content">
+                {isCompact ? 'compact' : 'expanded'}
+              </span>
+            )}
+          </PlayerWorkspace.LeftSidebar>
+          <PlayerWorkspace.Main />
+        </PlayerWorkspace>,
+      );
+
+    it('stays compact right after the mouse arrives', async () => {
+      renderCollapsedSidebar();
+
+      await userEvent.hover(screen.getByTestId('sidebar-left'));
+
+      expect(screen.getByTestId('sidebar-content')).toHaveTextContent(
+        'compact',
+      );
+    });
+
+    it('expands after the mouse rests on it for the delay', async () => {
+      renderCollapsedSidebar();
+
+      await userEvent.hover(screen.getByTestId('sidebar-left'));
+
+      expect(await screen.findByText('expanded')).toBeInTheDocument();
+    });
+
+    it('collapses again when the mouse leaves', async () => {
+      renderCollapsedSidebar();
+
+      await userEvent.hover(screen.getByTestId('sidebar-left'));
+      await screen.findByText('expanded');
+      await userEvent.unhover(screen.getByTestId('sidebar-left'));
+
+      expect(screen.getByTestId('sidebar-content')).toHaveTextContent(
+        'compact',
+      );
+    });
   });
 });

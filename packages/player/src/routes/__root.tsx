@@ -2,8 +2,7 @@ import { createRootRoute, useRouterState } from '@tanstack/react-router';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import {
   AudioLinesIcon,
-  HistoryIcon,
-  LibraryIcon,
+  LibraryBigIcon,
   MusicIcon,
   SettingsIcon,
 } from 'lucide-react';
@@ -29,6 +28,7 @@ import { ConnectedSettingsModal } from '../components/ConnectedSettingsModal';
 import { ConnectedThemeController } from '../components/ConnectedThemeController';
 import { ConnectedTitleBar } from '../components/ConnectedTitleBar';
 import { FlatpakWarningBanner } from '../components/FlatpakWarningBanner';
+import { SidebarPlaylists } from '../components/SidebarPlaylists';
 import { SoundProvider } from '../components/SoundProvider';
 import { StreamResolver } from '../components/StreamResolver';
 import { useFramelessWindow } from '../hooks/useFramelessWindow';
@@ -38,6 +38,7 @@ import { useLayoutStore } from '../stores/layoutStore';
 import { useSettingsModalStore } from '../stores/settingsModalStore';
 
 const NOW_PLAYING_PATH = '/now-playing';
+const SIDEBAR_PEEK_DELAY_MS = 1000;
 
 const RootComponent = () => {
   const { t } = useTranslation('navigation');
@@ -90,39 +91,38 @@ const RootComponent = () => {
               isCollapsed={leftSidebar.isCollapsed}
               onWidthChange={setLeftSidebarWidth}
               onToggle={toggleLeftSidebar}
+              peekDelayMs={SIDEBAR_PEEK_DELAY_MS}
             >
-              <SidebarNavigation isCompact={leftSidebar.isCollapsed}>
-                <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
-                  <AddFolderButton />
-                  <ConnectedThemeController />
-                  <div className="border-border my-1 border-t-(length:--border-width)" />
+              {({ isCompact }) => (
+                <SidebarNavigation isCompact={isCompact}>
+                  <div className="flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-auto">
+                    <AddFolderButton />
+                    <ConnectedThemeController />
+                    <div className="border-border my-1 border-t-(length:--border-width)" />
+                    <SidebarNavigationItem
+                      to="/now-playing"
+                      icon={<AudioLinesIcon />}
+                      label={t('nowPlaying')}
+                    />
+                    <SidebarNavigationItem
+                      to="/library"
+                      icon={<LibraryBigIcon />}
+                      label={t('allMusic')}
+                    />
+                    <SidebarNavigationItem
+                      to="/favorites/tracks"
+                      icon={<MusicIcon />}
+                      label={t('favoriteTracks')}
+                    />
+                    <SidebarPlaylists />
+                  </div>
                   <SidebarNavigationItem
-                    to="/now-playing"
-                    icon={<AudioLinesIcon />}
-                    label={t('nowPlaying')}
+                    icon={<SettingsIcon />}
+                    label={tPrefs('title')}
+                    onClick={() => openSettings()}
                   />
-                  <SidebarNavigationItem
-                    to="/dashboard"
-                    icon={<LibraryIcon />}
-                    label={t('dashboard')}
-                  />
-                  <SidebarNavigationItem
-                    to="/favorites/tracks"
-                    icon={<MusicIcon />}
-                    label={t('favoriteTracks')}
-                  />
-                  <SidebarNavigationItem
-                    to="/history"
-                    icon={<HistoryIcon />}
-                    label={t('history')}
-                  />
-                </div>
-                <SidebarNavigationItem
-                  icon={<SettingsIcon />}
-                  label={tPrefs('title')}
-                  onClick={() => openSettings()}
-                />
-              </SidebarNavigation>
+                </SidebarNavigation>
+              )}
             </PlayerWorkspace.LeftSidebar>
           )}
 
@@ -139,8 +139,11 @@ const RootComponent = () => {
                 isFullscreen ? toggleFullscreenQueue : toggleRightSidebar
               }
               headerActions={<QueueHeaderActions />}
+              peekDelayMs={SIDEBAR_PEEK_DELAY_MS}
             >
-              <ConnectedQueuePanel isCollapsed={isQueueCollapsed} />
+              {({ isCompact }) => (
+                <ConnectedQueuePanel isCollapsed={isCompact} />
+              )}
             </PlayerWorkspace.RightSidebar>
           )}
         </PlayerWorkspace>

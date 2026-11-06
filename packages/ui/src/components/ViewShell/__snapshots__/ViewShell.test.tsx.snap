@@ -1,0 +1,37 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ViewShell > (Snapshot) renders a title with actions next to it 1`] = `
+<DocumentFragment>
+  <div
+    class="surface-background relative flex h-full min-h-0 w-full flex-1 flex-col items-start justify-start px-6 pt-6"
+  >
+    <div
+      class="mb-6 flex w-full flex-0 flex-row items-center gap-3"
+    >
+      <h1
+        class="text-3xl font-bold"
+        data-testid="title"
+      >
+        All music
+      </h1>
+      <button
+        data-testid="title-action"
+      >
+        Open
+      </button>
+    </div>
+    <div
+      class="relative h-full flex min-h-0 w-full flex-1 flex-col"
+    >
+      <div
+        class="scrollbar-hide flex h-full w-full flex-col overflow-auto"
+        style="scrollbar-width: none;"
+      >
+        <span>
+          content
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -12,6 +12,7 @@ export type TrackTableLabels = {
   favorite: string;
   unfavorite: string;
   playAll: string;
+  playNow: string;
   addAllToQueue: string;
   addToQueue: string;
   trackOptions: string;

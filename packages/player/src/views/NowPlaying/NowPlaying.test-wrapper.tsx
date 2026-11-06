@@ -38,7 +38,7 @@ export const NowPlayingWrapper = {
       <App routerProp={router} queryClientProp={queryClient} />,
     );
     await screen.findByTestId(
-      initialPath === '/now-playing' ? 'now-playing-view' : 'dashboard-view',
+      initialPath === '/now-playing' ? 'now-playing-view' : 'all-music-view',
     );
     return { ...component, router };
   },

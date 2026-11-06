@@ -110,7 +110,7 @@ export const ConnectedPlayerBarWrapper = {
 
   // Explicit return type is required here to avoid the "The inferred type of 'ConnectedPlayerBarWrapper' cannot be named without a reference to" error
   async mount(): Promise<MountResult> {
-    const history = createMemoryHistory({ initialEntries: ['/dashboard'] });
+    const history = createMemoryHistory({ initialEntries: ['/library'] });
     const router = createRouter({ routeTree, history });
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
@@ -118,7 +118,7 @@ export const ConnectedPlayerBarWrapper = {
     const component = render(
       <App routerProp={router} queryClientProp={queryClient} />,
     );
-    await screen.findByTestId('dashboard-view');
+    await screen.findByTestId('all-music-view');
     return { ...component, router };
   },
 

@@ -2,12 +2,12 @@ import * as dialog from '@tauri-apps/plugin-dialog';
 import * as fs from '@tauri-apps/plugin-fs';
 import { type Mock } from 'vitest';
 
+import { SidebarPlaylistsWrapper } from '../components/SidebarPlaylists/SidebarPlaylists.test-wrapper';
 import { usePlaylistStore } from '../stores/playlistStore';
 import { PlaylistBuilder } from '../test/builders/PlaylistBuilder';
 import { resetInMemoryTauriStore } from '../test/utils/inMemoryTauriStore';
 import { mockUuid } from '../test/utils/mockUuid';
 import { PlaylistDetailWrapper } from '../views/PlaylistDetail/PlaylistDetail.test-wrapper';
-import { PlaylistsWrapper } from '../views/Playlists/Playlists.test-wrapper';
 
 vi.mock('@tauri-apps/plugin-dialog', () => ({
   open: vi.fn(),
@@ -64,15 +64,14 @@ describe('Playlist export → import round trip', () => {
     (dialog.open as Mock).mockResolvedValueOnce('/fake/Jazz Classics.json');
     (fs.readTextFile as Mock).mockResolvedValueOnce(capturedFileContent);
 
-    await PlaylistsWrapper.mount();
-    await PlaylistsWrapper.import.fromJson.click();
+    await SidebarPlaylistsWrapper.mount();
+    await SidebarPlaylistsWrapper.importButton.click();
 
     await vi.waitFor(() => {
-      expect(PlaylistsWrapper.cards).toHaveLength(1);
+      expect(SidebarPlaylistsWrapper.names).toEqual(['Jazz Classics']);
     });
-    expect(PlaylistsWrapper.card(0).name).toBe('Jazz Classics');
 
-    await PlaylistsWrapper.card(0).click();
+    await SidebarPlaylistsWrapper.playlist('Jazz Classics').click();
     await vi.waitFor(() => {
       expect(PlaylistDetailWrapper.title.display).toBeInTheDocument();
     });

@@ -27,48 +27,12 @@
   },
   "navigation": {
     "nowPlaying": "Now playing",
-    "dashboard": "Library",
+    "allMusic": "All music",
     "favoriteTracks": "Favorite tracks",
-    "history": "History",
+    "playlists": "Playlists",
+    "newPlaylist": "New playlist",
     "lightMode": "Light mode",
     "darkMode": "Dark mode"
-  },
-  "history": {
-    "title": "History",
-    "empty": "Nothing played yet",
-    "emptyDescription": "Tracks you play will appear here",
-    "today": "Today",
-    "yesterday": "Yesterday",
-    "tabs": {
-      "stats": "Stats",
-      "listeningHistory": "Listening history"
-    },
-    "row": {
-      "favorite": "Add to favorites",
-      "unfavorite": "Remove from favorites",
-      "addToQueue": "Add to queue"
-    },
-    "stats": {
-      "busiestHour": "Busiest hour",
-      "listeningTime": "Listening time",
-      "hourOfDay": "Time of day",
-      "dayOfWeek": "Day of week",
-      "calendar": "Listening calendar",
-      "topArtists": "Top artists",
-      "topAlbums": "Top albums",
-      "topTracks": "Top tracks",
-      "empty": "No listening data yet",
-      "emptyDescription": "Tracks you listen to will show up in your stats",
-      "legendLess": "Less",
-      "legendMore": "More",
-      "range": {
-        "last7Days": "Last 7 days",
-        "last30Days": "Last 30 days",
-        "last90Days": "Last 90 days",
-        "last12Months": "Last 12 months",
-        "allTime": "All time"
-      }
-    }
   },
   "favorites": {
     "tracks": {
@@ -124,11 +88,7 @@
     "descriptionPlaceholder": "Add a description..."
   },
   "dashboard": {
-    "title": "Library",
-    "empty-state": "Welcome to Nuclear",
-    "empty-state-description": "Use Add folder in the sidebar to turn a music folder into a playlist.",
     "add-folder": "Add folder",
-    "folders-title": "My folders",
     "folder-adding": "Reading your music...",
     "folder-added": "\"{{name}}\" is now in your library",
     "library-added": "{{count}} playlist is now in your library",
@@ -136,14 +96,13 @@
     "folder-empty": "No music found in this folder",
     "folder-add-error": "Could not add this folder",
     "all-music": "All music",
-    "all-music-description": "Every track from your folders in one list",
-    "all-music-count": "{{count}} track",
-    "all-music-count_other": "{{count}} tracks",
     "all-music-empty": "No music yet",
     "all-music-empty-description": "Add a music folder to see all your tracks here",
     "refresh-library": "Refresh",
     "refresh-library-success": "Music folders refreshed",
-    "refresh-library-error": "Some music folders could not be read"
+    "refresh-library-error": "Some music folders could not be read",
+    "open-files": "Open files",
+    "open-files-error": "Could not open these files"
   },
   "flatpak": {
     "sandboxWarning": "You're running Nuclear in a Flatpak sandbox. Some features may not work correctly. If you experience issues, try the .deb or AppImage instead.",
@@ -257,6 +216,7 @@
     "favorite": "Add to favorites",
     "unfavorite": "Remove from favorites",
     "playAll": "Play all",
+    "playNow": "Play now",
     "addAllToQueue": "Add all to queue",
     "addToQueue": "Add to queue",
     "trackOptions": "Track options",

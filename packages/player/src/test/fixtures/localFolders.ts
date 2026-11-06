@@ -123,3 +123,19 @@ export const EMPTY_FOLDER_SELECTION: MusicFolderSelection = {
   isLibrary: true,
   folders: [],
 };
+
+export const LOOSE_AUDIO_FILES = [
+  'C:/Downloads/Massive Attack - Teardrop.mp3',
+  'C:/Downloads/voice memo.m4a',
+];
+
+export const LOOSE_AUDIO_FILE_TAGS: LocalAudioTags[] = [
+  {
+    path: 'C:/Downloads/voice memo.m4a',
+    title: 'Morning idea',
+    artist: 'Carlo',
+    trackNumber: null,
+    durationMs: null,
+    coverPath: null,
+  },
+];

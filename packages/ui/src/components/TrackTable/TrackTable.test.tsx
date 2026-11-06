@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import type { Track } from '@nuclearplayer/model';
@@ -18,6 +19,7 @@ const labels: TrackTableLabels = {
   addAllToQueue: 'Add all to queue',
   addToQueue: 'Add to queue',
   trackOptions: 'Track options',
+  playNow: 'Play now',
   remove: 'Remove from list',
   filterPlaceholder: 'Filter tracks',
 };
@@ -159,5 +161,20 @@ describe('TrackTable', () => {
     );
     await findByTestId('add-all-to-queue-button');
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('plays a track from the play button on its row', async () => {
+    const onPlayNow = vi.fn();
+    const tracks = makeTracks(2);
+    const { findAllByRole } = render(
+      <TrackTable tracks={tracks} labels={labels} actions={{ onPlayNow }} />,
+    );
+
+    const [, secondPlayButton] = await findAllByRole('button', {
+      name: 'Play now',
+    });
+    await userEvent.click(secondPlayButton);
+
+    expect(onPlayNow).toHaveBeenCalledWith(tracks[1]);
   });
 });

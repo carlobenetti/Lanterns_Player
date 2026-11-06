@@ -102,7 +102,7 @@ describe('PlaylistDetail view', () => {
     });
   });
 
-  it('deletes playlist and navigates back to playlists list', async () => {
+  it('deletes playlist and navigates back to all music', async () => {
     await PlaylistDetailWrapper.mount('test-playlist');
 
     await PlaylistDetailWrapper.deleteDialog.openFromActions();
@@ -111,7 +111,7 @@ describe('PlaylistDetail view', () => {
     await PlaylistDetailWrapper.deleteDialog.confirmButton.click();
 
     await vi.waitFor(() => {
-      expect(PlaylistDetailWrapper.playlistsListView).toBeInTheDocument();
+      expect(PlaylistDetailWrapper.allMusicView).toBeInTheDocument();
     });
   });
 

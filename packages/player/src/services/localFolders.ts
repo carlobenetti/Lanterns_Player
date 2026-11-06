@@ -24,6 +24,19 @@ const ARTIST_TITLE_SEPARATOR = ' - ';
 
 const COVER_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp'];
 
+const AUDIO_FILE_EXTENSIONS = [
+  'mp3',
+  'mp4',
+  'm4a',
+  'aac',
+  'flac',
+  'wav',
+  'ogg',
+  'oga',
+  'opus',
+  'webm',
+];
+
 export const isFolderPlaylist = (
   playlist: Pick<PlaylistIndexEntry, 'origin'>,
 ): boolean => playlist.origin?.provider === LOCAL_FOLDER_PROVIDER;
@@ -77,6 +90,31 @@ export const trackFromLocalFile = (
 export const pickMusicFolder = async (): Promise<string | null> => {
   const selected = await open({ directory: true, multiple: false });
   return typeof selected === 'string' ? selected : null;
+};
+
+export const pickAudioFiles = async (): Promise<string[]> => {
+  const selected = await open({
+    multiple: true,
+    filters: [{ name: 'Audio', extensions: AUDIO_FILE_EXTENSIONS }],
+  });
+  if (Array.isArray(selected)) {
+    return selected;
+  }
+  return typeof selected === 'string' ? [selected] : [];
+};
+
+export const localAudioFileFromPath = (path: string): LocalAudioFile => {
+  const baseName = path.split(/[\\/]/).pop() ?? path;
+  const extensionIndex = baseName.lastIndexOf('.');
+  const hasExtension = extensionIndex > 0;
+
+  return {
+    path,
+    fileName: hasExtension ? baseName.slice(0, extensionIndex) : baseName,
+    extension: hasExtension
+      ? baseName.slice(extensionIndex + 1).toLowerCase()
+      : '',
+  };
 };
 
 export const pickCoverImage = async (): Promise<string | null> => {

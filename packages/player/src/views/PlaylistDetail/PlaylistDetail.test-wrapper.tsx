@@ -141,8 +141,8 @@ export const PlaylistDetailWrapper = {
     await user.click(screen.getByTestId('add-to-queue-action'));
   },
 
-  get playlistsListView() {
-    return screen.queryByTestId('playlists-view');
+  get allMusicView() {
+    return screen.queryByTestId('all-music-view');
   },
 
   get removeButtons() {

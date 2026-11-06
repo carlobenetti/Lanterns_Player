@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+const LAYOUT_STORE_VERSION = 1;
+
 export interface LayoutState {
   leftSidebar: {
     isCollapsed: boolean;
@@ -20,11 +22,11 @@ export const useLayoutStore = create<LayoutState>()(
   persist(
     (set) => ({
       leftSidebar: {
-        isCollapsed: false,
+        isCollapsed: true,
         width: 200,
       },
       rightSidebar: {
-        isCollapsed: false,
+        isCollapsed: true,
         width: 200,
       },
       toggleLeftSidebar: () =>
@@ -58,6 +60,15 @@ export const useLayoutStore = create<LayoutState>()(
     }),
     {
       name: 'nuclear-layout-store',
+      version: LAYOUT_STORE_VERSION,
+      migrate: (persistedState) => {
+        const state = persistedState as LayoutState;
+        return {
+          ...state,
+          leftSidebar: { ...state.leftSidebar, isCollapsed: true },
+          rightSidebar: { ...state.rightSidebar, isCollapsed: true },
+        };
+      },
     },
   ),
 );

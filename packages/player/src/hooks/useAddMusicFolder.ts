@@ -39,7 +39,7 @@ export const useAddMusicFolder = () => {
           ? t('folder-added', { name })
           : t('library-added', { count: playlistIds.length });
       toast.success(message, { id: toastId });
-      navigate({ to: '/dashboard' });
+      navigate({ to: '/library' });
     } catch (error) {
       Logger.playlists.error(
         `Failed to add music folder ${folderPath}: ${String(error)}`,

@@ -14,6 +14,7 @@ export const labels: TrackTableLabels = {
   addAllToQueue: 'Add all to queue',
   addToQueue: 'Add to queue',
   trackOptions: 'Track options',
+  playNow: 'Play now',
   remove: 'Remove from list',
   filterPlaceholder: 'Filter tracks',
 };

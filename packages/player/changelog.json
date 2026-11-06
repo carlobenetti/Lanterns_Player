@@ -1,5 +1,31 @@
 [
   {
+    "date": "2026-11-06T12:00",
+    "description": "As barras do Now playing não batem mais num teto: em músicas altas elas paravam todas na mesma altura, formando uma linha reta, e o brilho de cima era cortado. Agora elas sobem suavemente até perto do topo sem encostar, cada uma na sua altura, e o brilho e as bolinhas de pico aparecem inteiros.",
+    "type": "fix",
+    "contributors": ["carlobenetti"],
+    "tags": [
+      {
+        "label": "Now playing",
+        "color": "cyan"
+      }
+    ]
+  },
+  {
+    "date": "2026-11-04T12:00",
+    "description": "O app agora abre direto na lista com todas as músicas (All music), que substituiu a tela Library. As pastas e playlists foram para a barra da esquerda, abaixo de All music, junto com Nova playlist e Importar. A aba History saiu. Cada música da lista ganhou um botão de play visível ao lado do nome, sem precisar abrir o menu de três pontos. Ao lado do título All music há um botão só com ícone para abrir arquivos de música soltos do computador; o nome dele aparece ao passar o mouse. As duas barras laterais ficam recolhidas, só com ícones, e se abrem por cima da tela quando o mouse fica parado nelas por 1 segundo; o botão do canto continua fixando a barra aberta.",
+    "type": "feature",
+    "contributors": [
+      "carlobenetti"
+    ],
+    "tags": [
+      {
+        "label": "Biblioteca",
+        "color": "green"
+      }
+    ]
+  },
+  {
     "date": "2026-11-01T12:00",
     "description": "O modo aleatório ficou justo: agora ele toca todas as músicas da fila uma vez, em ordem sorteada, antes de repetir qualquer uma, então nenhuma música aparece toda hora enquanto outras ficam esquecidas. Quando todas já tocaram, começa uma rodada nova, e as músicas que fecharam a rodada anterior não abrem a próxima. Tocar uma playlist no aleatório também já começa de uma música sorteada, não mais sempre da primeira. O botão Anterior volta para a música que tocou antes de verdade, e a rodada continua de onde parou mesmo depois de fechar o app. Com o repetir desligado, o aleatório para quando todas as músicas tiverem tocado; com repetir tudo, ele segue em rodadas novas.",
     "type": "improvement",

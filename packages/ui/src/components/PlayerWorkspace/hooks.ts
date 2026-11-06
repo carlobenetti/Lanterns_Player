@@ -1,6 +1,35 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { SIDEBAR_CONFIG } from './constants';
+
+export const useSidebarPeek = (isCollapsed: boolean, delayMs?: number) => {
+  const [isPeeking, setIsPeeking] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearTimer = useCallback(() => {
+    if (timer.current) {
+      clearTimeout(timer.current);
+      timer.current = null;
+    }
+  }, []);
+
+  const startPeek = useCallback(() => {
+    if (!isCollapsed || delayMs === undefined) {
+      return;
+    }
+    clearTimer();
+    timer.current = setTimeout(() => setIsPeeking(true), delayMs);
+  }, [isCollapsed, delayMs, clearTimer]);
+
+  const stopPeek = useCallback(() => {
+    clearTimer();
+    setIsPeeking(false);
+  }, [clearTimer]);
+
+  useEffect(() => clearTimer, [clearTimer]);
+
+  return { isPeeking: isCollapsed && isPeeking, startPeek, stopPeek };
+};
 
 export const useSidebarResize = (
   width: number,

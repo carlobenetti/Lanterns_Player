@@ -6,7 +6,7 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
   class="relative z-50"
   data-headlessui-state="open"
   data-open=""
-  id="headlessui-dialog-:r5:"
+  id="headlessui-dialog-:r1:"
   role="dialog"
   tabindex="-1"
 >
@@ -32,7 +32,7 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
         class="contents"
         data-headlessui-state="open"
         data-open=""
-        id="headlessui-dialog-panel-:rb:"
+        id="headlessui-dialog-panel-:r7:"
       >
         <button
           aria-label="Close"
@@ -316,7 +316,7 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
                                       aria-label="Frameless window"
                                       class="border-border focus:ring-ring focus:ring-offset-muted relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full border-(length:--border-width) transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none data-checked:surface-primary surface-input data-disabled:cursor-not-allowed data-disabled:opacity-50 group"
                                       data-headlessui-state=""
-                                      id="headlessui-switch-:rc:"
+                                      id="headlessui-switch-:r8:"
                                       role="switch"
                                       tabindex="0"
                                       type="button"
@@ -348,7 +348,7 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
                                       aria-label="Custom title bar"
                                       class="border-border focus:ring-ring focus:ring-offset-muted relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full border-(length:--border-width) transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none data-checked:surface-primary surface-input data-disabled:cursor-not-allowed data-disabled:opacity-50 group"
                                       data-headlessui-state=""
-                                      id="headlessui-switch-:rd:"
+                                      id="headlessui-switch-:r9:"
                                       role="switch"
                                       tabindex="0"
                                       type="button"
@@ -374,8 +374,8 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
                                 >
                                   <label
                                     class="text-foreground text-sm font-semibold"
-                                    for="select-:re:"
-                                    id="select-:re:-label"
+                                    for="select-:ra:"
+                                    id="select-:ra:-label"
                                   >
                                     Title bar style
                                   </label>
@@ -384,7 +384,7 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
                                     aria-haspopup="listbox"
                                     class="border-border surface-primary focus-visible:ring-ring focus-visible:ring-offset-muted relative flex w-full items-center justify-between rounded-md border-(length:--border-width) text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 px-3 py-2 text-sm"
                                     data-headlessui-state=""
-                                    id="select-:re:"
+                                    id="select-:ra:"
                                     type="button"
                                   >
                                     <span
@@ -416,7 +416,7 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
                                   </button>
                                   <p
                                     class="text-foreground/60 text-sm select-none"
-                                    id="select-:re:-description"
+                                    id="select-:ra:-description"
                                   >
                                     Choose the visual style for the custom title bar controls.
                                   </p>
@@ -450,8 +450,8 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
                                 >
                                   <label
                                     class="text-foreground text-sm font-semibold"
-                                    for="select-:rl:"
-                                    id="select-:rl:-label"
+                                    for="select-:rh:"
+                                    id="select-:rh:-label"
                                   >
                                     Language
                                   </label>
@@ -460,7 +460,7 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
                                     aria-haspopup="listbox"
                                     class="border-border surface-primary focus-visible:ring-ring focus-visible:ring-offset-muted relative flex w-full items-center justify-between rounded-md border-(length:--border-width) text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 px-3 py-2 text-sm"
                                     data-headlessui-state=""
-                                    id="select-:rl:"
+                                    id="select-:rh:"
                                     type="button"
                                   >
                                     <span
@@ -492,7 +492,7 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
                                   </button>
                                   <p
                                     class="text-foreground/60 text-sm select-none"
-                                    id="select-:rl:-description"
+                                    id="select-:rh:-description"
                                   >
                                     Select your preferred language
                                   </p>
@@ -533,7 +533,7 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
                                       class="border-border focus:ring-ring focus:ring-offset-muted relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full border-(length:--border-width) transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none data-checked:surface-primary surface-input data-disabled:cursor-not-allowed data-disabled:opacity-50 group"
                                       data-checked=""
                                       data-headlessui-state="checked"
-                                      id="headlessui-switch-:rs:"
+                                      id="headlessui-switch-:ro:"
                                       role="switch"
                                       tabindex="0"
                                       type="button"
@@ -583,22 +583,22 @@ exports[`Settings view > (Snapshot) renders the settings view 1`] = `
                                 >
                                   <label
                                     class="text-foreground text-sm font-semibold"
-                                    for="input-:rt:"
-                                    id="input-:rt:-label"
+                                    for="input-:rp:"
+                                    id="input-:rp:-label"
                                   >
                                     Skip duration
                                   </label>
                                   <input
                                     class="border-border focus-visible:ring-ring focus-visible:ring-offset-muted w-full px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none surface-input placeholder:text-input-foreground/60 h-10 rounded-md border-(length:--border-width)"
                                     data-headlessui-state=""
-                                    id="input-:rt:"
+                                    id="input-:rp:"
                                     inputmode="numeric"
                                     type="number"
                                     value="5"
                                   />
                                   <p
                                     class="text-foreground/60 text-sm select-none"
-                                    id="input-:rt:-description"
+                                    id="input-:rp:-description"
                                   >
                                     Number of seconds to skip forward/backward
                                   </p>

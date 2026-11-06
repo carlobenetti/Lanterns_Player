@@ -39,7 +39,7 @@ export const QueueWrapper = {
   },
 
   async mount(): Promise<RenderResult> {
-    const history = createMemoryHistory({ initialEntries: ['/dashboard'] });
+    const history = createMemoryHistory({ initialEntries: ['/library'] });
     const router = createRouter({ routeTree, history });
     const result = render(<App routerProp={router} />);
     await screen.findByTestId('sidebar-toggle-right');

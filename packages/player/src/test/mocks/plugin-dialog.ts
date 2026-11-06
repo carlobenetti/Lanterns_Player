@@ -9,4 +9,7 @@ export const PluginDialogMock = {
   setOpen: (value: string) => {
     (dialog.open as Mock).mockResolvedValue(value);
   },
+  setOpenMany: (values: string[]) => {
+    (dialog.open as Mock).mockResolvedValue(values);
+  },
 };

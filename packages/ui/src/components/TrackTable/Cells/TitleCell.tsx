@@ -1,5 +1,5 @@
 import { CellContext } from '@tanstack/react-table';
-import { EllipsisVertical, Plus } from 'lucide-react';
+import { EllipsisVertical, Play, Plus } from 'lucide-react';
 import { FC, forwardRef } from 'react';
 
 import { Track } from '@nuclearplayer/model';
@@ -32,6 +32,27 @@ const AddToQueueButton: FC<AddToQueueButtonProps> = ({ label, onClick }) => (
     aria-label={label}
   >
     <Plus size={16} />
+  </Button>
+);
+
+type PlayNowButtonProps = {
+  label: string;
+  onClick: () => void;
+};
+
+const PlayNowButton: FC<PlayNowButtonProps> = ({ label, onClick }) => (
+  <Button
+    data-testid="play-now-button"
+    size="icon-sm"
+    variant="text"
+    className="shrink-0 opacity-60 transition-none group-hover:opacity-100"
+    onClick={(e) => {
+      e.stopPropagation();
+      onClick();
+    }}
+    aria-label={label}
+  >
+    <Play size={16} className="fill-current" />
   </Button>
 );
 
@@ -75,6 +96,12 @@ export const TitleCell = <T extends Track>({
   return (
     <td className="truncate px-2">
       <div className="flex items-center justify-between gap-2">
+        {actions?.onPlayNow && (
+          <PlayNowButton
+            label={labels.playNow}
+            onClick={() => actions.onPlayNow?.(track)}
+          />
+        )}
         <button
           className="min-w-0 flex-1 cursor-pointer truncate text-left hover:underline"
           onClick={(e) => {

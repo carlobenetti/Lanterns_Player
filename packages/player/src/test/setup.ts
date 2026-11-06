@@ -6,11 +6,22 @@ import { vi } from 'vitest';
 
 import { setupDomMocks } from '@nuclearplayer/ui';
 
+import { useLayoutStore } from '../stores/layoutStore';
+
 process.env.NODE_ENV = 'test';
 process.env.TZ = 'UTC';
 Settings.defaultLocale = 'en-US';
 
 setupDomMocks();
+
+const PINNED_SIDEBAR = { isCollapsed: false, width: 200 };
+
+beforeEach(() => {
+  useLayoutStore.setState({
+    leftSidebar: PINNED_SIDEBAR,
+    rightSidebar: PINNED_SIDEBAR,
+  });
+});
 
 // Silences react's pointless warning spam
 // give it a rest already
@@ -162,7 +173,7 @@ const makeAudioContextMock = () => {
       frequencyBinCount: 1024,
       smoothingTimeConstant: 0.8,
       context: { sampleRate: 44100 },
-      getByteFrequencyData: vi.fn(),
+      getFloatFrequencyData: vi.fn(),
     }),
     destination: {
       connect: vi.fn(),

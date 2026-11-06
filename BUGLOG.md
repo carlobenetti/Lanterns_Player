@@ -2,6 +2,39 @@
 
 Bugs encontrados durante as mudanças e a regra para não repetir.
 
+## 2026-11-06 — Barras do Now playing batendo num teto
+
+### Topo das barras cortado por uma linha reta
+- **O que quebrou:** com música alta, várias barras graves chegavam juntas na mesma altura e formavam uma linha reta, e o brilho acima delas sumia num corte seco.
+- **Por quê:** `getByteFrequencyData` satura em 255 tudo que passa de -30 dB, então as barras batiam num teto fixo. Além disso a altura máxima era 94% do canvas, sem espaço para o brilho (`shadowBlur`) e para as bolinhas de pico, que eram cortadas pela borda do canvas.
+- **Correção:** o espectro usa `getFloatFrequencyData` (sem teto) e passa por um limite suave (`tanh` acima de 70%), que se aproxima do topo sem nunca encostar. A altura máxima desconta o brilho, o espaço e a bolinha de pico.
+- **Regra:** nunca mapear um sinal que pode passar do máximo direto em altura com corte seco; usar limite suave. Em canvas com `shadowBlur`, reservar o raio do brilho dentro da área desenhada.
+
+## 2026-11-04 — All music como tela inicial, barras que abrem no hover
+
+### Hover das barras não disparava nos testes
+- **O que quebrou:** os testes do hover de 1s não viam a barra abrir.
+- **Por quê:** o mock do `motion` nos testes da UI só repassa `className`, `animate` e props `data-*`; `onMouseEnter`/`onMouseLeave` num `motion.div` são descartados.
+- **Correção:** os eventos de mouse ficam numa `div` comum que envolve a barra; o `motion.div` só cuida da largura.
+- **Regra:** nunca pôr handlers de evento direto em `motion.*`; envolver num elemento comum.
+
+### Testes com relógio falso travando (timeout de 5s)
+- **O que quebrou:** `vi.useFakeTimers()` + `userEvent` travavam os testes.
+- **Por quê:** o `userEvent` usa `setTimeout` internamente entre ações; com o relógio falso ele espera para sempre.
+- **Correção:** os testes usam tempo real com um atraso curto (50ms) e `findBy` para esperar a barra abrir.
+- **Regra:** para atrasos de UI, preferir atraso curto configurável + `findBy` a relógio falso com `userEvent`.
+
+### Barra lateral quebrando com playlist sem capas
+- **O que quebrou:** `const [cover] = playlist.thumbnails` estourou ("undefined is not iterable") em playlists sem `thumbnails`.
+- **Por quê:** o tipo diz que o campo existe, mas dados salvos antigos e alguns testes não têm.
+- **Correção:** `head(playlist.thumbnails)` do lodash.
+- **Regra:** dado que vem do disco não é confiável só pelo tipo; nunca desestruturar arrays dele sem proteção.
+
+### Barras começando recolhidas quebraram testes da fila
+- **O que mudou:** o padrão das barras passou a ser recolhido (com migração do estado salvo), e a fila recolhida mostra só capas, sem botões.
+- **Correção:** o `test/setup.ts` fixa as duas barras abertas antes de cada teste, como era antes; os testes do hover cobrem o modo recolhido.
+- **Regra:** mudar o padrão de um store persistido exige migração (`version` + `migrate`), senão quem já usa o app não vê a mudança.
+
 ## 2026-11-01 — Aleatório justo (shuffle bag)
 
 ### Músicas repetindo muito no aleatório

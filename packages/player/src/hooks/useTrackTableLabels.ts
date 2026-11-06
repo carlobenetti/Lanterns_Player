@@ -14,6 +14,7 @@ export const useTrackTableLabels = (): TrackTableLabels => {
     favorite: t('favorite'),
     unfavorite: t('unfavorite'),
     playAll: t('playAll'),
+    playNow: t('playNow'),
     addAllToQueue: t('addAllToQueue'),
     addToQueue: t('addToQueue'),
     trackOptions: t('trackOptions'),

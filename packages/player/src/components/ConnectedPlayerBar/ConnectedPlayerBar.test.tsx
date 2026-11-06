@@ -69,7 +69,7 @@ describe('ConnectedNowPlaying', () => {
 
     await Wrapper.nowPlaying.clickTitle();
 
-    expect(router.state.location.pathname).toBe('/dashboard');
+    expect(router.state.location.pathname).toBe('/library');
   });
 });
 

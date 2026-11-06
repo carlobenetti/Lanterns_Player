@@ -32,7 +32,7 @@ export const PlaylistDetailActions: FC<PlaylistDetailActionsProps> = ({
   const handleDelete = async () => {
     await deletePlaylist(playlistId);
     setIsDeleteDialogOpen(false);
-    navigate({ to: '/dashboard' });
+    navigate({ to: '/library' });
   };
 
   return (

@@ -53,7 +53,7 @@ describe('Now playing view', () => {
 
   it('hides the bottom player bar while Now playing is open', async () => {
     Wrapper.seedQueue(Wrapper.fixtures.album());
-    await Wrapper.mount('/dashboard');
+    await Wrapper.mount('/library');
     expect(Wrapper.playerBarCover).toBeInTheDocument();
 
     await Wrapper.openFromPlayerBarCover();
@@ -164,7 +164,7 @@ describe('Now playing view', () => {
 
   it('opens from the cover in the player bar', async () => {
     Wrapper.seedQueue(Wrapper.fixtures.album());
-    await Wrapper.mount('/dashboard');
+    await Wrapper.mount('/library');
 
     await Wrapper.openFromPlayerBarCover();
 
@@ -173,7 +173,7 @@ describe('Now playing view', () => {
 
   it('opens from the sidebar', async () => {
     Wrapper.seedQueue(Wrapper.fixtures.album());
-    await Wrapper.mount('/dashboard');
+    await Wrapper.mount('/library');
 
     await Wrapper.openFromSidebar();
 

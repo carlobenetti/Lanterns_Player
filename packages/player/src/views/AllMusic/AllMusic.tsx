@@ -6,6 +6,7 @@ import { useTranslation } from '@nuclearplayer/i18n';
 import { EmptyState, Loader, ViewShell } from '@nuclearplayer/ui';
 
 import { ConnectedTrackTable } from '../../components/ConnectedTrackTable';
+import { OpenFilesButton } from './OpenFilesButton';
 import { RefreshLibraryButton } from './RefreshLibraryButton';
 import { useAllMusicTracks } from './useAllMusicTracks';
 
@@ -17,7 +18,11 @@ export const AllMusic: FC = () => {
 
   if (isLoading && isEmpty(tracks)) {
     return (
-      <ViewShell data-testid="all-music-view" title={t('all-music')}>
+      <ViewShell
+        data-testid="all-music-view"
+        title={t('all-music')}
+        titleActions={<OpenFilesButton />}
+      >
         <div className="flex flex-1 items-center justify-center">
           <Loader size="xl" />
         </div>
@@ -26,7 +31,11 @@ export const AllMusic: FC = () => {
   }
 
   return (
-    <ViewShell data-testid="all-music-view" title={t('all-music')}>
+    <ViewShell
+      data-testid="all-music-view"
+      title={t('all-music')}
+      titleActions={<OpenFilesButton />}
+    >
       {isEmpty(tracks) ? (
         <EmptyState
           icon={<LibraryBig size={EMPTY_ICON_SIZE} />}

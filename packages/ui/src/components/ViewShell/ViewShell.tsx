@@ -11,6 +11,7 @@ type ViewShellClasses = {
 type ViewShellProps = {
   children: ReactNode;
   title?: string;
+  titleActions?: ReactNode;
   subtitle?: string;
   'data-testid'?: string;
   classes?: ViewShellClasses;
@@ -19,6 +20,7 @@ type ViewShellProps = {
 export const ViewShell: FC<ViewShellProps> = ({
   children,
   title,
+  titleActions,
   subtitle,
   'data-testid': dataTestId,
   classes,
@@ -30,13 +32,21 @@ export const ViewShell: FC<ViewShellProps> = ({
     )}
     data-testid={dataTestId}
   >
-    {title && (
+    {title && !titleActions && (
       <h1
         className="mb-6 flex w-full flex-0 flex-row text-center text-3xl font-bold"
         data-testid="title"
       >
         {title}
       </h1>
+    )}
+    {title && titleActions && (
+      <div className="mb-6 flex w-full flex-0 flex-row items-center gap-3">
+        <h1 className="text-3xl font-bold" data-testid="title">
+          {title}
+        </h1>
+        {titleActions}
+      </div>
     )}
     {subtitle && (
       <h2 className="mb-4 flex w-full flex-0 flex-row text-center text-xl font-semibold">

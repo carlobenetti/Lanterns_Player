@@ -14,7 +14,7 @@ export const CustomTitleBarWrapper = {
     await initializeSettingsStore();
     registerBuiltInCoreSettings();
 
-    const history = createMemoryHistory({ initialEntries: ['/dashboard'] });
+    const history = createMemoryHistory({ initialEntries: ['/library'] });
     const router = createRouter({ routeTree, history });
     const result = render(<App routerProp={router} />);
     await screen.findByTestId('player-workspace-main');
